@@ -1,0 +1,20 @@
+<aura:component>
+    <aura:attribute name="label" type="String" />
+    <aura:attribute name="sendEmail" type="boolean" />
+    <aura:attribute name="disabled" type="boolean" default="false" />
+
+    <aura:handler name="init" action="{! c.init }" value="{! this }" />
+
+    <tr>
+        <td class="border-right">{! v.label }</td>
+        <td class="checkbox-column border-right">
+            <lightning:input
+                type="checkbox"
+                name="email"
+                label="{# v.label }"
+                disabled="{! v.disabled }"
+                checked="{! v.sendEmail }"
+            />
+        </td>
+    </tr>
+</aura:component>

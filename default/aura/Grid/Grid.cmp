@@ -1,0 +1,112 @@
+<aura:component>
+    <ltng:require scripts="{! $Resource.lodash }" afterScriptsLoaded="{! c.resourcesLoaded }" />
+
+    <!-- PUBLIC ATTRIBUTES -->
+    <aura:attribute name="class" type="String" />
+    <aura:attribute name="columns" type="List" default="[]" access="public" />
+    <aura:attribute name="rows" type="List" default="[]" access="public" />
+    <aura:attribute name="gridData" type="List" access="public" />
+
+    <aura:attribute name="fixedFirstColumnWidth" type="Boolean" default="true" />
+    <aura:attribute name="smallColumns" type="Integer" default="3" access="public" />
+    <aura:attribute name="mediumColumns" type="Integer" default="4" access="public" />
+    <aura:attribute name="largeColumns" type="Integer" default="6" access="public" />
+    <aura:attribute name="expandColumnsToFit" type="Boolean" default="false" access="public" />
+
+    <aura:attribute name="showCellBorders" type="Boolean" default="true" access="public" />
+    <aura:attribute name="showGridTopBorder" type="Boolean" default="true" access="public" />
+    <aura:attribute name="showGridBottomBorder" type="Boolean" default="true" access="public" />
+    <aura:attribute name="showGridLeftBorder" type="Boolean" default="true" access="public" />
+    <aura:attribute name="showGridRightBorder" type="Boolean" default="true" access="public" />
+
+    <aura:attribute name="cornerColor" type="String" default="#fff" access="public" />
+    <aura:attribute name="columnHeaderColor" type="String" default="#fff" access="public" />
+    <aura:attribute name="rowHeaderColor" type="String" default="#fff" access="public" />
+    <aura:attribute name="cellColor" type="String" default="#fff" access="public" />
+
+    <aura:attribute name="rowHeaderClass" type="String" default="slds-truncate" access="public" />
+    <aura:attribute name="columnHeaderClass" type="String" default="slds-truncate" access="public" />
+
+    <aura:attribute name="lodashLoaded" type="Boolean" default="false" />
+
+    <!-- PRIVATE ATTRIBUTES -->
+    <aura:attribute name="orderedGridData" type="List" default="[]" access="private" />
+    <aura:attribute name="smallColumnsToUse" type="Integer" default="3" access="private" />
+    <aura:attribute name="mediumColumnsToUse" type="Integer" default="4" access="private" />
+    <aura:attribute name="largeColumnsToUse" type="Integer" default="6" access="private" />
+
+    <!-- HANDLERS -->
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
+    <aura:handler name="change" value="{! v.gridData }" action="{! c.dataChanged }" />
+    <aura:handler name="change" value="{! v.smallColumns }" action="{! c.columnDisplayChanged }" />
+    <aura:handler name="change" value="{! v.mediumColumns }" action="{! c.columnDisplayChanged }" />
+    <aura:handler name="change" value="{! v.largeColumns }" action="{! c.columnDisplayChanged }" />
+
+    <div class="{! join(' ', 'pro-grid-wrapper', v.class) }">
+        <!-- HEADER -->
+        <c:GridRow
+            aura:id="headerRow"
+            columns="{! v.columns }"
+            isHeaderRow="true"
+            isFooterRow="{! v.orderedGridData.length eq 0 }"
+            showCellBorders="{! v.showCellBorders }"
+            showGridTopBorder="{! v.showGridTopBorder }"
+            showGridBottomBorder="{! v.showGridBottomBorder }"
+            showGridLeftBorder="{! v.showGridLeftBorder }"
+            showGridRightBorder="{! v.showGridRightBorder }"
+            smallColumns="{! v.smallColumnsToUse }"
+            mediumColumns="{! v.mediumColumnsToUse }"
+            largeColumns="{! v.largeColumnsToUse }"
+            fixedFirstColumnWidth="{! v.fixedFirstColumnWidth }"
+            rowTitleColor="{! v.cornerColor }"
+            rowCellColor="{! v.columnHeaderColor }"
+            headerClass="{! join(' ', v.columnHeaderClass, (empty(v.columns) ? 'empty-row' : '')) }"
+        />
+        <!-- ROWS -->
+        <aura:if isTrue="{! empty(v.rows) }">
+            <!-- If No Rows -->
+            <c:GridRow
+                columns="{! v.columns }"
+                isHeaderRow="false"
+                isFooterRow="true"
+                showCellBorders="{! v.showCellBorders }"
+                showGridTopBorder="{! v.showGridTopBorder }"
+                showGridBottomBorder="{! v.showGridBottomBorder }"
+                showGridLeftBorder="{! v.showGridLeftBorder }"
+                showGridRightBorder="{! v.showGridRightBorder }"
+                rowTitle="{! $Label.c.No_Rows }"
+                rowData=""
+                smallColumns="{! v.smallColumnsToUse }"
+                mediumColumns="{! v.mediumColumnsToUse }"
+                largeColumns="{! v.largeColumnsToUse}"
+                fixedFirstColumnWidth="{! v.fixedFirstColumnWidth }"
+                rowTitleColor="{! v.rowHeaderColor }"
+                rowCellColor="{! v.cellColor }"
+                headerClass="{! join(' ', v.rowHeaderClass, 'empty-row') }"
+            />
+            <aura:set attribute="else">
+                <aura:iteration items="{! v.orderedGridData }" var="rowObj" indexVar="index">
+                    <c:GridRow
+                        columns="{! v.columns }"
+                        isHeaderRow="false"
+                        isFooterRow="{! (v.orderedGridData.length-1) eq index }"
+                        showCellBorders="{! v.showCellBorders }"
+                        showGridTopBorder="{! v.showGridTopBorder }"
+                        showGridBottomBorder="{! v.showGridBottomBorder }"
+                        showGridLeftBorder="{! v.showGridLeftBorder }"
+                        showGridRightBorder="{! v.showGridRightBorder }"
+                        rowTitle="{! rowObj.name }"
+                        rowData="{! rowObj.data }"
+                        smallColumns="{! v.smallColumnsToUse }"
+                        mediumColumns="{! v.mediumColumnsToUse }"
+                        largeColumns="{! v.largeColumnsToUse}"
+                        fixedFirstColumnWidth="{! v.fixedFirstColumnWidth }"
+                        rowTitleColor="{! v.rowHeaderColor }"
+                        rowCellColor="{! v.cellColor }"
+                        headerClass="{! v.rowHeaderClass }"
+                    />
+                </aura:iteration>
+            </aura:set>
+        </aura:if>
+    </div>
+</aura:component>

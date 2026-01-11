@@ -1,0 +1,56 @@
+<apex:page standardController="Account_Plan__c">
+    <apex:includeLightning />
+
+    <div id="relationshipMatrix"></div>
+
+    <script>
+        var recordId = '{!pqcrush__Account_Plan__c.Id}';
+
+        $Lightning.use("pqcrush:strategyApp", function() {
+            $Lightning.createComponent(
+                "pqcrush:relationshipMatrix",
+                { recordId: recordId, sObjectName: 'pqcrush__Account_Plan__c', isClassic: true },
+                "relationshipMatrix",
+                function(cmp) {
+                    console.log('component created');
+                    console.log(cmp);
+
+                    $A.eventService.addHandler({
+                        event: 'force:refreshView',
+                        handler: function(event) {
+                            if (rerenderAccountPlanDetails) {
+                                rerenderAccountPlanDetails();
+                            }
+                        }
+                    });
+
+                    $A.eventService.addHandler({
+                        event: 'force:navigateToSObject',
+                        handler: function(event) {
+                            var recordId = event.getParam('recordId');
+                            if (isMobile) {
+                                sforce.one.navigateToSObject(recordId);
+                            } else {
+                                window.location.href = '/' + recordId;
+                            }
+                        }
+                    });
+
+                    $A.eventService.addHandler({
+                        event: 'force:editRecord',
+                        handler: function (event) {
+                            var currentURL = '{! JSENCODE($CurrentPage.URL) }';
+                            var recordId = event.getParam('recordId');
+                            if (isMobile) {
+                                sforce.one.editRecord(recordId);
+                            } else {
+                                var editURL = '/' + recordId + '/e?saveURL=' + currentURL + '&retURL=' + currentURL;
+                                window.location.href = editURL;
+                            }
+                        }
+                    });
+                }
+            );
+        });
+     </script>
+</apex:page>

@@ -1,0 +1,54 @@
+<aura:component controller="WhiteSpaceController">
+    <aura:method name="getFirstWhiteSpaceIdForAccountPlan" action="{! c.handleGetFirstWhiteSpaceIdForAccountPlan }">
+        <aura:attribute name="accountPlanId" type="Id" />
+    </aura:method>
+    <aura:method name="getWhiteSpaceForAccountPlan" action="{! c.handleGetWhiteSpaceForAccountPlan }">
+        <aura:attribute name="accountPlanId" type="Id" />
+    </aura:method>
+    <aura:method name="createWhiteSpace" action="{! c.handleCreateWhiteSpace }">
+        <aura:attribute name="accountPlanId" type="Id" />
+        <aura:attribute name="name" type="String" />
+        <aura:attribute name="rowNames" type="List" />
+        <aura:attribute name="columnNames" type="List" />
+    </aura:method>
+    <aura:method name="createWhiteSpaceFromTemplate" action="{! c.handleCreateWhiteSpaceFromTemplate }">
+        <aura:attribute name="whiteSpace" type="White_Space__c" />
+    </aura:method>
+    <aura:method name="deleteWhiteSpace" action="{! c.handleDeleteWhiteSpace }">
+        <aura:attribute name="whiteSpaceId" type="Id" />
+    </aura:method>
+    <aura:method name="undeleteWhiteSpace" action="{! c.handleUndeleteWhiteSpace }">
+        <aura:attribute name="whiteSpaceId" type="Id" />
+    </aura:method>
+    <aura:method name="updateWhiteSpaceCell" action="{! c.handleUpdateWhiteSpaceCell }">
+        <aura:attribute name="record" type="WhiteSpaceTileWrapper" />
+    </aura:method>
+    <aura:method name="createWhiteSpaceCell" action="{! c.handleCreateWhiteSpaceCell }">
+        <aura:attribute name="whiteSpaceId" type="Id" />
+        <aura:attribute name="rowId" type="Id" />
+        <aura:attribute name="columnId" type="Id" />
+    </aura:method>
+    <aura:method name="deleteWhiteSpaceCell" action="{! c.handleDeleteWhiteSpaceCell }">
+        <aura:attribute name="cellId" type="Id" />
+    </aura:method>
+    <aura:method name="updateWhiteSpaceRowsAndColumns" action="{! c.handleUpdateWhiteSpaceRowsAndColumns }">
+        <aura:attribute name="whiteSpaceId" type="Id" />
+        <aura:attribute name="wsRows" type="List" />
+        <aura:attribute name="wsColumns" type="List" />
+    </aura:method>
+    <aura:method
+        name="getWhiteSpaceObjectAccessForAccountPlan"
+        action="{! c.handleGetWhiteSpaceObjectAccessForAccountPlan }"
+    >
+        <aura:attribute name="accountPlanId" type="Id" />
+    </aura:method>
+    <aura:method name="getSummaryFormulas" action="{! c.handleGetSummaryFormulas }">
+        <aura:attribute name="whiteSpaceId" type="Id" />
+    </aura:method>
+    <aura:method name="getUserSetting" action="{! c.handleGetUserSetting }">
+        <aura:attribute name="whitespaceId" type="Id" />
+    </aura:method>
+    <aura:method name="updateUserSetting" action="{! c.handleUpdateUserSetting }">
+        <aura:attribute name="setting" type="Object" />
+    </aura:method>
+</aura:component>

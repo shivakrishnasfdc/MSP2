@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auto_Create_Stakeholder_Maps__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Should auto create relationship maps for CRUSH Account Plans</description>
+    <inlineHelpText>If checked, then it will auto create relationship maps for account plans, if unchecked it will not.  (Note that there are currently no ways to manually create a map from inside the plan, so only uncheck if you are creating through some sort of automation, or just don&apos;t want relationship maps on your account plans)</inlineHelpText>
+    <label>Auto Create Stakeholder Maps</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

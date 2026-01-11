@@ -1,0 +1,64 @@
+.THIS .slds-button__icon_hint {
+    fill: transparent;
+}
+
+.THIS .slds-hint-parent:hover .slds-button__icon_hint {
+    fill: rgb(159, 170, 181);
+}
+
+.THIS .slds-button:focus .slds-button__icon_edit,
+.THIS .slds-hint-parent .slds-button__icon_edit:hover {
+    fill: rgb(0, 112, 210);
+}
+
+.THIS .slds-button:focus .slds-button__icon_delete,
+.THIS .slds-hint-parent .slds-button__icon_delete:hover {
+    fill: rgb(194, 57, 52);
+}
+
+.THIS li {
+    white-space: normal;
+    padding: 0.25rem;
+    position: relative;
+}
+
+.THIS:nth-child(1) {
+    border-radius: 0.25rem 0.25rem 0 0;
+    border-bottom-width: 0;
+}
+
+.THIS:nth-child(2),
+.THIS:nth-child(3) {
+    border-radius: 0;
+    border-bottom-width: 0;
+}
+
+.THIS:nth-child(4) {
+    border-radius: 0 0 0.25rem 0.25rem;
+}
+
+@media (min-width: 48em) {
+    .THIS:nth-child(1) {
+        border-radius: 0.25rem 0 0 0;
+        border-right-width: 0;
+        border-bottom-width: 1px;
+    }
+
+    .THIS:nth-child(2) {
+        border-radius: 0 0.25rem 0 0;
+        border-bottom-width: 1px;
+    }
+
+    .THIS:nth-child(3) {
+        border-radius: 0 0 0 0.25rem;
+        border-right-width: 0;
+        border-top-width: 0;
+        border-bottom-width: 1px;
+    }
+
+    .THIS:nth-child(4) {
+        border-radius: 0 0 0.25rem 0;
+        border-top-width: 0;
+        border-bottom-width: 1px;
+    }
+}

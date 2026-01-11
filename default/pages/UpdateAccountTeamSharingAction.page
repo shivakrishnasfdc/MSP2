@@ -1,0 +1,29 @@
+<apex:page showHeader="true" sidebar="true" standardController="Account_Plan__c">
+
+    <apex:includeLightning />
+
+    <div id="UpdateAccountTeamSharing"></div>
+
+    <script>
+        $Lightning.use('pqcrush:strategyApp', function() {
+          const recordId = '{! Account_Plan__c.Id }';
+
+            $Lightning.createComponent(
+                'pqcrush:UpdateAccountTeamSharing',
+                {
+                    recordId: recordId,
+                    isClassic: true
+                },
+                'UpdateAccountTeamSharing',
+                function(cmp) {
+                    $A.eventService.addHandler({
+                        event: 'force:closeQuickAction',
+                        handler: function(event) {
+                            window.location = encodeURI('/' + recordId);
+                        }
+                    });
+                }
+            );
+        });
+    </script>
+</apex:page>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IsActive__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Controls whether this record shows up in white space reports</description>
+    <inlineHelpText>Active records will be displayed in associated white space reports. Inactive records will be hidden from associated white space reports.</inlineHelpText>
+    <label>Active</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

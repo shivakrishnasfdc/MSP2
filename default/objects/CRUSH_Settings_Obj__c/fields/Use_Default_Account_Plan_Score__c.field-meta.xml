@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Use_Default_Account_Plan_Score__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Toggle this to false to disable the built in Account Plan Scoring</description>
+    <inlineHelpText>Turn off if you want to implement your own scoring to save to the Intermediate_Score__c field on account plan records</inlineHelpText>
+    <label>Use Default Account Plan Scoring</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

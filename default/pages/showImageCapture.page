@@ -1,0 +1,298 @@
+<apex:page >
+    <apex:includeLightning />
+    <body>
+        <div id="toast-message">
+            <div class="toast-icon-left">
+                <img id="toast-icon-left"/>
+            </div>
+            <div class='toast-container'>
+                <span id="toast-heading"></span>
+                <span id="toast-msg"></span>
+            </div>
+            <div class="toast-icon-right">
+                <img class="toast-icon" src="{!$Resource.closeIconToast}" onclick="handleToastClose()"/>
+            </div>
+        </div>
+    <div class="storeBtn">
+        <button class="myBtnCap" type="button" id="btnCapture" onclick = "enableCaptureMode()" >{!$Label.Select_Image}</button>
+        <span id="capturingImageMsg">{!$Label.Please_wait_for_sometime}</span>
+    </div>
+
+    <div id="containerLoader">
+        <div id="loader"></div>
+    </div>
+
+    <img id="imgId"  class="imageCapture" />
+    <div id="storeComponent">
+        <!-- Dynamically added LWC component -->
+    </div>
+
+</body>
+    <apex:includeScript value="{!$Resource.HTML3Canvas}"/>
+    <style>
+     #overlay {
+            position: fixed;
+            display: none;
+            border: 2px dashed #000;
+            z-index: 9999999999;
+            pointer-events: none; /* Ensure the overlay doesn't interfere with selection */
+        }
+
+        #loader {
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 70px;
+        height: 70px;
+        -webkit-animation: spin 2s linear infinite; /* Safari */
+        animation: spin 2s linear infinite;
+        }
+        #containerLoader{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #000;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        opacity: .15;
+        }
+        @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+        }
+        .myBtnCap{
+        border: none;
+        background: #2D50E2;
+        outline: none;
+        color: #fff;
+        padding: 8px 15px;
+        border-radius: 4px;
+        margin: 20px 10px 10px 0;
+        cursor: pointer;
+        transition: .25s ease;
+        height: 36px;
+        font-weight: 600;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+        }
+        .storeBtn{
+        position: relative;
+        left: 24px;
+        }
+        #freezeLayer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #0000004d  ; /*rgba(255, 255, 255, 0.5) Semi-transparent white */
+        display: none;
+        z-index: 999; /* Below the overlay's z-index to still show the selection */
+    }
+
+    #capturingImageMsg {
+        visibility: hidden;
+        color: #181818;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    }
+    #toast-message {
+        visibility: hidden;
+        /* min-width: 250px;
+        margin-left: -125px; */
+        color: #fff;
+        text-align: center;
+        border-radius: 4px;
+        padding: 12px;
+        position: fixed;
+        z-index: 10000;
+        left: 36%;
+        font-size: 14px;
+        width: 23%;
+        display: flex;
+        align-items: center;
+        top: 1%;
+    }
+            #toast-message.show {
+                visibility: visible;
+                -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+                animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            }
+            .toast-icon-left {
+                margin-right: 0.5rem;
+                img {
+                    width: 1.5rem;
+                }
+            }
+            .toast-container {
+                display: flex;
+                flex-direction: column;
+                align-items: baseline;
+                justify-content: center;
+                width: 100%;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+            }
+            #toast-heading {
+                font-size: 1rem;
+            }
+            .toast-icon-right {
+                img {
+                    width: 1.5rem;
+                }
+            }
+            .toast-icon-right:hover {
+                cursor: pointer;
+                border: 1px solid #FFF;
+                border-radius: 4px;
+            }
+
+    </style>
+    <script type="text/javascript">__sfdcSessionId = '{!JSENCODE($Api.Session_Id)}';</script>
+    <script src="../../soap/ajax/30.0/connection.js" type="text/javascript"></script>
+    <script>
+        var recordid = '{!JSENCODE($CurrentPage.parameters.recordId)}';
+    	var currentComponent = '{!JSENCODE($CurrentPage.parameters.currentComponent)}';
+    	var templateid = '{!JSENCODE($CurrentPage.parameters.planId)}';
+        let customLabel = {'pqcrush:WhiteSpaceReport':'{!$Label.CrossSell_Image}',
+                           'pqcrush:StakeholderHierarchyChart': '{!$Label.RelationshipMap_Image}'
+                            }
+         var startX, startY, overlay = document.createElement('canvas');
+        overlay.id = 'overlay';
+        document.body.appendChild(overlay);
+        var freezeLayer = document.createElement('div');
+        freezeLayer.id = 'freezeLayer';
+        document.body.appendChild(freezeLayer);
+        var span = document.getElementsByClassName("close")[0];
+        var modal = document.getElementById("myModal");
+        var imageData = document.getElementById("imgId");
+        let captureDiv = document.getElementById('storeComponent');
+        var previewItem = JSON.parse(localStorage.getItem('pqPrsentPreview'));
+        let base64Image=previewItem.base64Image;
+        let comp = currentComponent.split('%20$')[0]
+        document.getElementById('containerLoader').style.display = 'flex';
+        if(comp.split(' $')[0] === 'pqcrush:WhiteSpaceReport'){
+            $Lightning.use("pqcrush:PqPresentAccountPlan", function() {
+            $Lightning.createComponent(
+                comp.split(' $')[0],
+                {recordId : recordid ,sObjectName: comp.split('%20$')[1]},
+                "storeComponent",
+                function(cmp) {
+                    setTimeout(()=>{
+                         document.getElementById('containerLoader').style.display = 'none';
+                    },5000);
+                    }
+                        );
+                    });
+                    }
+        else{
+            document.getElementById('imgId').src = base64Image;
+            document.getElementById('containerLoader').style.display = 'none';
+        }
+        let body = document.body;
+        function enableCaptureMode() {
+            overlay.style.display = 'none'; // Hide overlay until needed
+            freezeLayer.style.display = 'block';
+            body.style.cursor='crosshair';
+            document.addEventListener('mousedown', onMouseDown, false);
+        }
+
+        function onMouseDown(e) {
+            startX = e.clientX + window.scrollX;
+            startY = e.clientY + window.scrollY;
+            overlay.style.left = startX + 'px';
+            overlay.style.top = startY + 'px';
+            overlay.style.width = '0';
+            overlay.style.height = '0';
+            overlay.style.display = 'block';
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+            e.preventDefault();
+        }
+
+        function onMouseMove(e) {
+            var width = Math.abs((e.clientX + window.scrollX) - startX);
+            var height = Math.abs((e.clientY + window.scrollY) - startY);
+            overlay.style.width = width + 'px';
+            overlay.style.height = height + 'px';
+            overlay.style.left = Math.min(startX, e.clientX + window.scrollX) + 'px';
+            overlay.style.top = Math.min(startY, e.clientY + window.scrollY) + 'px';
+        }
+
+       function onMouseUp() {
+            document.removeEventListener('mousemove', onMouseMove, true);
+            document.removeEventListener('mouseup', onMouseUp, true);
+            document.getElementById('capturingImageMsg').style.visibility = 'visible';
+            // Temporarily hide the overlay to prevent its border from being captured
+            overlay.style.display = 'none';
+            freezeLayer.style.display = 'none';
+            document.getElementById('containerLoader').style.display = 'flex';
+            html2canvas(document.body, {
+                x: parseInt(overlay.style.left, 10) - window.pageXOffset,
+                y: parseInt(overlay.style.top, 10) - window.pageYOffset,
+                width: parseInt(overlay.style.width, 10),
+                height: parseInt(overlay.style.height, 10),
+                scrollX: window.pageXOffset,
+                scrollY: window.pageYOffset,
+                windowWidth: document.documentElement.scrollWidth,
+                windowHeight: document.documentElement.scrollHeight,
+                allowTaint: true,
+                foreignObjectRendering: true
+            }).then(canvas => {
+                body.style.cursor='default';
+                var base64Image = canvas.toDataURL("image/png");
+                //document.getElementById('containerLoader').style.display = 'flex';
+                let msg = 'Captured the image';
+                let toastType = 'create';
+                showToastMessageFunction (msg, toastType);
+                let image = base64Image.split(",");
+                var contentVersion = new sforce.SObject('ContentVersion');
+                contentVersion.Title = 'Component.png';
+                contentVersion.PathOnClient = '/'+'pateh.png';
+                contentVersion.FirstPublishLocationId = recordid;
+                contentVersion.VersionData = image[1];
+                contentVersion.Description = customLabel[comp.split(' $')[0]];
+                var results = sforce.connection.create([contentVersion]);
+                var url = '/apex/pqcrush__PqPresentAccountPlan?recordId='+recordid+'&planId='+templateid;
+                window.location.href = url;
+            });
+        }
+           function showToastMessageFunction (msg, toastType) {
+            document.getElementById('capturingImageMsg').style.visibility = 'hidden';
+            var toastMessage = document.getElementById("toast-message");
+            var toastIcon = document.getElementById('toast-icon-left');
+            var toastHeading = document.getElementById('toast-heading');
+            if(toastType === 'create') {
+                toastMessage.style.background = '#2e844a';
+                toastIcon.setAttribute('src','{!$Resource.success}');
+                toastHeading.innerHTML = 'Success';
+            }
+            else if(toastType === 'info') {
+                toastMessage.style.background = '#747474';
+                toastIcon.setAttribute('src','{!$Resource.infoIconToast}');
+                toastHeading.innerHTML = 'Information';
+            }
+            else if(toastType === 'error') {
+                toastMessage.style.background = '#ea001e';
+                toastIcon.setAttribute('src','{!$Resource.errorIconToast}');
+                toastHeading.innerHTML = 'Error';
+            }
+            var toastMsg = document.getElementById('toast-msg');
+            toastMsg.innerHTML = msg;
+            // Show the toast message
+            toastMessage.className = "show";
+            // After 3 seconds, hide the toast message
+            setTimeout(function(){
+                toastMessage.className = toastMessage.className.replace("show", "");
+            }, 3000);
+        }
+
+    </script>
+</apex:page>

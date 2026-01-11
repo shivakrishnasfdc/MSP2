@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Map_Member_Placeholder__c</fullName>
+    <label>Map Member Placeholder</label>
+    <referenceTo>Map_Member_Placeholder__c</referenceTo>
+    <relationshipLabel>Relationship Group Placeholder Assocs</relationshipLabel>
+    <relationshipName>Relationship_Group_Placeholder_Assocs</relationshipName>
+    <relationshipOrder>1</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

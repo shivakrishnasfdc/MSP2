@@ -1,0 +1,8 @@
+<apex:page standardController="White_Space_Template__c" standardStylesheets="false" lightningStylesheets="true" sidebar="false">
+    <apex:pageBlock >
+        <apex:detail subject="{!White_Space_Template__c.Id}" relatedListHover="false" rendered="{!White_Space_Template__c.isLegacy__c}"
+        />
+        <c:WhiteSpaceTemplateBuilder recordId="{!White_Space_Template__c.Id}" rendered="{! pqcrush__White_Space_Template__c.isLegacy__c = false }"
+        />
+    </apex:pageBlock>
+</apex:page>

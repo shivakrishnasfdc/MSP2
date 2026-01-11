@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Used_in_all_account_plans__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Check this box to make this badge available to all Prolifiq CRUSH Key Stakeholder Maps.</description>
+    <inlineHelpText>Check this box to make this badge available to all Prolifiq CRUSH Key Stakeholder Maps.</inlineHelpText>
+    <label>Used in all Account Plans</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

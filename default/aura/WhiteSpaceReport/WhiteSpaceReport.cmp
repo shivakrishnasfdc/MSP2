@@ -1,0 +1,108 @@
+<aura:component
+    extends="PQBaseCrushFeature"
+    implements="flexipage:availableForAllPageTypes,force:hasRecordId"
+    access="global"
+>
+    <ltng:require scripts="{! $Resource.StrategyUtils }" afterScriptsLoaded="{! c.init }" />
+    <!-- SERVICE COMPONENTS -->
+    <c:WhiteSpaceService aura:id="whiteSpaceService" />
+    <c:stringUtils aura:id="stringUtilService" />
+
+    <!-- ATTRIBUTES -->
+    <aura:attribute name="whiteSpaceId" type="List" default="[]" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
+    <aura:attribute name="isClassic" type="Boolean" default="false" access="public" />
+    <aura:attribute name="isPrinterFriendly" type="Boolean" default="false" access="public" />
+    <aura:attribute name="createWhiteSpaceMenuItems" type="Map[]" default="[]" />
+    <aura:attribute name="deletedWhiteSpaceId" type="String" default="" />
+
+    <aura:attribute name="errorMessage" type="String" />
+    <aura:attribute name="errorType" type="String" />
+    <aura:attribute name="stateBody" type="String" />
+    <aura:attribute name="stateTitle" type="String" />
+    <aura:attribute name="whiteSpaceObjectAccess" type="Object" access="private" />
+
+    <!-- EVENT HANDLING -->
+    <aura:handler event="c:PQApplicationEvent" action="{! c.handleApplicationEvent }" />
+
+    <div aura:id="whitespaceContainer" class="whitespaceReport slds-theme_default pro-relationship-matrix-print">
+        <aura:if isTrue="{! v.isLoading }">
+            <lightning:spinner variant="brand" size="large" class="ws-spinner" />
+        </aura:if>
+
+        <aura:if isTrue="{! v.errorMessage }">
+            <c:PQIllustration
+                stateTitle="{! v.stateTitle }"
+                stateBody="{! v.stateBody }"
+                stateDetail="{! v.errorMessage }"
+            >
+                <aura:set attribute="actionItems">
+                    <aura:if
+                        isTrue="{! v.whiteSpaceObjectAccess.canDelete &amp;&amp; !empty(v.whiteSpaceId) &amp;&amp; v.errorType == 'System.LimitException'  }"
+                    >
+                        <lightning:button
+                            variant="destructive-text"
+                            label="{# $Label.c.Delete }"
+                            title="{# $Label.c.Delete }"
+                            onclick="{! c.deleteWhiteSpace }"
+                        />
+                    </aura:if>
+                </aura:set>
+            </c:PQIllustration>
+
+            <aura:set attribute="else">
+                <aura:if isTrue="{! empty(v.whiteSpaceId) }">
+                    <c:pqIllustrationLwc imageUrl="{! $Resource.empty_whitespace_illustration }"></c:pqIllustrationLwc>
+                    <div
+                        class="pq-no-results-text slds-text-color_weak slds-text-heading_small slds-text-align_center slds-p-bottom_medium"
+                    >
+                        {! $Label.c.White_Space_Not_Created_Yet }
+                    </div>
+                    <div class="slds-text-align_center">
+                        <aura:if isTrue="{! v.whiteSpaceObjectAccess.canCreate == true }">
+                            <aura:if isTrue="{! !empty(v.deletedWhiteSpaceId) }">
+                                <lightning:button
+                                    variant="neutral"
+                                    label="{! $Label.c.Restore_White_Space }"
+                                    title="{! $Label.c.Restore_White_Space }"
+                                    onclick="{! c.undeleteWhiteSpace }"
+                                />
+                            </aura:if>
+                            <c:PQButtonMenu
+                                alternativeText="{# $Label.c.Create_New_White_Space }"
+                                label="{# $Label.c.Create_New_White_Space }"
+                                onselect="{! c.handleCreateButton }"
+                                menuAlignment="right"
+                                itemList="{! v.createWhiteSpaceMenuItems }"
+                            />
+                        </aura:if>
+                    </div>
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{! !v.isLoading }">
+                            <div class="slds-align_absolute-center">
+                                <c:PQButtonMenu
+                                    alternativeText="{# $Label.c.Create_New_White_Space }"
+                                    label="{# $Label.c.Create_New_White_Space }"
+                                    onselect="{! c.handleCreateButton }"
+                                    menuAlignment="right"
+                                    itemList="{! v.createWhiteSpaceMenuItems }"
+                                />
+                            </div>
+                            <br/>
+                            <aura:iteration items="{! v.whiteSpaceId }" var="item">
+                                <c:WhiteSpaceReportRecord
+                                    recordId="{!item}"
+                                    hiddenHeaderItems=""
+                                    isClassic="{# v.isClassic }"
+                                    onDelete="{! c.deleteWhiteSpace }"
+                                    onError="{! c.handleError }"
+                                ></c:WhiteSpaceReportRecord>
+                            </aura:iteration>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+    </div>
+    <c:PQModalService aura:id="modalService" isClassic="{# v.isClassic }" />
+</aura:component>

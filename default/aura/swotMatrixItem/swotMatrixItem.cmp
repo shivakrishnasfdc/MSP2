@@ -1,0 +1,42 @@
+<aura:component>
+    <aura:attribute name="item" type="SWOT_Analysis__c" />
+    <aura:attribute name="itemCopy" type="SWOT_Analysis__c" />
+    <aura:attribute name="canUpdate" type="Boolean" />
+    <aura:attribute name="canDelete" type="Boolean" />
+
+    <aura:registerEvent name="updateItem" type="c:swotEvent" />
+    <aura:registerEvent name="deleteItem" type="c:swotEvent" />
+
+    <div class="swot-matrix-item">
+        <span class="slds-col">
+            <strong><ui:outputText value="{! v.item.Name }"/></strong>
+            <aura:if isTrue="{! !empty(v.item.pqcrush__Description_Rich_Text__c) }">
+                <strong>:</strong>
+                &nbsp;
+                <lightning:formattedRichText value="{! v.item.pqcrush__Description_Rich_Text__c }" />
+            </aura:if>
+        </span>
+        <aura:if isTrue="{! v.canUpdate }">
+            <div class="slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open">
+                <c:PQButtonIcon
+                    iconName="utility:edit"
+                    class="slds-m-left_x-small"
+                    iconClass="slds-button__icon slds-button__icon_hint slds-button__icon_edit"
+                    variant="bare"
+                    tabindex="-1"
+                    onclick="{! c.onEditItem }"
+                />
+            </div>
+        </aura:if>
+        <aura:if isTrue="{! v.canDelete }">
+            <c:PQButtonIcon
+                iconName="utility:delete"
+                class="slds-m-left_x-small"
+                iconClass="slds-button__icon slds-button__icon_hint slds-button__icon_delete"
+                variant="bare"
+                tabindex="-1"
+                onclick="{! c.onDeleteItem }"
+            />
+        </aura:if>
+    </div>
+</aura:component>

@@ -1,0 +1,22 @@
+<aura:component
+    controller="OpportunityPlanController"
+    implements="flexipage:availableForRecordHome,force:hasRecordID"
+    access="global"
+>
+    <ltng:require scripts="{! $Resource.StrategyUtils }" afterScriptsLoaded="{! c.init }" />
+
+    <aura:attribute name="mapId" type="Id" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
+
+    <c:oppManDataDispatcher aura:id="oppManDataDispatcher" />
+    <lightning:messageChannel type="pqcrush__relationshipMapData__c" onMessage="{!c.init}" />
+
+    <c:PQBaseOppPlanFeature>
+        <aura:if isTrue="{! v.isLoading }">
+            <lightning:spinner alternativeText="{! $Label.c.Loading }" variant="brand" />
+        </aura:if>
+        <aura:if isTrue="{! v.mapId }">
+            <c:relationshipInfluenceShared recordId="{! v.mapId }" />
+        </aura:if>
+    </c:PQBaseOppPlanFeature>
+</aura:component>

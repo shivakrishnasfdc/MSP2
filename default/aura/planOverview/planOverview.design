@@ -1,0 +1,8 @@
+<design:component label="PROLIFIQ CRUSH Overview">
+    <sfdc:objects>
+        <sfdc:object>Account_Plan__c</sfdc:object>
+    </sfdc:objects>
+    <design:attribute name="title" label="Title" description="Add a title to the component" default="Overview" />
+    <design:attribute name="overviewKey" label="Key" description="Add a key to distinguish data between components added to the same Account Plan" default=""  />
+    <design:attribute name="isGlobal" label="Global" description="Check this to share data across all Account Plans" default="false" />
+</design:component>

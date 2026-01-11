@@ -1,0 +1,7 @@
+<apex:page standardController="Account">
+    <apex:pageBlock >
+        <div class="MapBlock">
+            <c:RelationshipMap recordId="{! Account.Id }" sObjectType="Account" />
+        </div>
+    </apex:pageBlock>
+</apex:page>

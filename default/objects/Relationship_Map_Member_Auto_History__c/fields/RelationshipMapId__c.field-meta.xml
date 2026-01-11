@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RelationshipMapId__c</fullName>
+    <description>The Relationship Map where the contact was added by the system</description>
+    <label>Relationship Map</label>
+    <referenceTo>Relationship_Map__c</referenceTo>
+    <relationshipLabel>Relationship Map Member Auto Histories</relationshipLabel>
+    <relationshipName>Relationship_Map_Member_Auto_Histories</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

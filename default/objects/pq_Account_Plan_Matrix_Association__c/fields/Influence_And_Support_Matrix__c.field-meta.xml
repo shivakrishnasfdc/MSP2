@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Influence_And_Support_Matrix__c</fullName>
+    <label>Influence And Support Matrix</label>
+    <referenceTo>pq_Influence_And_Support_Matrix__c</referenceTo>
+    <relationshipLabel>Account Plans that use this matrix</relationshipLabel>
+    <relationshipName>Account_Plans_that_use_this_matrix</relationshipName>
+    <relationshipOrder>1</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

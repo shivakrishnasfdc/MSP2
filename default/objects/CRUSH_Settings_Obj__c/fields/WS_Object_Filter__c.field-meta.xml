@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WS_Object_Filter__c</fullName>
+    <description>A list of the objects that are available to use when creating a cross-sell template.</description>
+    <inlineHelpText>You should use the API name for each object and each one should be on its own line</inlineHelpText>
+    <label>WS Object Filter</label>
+    <length>5000</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>10</visibleLines>
+</CustomField>

@@ -1,0 +1,210 @@
+<aura:component
+    extends="PQBaseCrushFeature"
+    controller="SWOTMatrixController"
+    implements="flexipage:availableForAllPageTypes,force:hasRecordId"
+    access="global"
+>
+    <ltng:require scripts="{!$Resource.StrategyUtils}" afterScriptsLoaded="{! c.doInit }" />
+
+    <!-- Service Components -->
+    <c:PQEventService aura:id="eventService" />
+    <c:UserRecordAccessService aura:id="userRecordAccessService" />
+    <c:stringUtils aura:id="stringUtilService" />
+
+    <aura:attribute name="accountPlanAccess" type="UserRecordAccess" />
+    <aura:attribute name="swotMatrix" type="SWOTMatrix" />
+    <aura:attribute name="strengths" type="SWOT_Analysis__c[]" />
+    <aura:attribute name="weaknesses" type="SWOT_Analysis__c[]" />
+    <aura:attribute name="opportunities" type="SWOT_Analysis__c[]" />
+    <aura:attribute name="threats" type="SWOT_Analysis__c[]" />
+    <aura:attribute name="itemToDelete" type="SWOT_Analysis__c" />
+    <aura:attribute name="itemToUpdate" type="SWOT_Analysis__c" />
+    <aura:attribute name="isMobile" type="boolean" default="false" />
+    <aura:attribute name="isExpanded" type="boolean" default="false" />
+    <aura:attribute name="isLoading" type="Boolean" />
+    <aura:attribute name="isSaving" type="Boolean" />
+    <aura:attribute name="isUpdating" type="Boolean" default="false" />
+    <aura:attribute name="modalTitle" type="String" />
+
+    <aura:handler name="addItem" event="c:swotEvent" action="{!c.onAddItem}" />
+    <aura:handler name="updateItem" event="c:swotEvent" action="{!c.onUpdateThisItem}" />
+    <aura:handler name="deleteItem" event="c:swotEvent" action="{!c.onDeleteItem}" />
+
+    <aura:if isTrue="{! !$Browser.isDesktop }">
+        <lightning:card aura:id="card" class="is-mobile">
+            <aura:set attribute="title">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        <c:PQIcon iconName="standard:apps_admin" size="medium" />
+                    </div>
+                    <div class="slds-media__body">
+                        <h2 class="slds-text-heading_small">{! $Label.c.SWOT_Analysis_Title }</h2>
+                    </div>
+                </header>
+            </aura:set>
+        </lightning:card>
+    </aura:if>
+
+    <div class="{! join(' ', 'slds-theme_default', (v.isExpanded ? 'swot-fullscreen' : '')) }">
+        <c:PQCard aura:id="bodyContent" title="{! $Label.c.SWOT_Analysis_Title }" class="pro-matrix-print">
+            <aura:if isTrue="{! v.isLoading }">
+                <lightning:spinner alternativeText="{! $Label.c.Loading }" variant="brand" />
+            </aura:if>
+            <aura:set attribute="title">
+                <aura:if isTrue="{! !$Browser.isDesktop }">
+                    <div class="slds-media__figure">
+                        <c:PQIcon iconName="standard:apps_admin" size="medium" /><span class="slds-p-horizontal_small"
+                            >{! $Label.c.SWOT_Analysis_Title }</span
+                        >
+                    </div>
+                    <aura:set attribute="else">
+                        <span>{! $Label.c.SWOT_Analysis_Title }</span>
+                    </aura:set>
+                </aura:if>
+            </aura:set>
+
+            <aura:set attribute="actions">
+                <div
+                    class="{! join(' ', 'slds-m-left_xx-small', ($Browser.isDesktop ? 'slds-visible' : 'slds-hidden')) }"
+                >
+                    <aura:if isTrue="{! v.isExpanded }">
+                        <c:PQButtonIcon
+                            alternativeText="{! $Label.c.Exit_Full_Screen }"
+                            iconName="utility:contract_alt"
+                            onclick="{! c.fullScreenHandler }"
+                        />
+                        <aura:set attribute="else">
+                            <c:PQButtonIcon
+                                alternativeText="{! $Label.c.Full_Screen }"
+                                iconName="utility:expand_alt"
+                                onclick="{! c.fullScreenHandler }"
+                            />
+                        </aura:set>
+                    </aura:if>
+                </div>
+            </aura:set>
+
+            <lightning:layout class="slds-p-horizontal_small" verticalAlign="stretch" multipleRows="true">
+                <c:swotMatrixQuadrant
+                    title="{! v.swotMatrix.strengthLabel }"
+                    records="{!v.strengths}"
+                    recordTypeId="{!v.swotMatrix.strengthRecordTypeId}"
+                    canCreate="{! and(v.swotMatrix.canCreate, or(v.accountPlanAccess.HasAllAccess, v.accountPlanAccess.HasEditAccess)) }"
+                    canUpdate="{! and(v.swotMatrix.canUpdate, or(v.accountPlanAccess.HasAllAccess, v.accountPlanAccess.HasEditAccess)) }"
+                    canDelete="{! and(v.swotMatrix.canDelete, or(v.accountPlanAccess.HasAllAccess, v.accountPlanAccess.HasEditAccess)) }"
+                />
+                <c:swotMatrixQuadrant
+                    title="{! v.swotMatrix.opportunityLabel }"
+                    records="{!v.opportunities}"
+                    recordTypeId="{!v.swotMatrix.opportunityRecordTypeId}"
+                    canCreate="{! and(v.swotMatrix.canCreate, or(v.accountPlanAccess.HasAllAccess, v.accountPlanAccess.HasEditAccess)) }"
+                    canUpdate="{! and(v.swotMatrix.canUpdate, or(v.accountPlanAccess.HasAllAccess, v.accountPlanAccess.HasEditAccess)) }"
+                    canDelete="{! and(v.swotMatrix.canDelete, or(v.accountPlanAccess.HasAllAccess, v.accountPlanAccess.HasEditAccess)) }"
+                />
+                <c:swotMatrixQuadrant
+                    title="{! v.swotMatrix.weaknessLabel }"
+                    records="{!v.weaknesses}"
+                    recordTypeId="{!v.swotMatrix.weaknessRecordTypeId}"
+                    canCreate="{! and(v.swotMatrix.canCreate, or(v.accountPlanAccess.HasAllAccess, v.accountPlanAccess.HasEditAccess)) }"
+                    canUpdate="{! and(v.swotMatrix.canUpdate, or(v.accountPlanAccess.HasAllAccess, v.accountPlanAccess.HasEditAccess)) }"
+                    canDelete="{! and(v.swotMatrix.canDelete, or(v.accountPlanAccess.HasAllAccess, v.accountPlanAccess.HasEditAccess)) }"
+                />
+                <c:swotMatrixQuadrant
+                    title="{! v.swotMatrix.threatLabel }"
+                    records="{!v.threats}"
+                    recordTypeId="{!v.swotMatrix.threatRecordTypeId}"
+                    canCreate="{! and(v.swotMatrix.canCreate, or(v.accountPlanAccess.HasAllAccess, v.accountPlanAccess.HasEditAccess)) }"
+                    canUpdate="{! and(v.swotMatrix.canUpdate, or(v.accountPlanAccess.HasAllAccess, v.accountPlanAccess.HasEditAccess)) }"
+                    canDelete="{! and(v.swotMatrix.canDelete, or(v.accountPlanAccess.HasAllAccess, v.accountPlanAccess.HasEditAccess)) }"
+                />
+            </lightning:layout>
+        </c:PQCard>
+
+        <div class="slds pro-matrix-print">
+            <div aria-hidden="true" role="dialog" class="slds-modal" aura:id="deleteSWOTModal">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                        <c:PQButtonIcon
+                            class="slds-modal__close"
+                            iconName="utility:close"
+                            alternativeText="{! $Label.c.Close }"
+                            size="large"
+                            variant="bare-inverse"
+                            onclick="{! c.onDeleteCancel }"
+                        />
+                        <h2 class="slds-text-heading_medium">{! $Label.c.Delete_SWOT_Analysis }</h2>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium slds-text-align_center">
+                        {! $Label.c.Delete_Confirmation_Message } &nbsp;<strong
+                            ><lightning:formattedText value="{! v.itemToDelete.Name }" /></strong
+                        >?
+                    </div>
+                    <div class="slds-modal__footer">
+                        <lightning:button
+                            variant="neutral"
+                            label="{! $Label.c.Cancel }"
+                            onclick="{! c.onDeleteCancel }"
+                        />
+                        <lightning:button
+                            variant="brand"
+                            label="{! $Label.c.Delete }"
+                            onclick="{! c.onDeleteConfirm }"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds pro-matrix-print">
+            <div aria-hidden="true" role="dialog" class="slds-modal" aura:id="SWOTModal">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                        <c:PQButtonIcon
+                            class="slds-modal__close"
+                            iconName="utility:close"
+                            alternativeText="{! $Label.c.Close }"
+                            size="large"
+                            variant="bare-inverse"
+                            onclick="{! c.onCancel }"
+                        />
+                        <h2 class="slds-text-heading_medium">{! v.modalTitle }</h2>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <form class="slds-form_stacked">
+                            <div class="slds-form-element">
+                                <lightning:input
+                                    aura:id="newName"
+                                    label="{! $Label.c.Name }"
+                                    name="name"
+                                    value="{! v.itemToUpdate.Name }"
+                                    required="true"
+                                    maxlength="80"
+                                />
+                            </div>
+                            <div class="slds-form-element">
+                                <lightning:inputRichText
+                                    label="{! $Label.c.Description }"
+                                    value="{! v.itemToUpdate.pqcrush__Description_Rich_Text__c }"
+                                    formats="['font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'indent', 'align','clean', 'table', 'header', 'color', 'image']"
+                                    shareWithEntityId="{! v.recordId }"
+                                    ><lightning:insertImageButton
+                                /></lightning:inputRichText>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <lightning:button variant="neutral" label="{! $Label.c.Cancel }" onclick="{! c.onCancel }" />
+                        <lightning:button
+                            variant="brand"
+                            label="{! $Label.c.Save }"
+                            onclick="{! c.onUpdateConfirm }"
+                            disabled="{! empty(v.itemToUpdate.Name) }"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-backdrop pro-matrix-print" aura:id="backdrop" />
+    </div>
+</aura:component>

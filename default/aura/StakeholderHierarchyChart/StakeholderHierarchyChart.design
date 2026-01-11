@@ -1,0 +1,3 @@
+<design:component label="PROLIFIQ RELATIONSHIP MAP">
+    <design:attribute name="defaultMatrix" label="Default Influence &amp; Support Matrix" default="" description="Type in the ID for the Influence and Support Matrix that is used for the relationship maps placed within this object's page." />
+</design:component>

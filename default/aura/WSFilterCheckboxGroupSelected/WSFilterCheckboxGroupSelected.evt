@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="An event to mimic the event fired by onsuccess for lightning checkbox group">
+        <aura:attribute name="selections" type="Object" />
+</aura:event>

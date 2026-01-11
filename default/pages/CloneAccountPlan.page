@@ -1,0 +1,67 @@
+<apex:page standardController="Account_Plan__c" extensions="CloneAccountPlanExtension" lightningStylesheets="true">
+
+    <style type="text/css">
+        .status-display {
+            padding: 3em;
+            text-align: center;
+        }
+
+        .status-display-label {
+            font-size: 1.8em;
+        }
+    </style>
+
+    <apex:slds rendered="{! !isClassic }"/>
+    <div class="slds-scope">
+        <apex:actionStatus id="cloneStatus">
+            <apex:facet name="stop">
+                <apex:form >
+                    <apex:pageBlock title="{! $Label.Clone + ' ' + pqcrush__Account_Plan__c.Name }" mode="edit">
+                        <apex:pageBlockSection columns="2">
+                            <apex:inputField value="{! pqcrush__Account_Plan__c.Name }" required="true" />
+
+                            <apex:inputField value="{! pqcrush__Account_Plan__c.pqcrush__Account__c }" />
+
+                            <apex:inputField value="{! pqcrush__Account_Plan__c.OwnerId }" />
+
+                            <apex:selectCheckboxes value="{! selectedFields }" layout="pageDirection" label="{! $Label.Clone_Related_Objects }">
+                                <apex:selectOptions value="{! relatedObjects }"/>
+                            </apex:selectCheckboxes>
+
+                        </apex:pageBlockSection>
+
+                        <apex:pageBlockButtons location="bottom">
+                            <apex:commandButton action="{! cancel }" value="{! $Label.Cancel }"/>
+                            <apex:commandButton action="{! clonePlan }" value="{! $Label.Clone }" styleClass="slds-vf-button slds-vf-button_brand" status="cloneStatus" rerender="cloneStatus"/>
+                        </apex:pageBlockButtons>
+                        <apex:pageBlockButtons location="bottom">
+                            <p>{!$Label.pqcrush__Clone_Note}</p>
+                        </apex:pageBlockButtons>
+                    </apex:pageBlock>
+                </apex:form>
+            </apex:facet>
+            <apex:facet name="start">
+                <apex:outputPanel layout="block" styleClass="status-display">
+                    <apex:outputLabel styleClass="status-display-label" value="{! $Label.Cloning_Account_Plan }"/>
+                </apex:outputPanel>
+            </apex:facet>
+        </apex:actionStatus>
+    </div>
+
+    <script type="text/javascript">
+
+        function stopRKey(evt) {
+          var evt = (evt) ? evt : ((event) ? event : null);
+          var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+          if ((evt.keyCode == 13) && (node.type=="text"))  {
+              if (node.blur) {
+                node.blur();
+              }
+              return false;
+            }
+        }
+
+        document.onkeypress = stopRKey;
+
+    </script>
+</apex:page>

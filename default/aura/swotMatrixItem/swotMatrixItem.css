@@ -1,0 +1,7 @@
+.THIS.swot-matrix-item {
+    position: relative;
+    width: 100%;
+    display: inline-flex;
+    justify-content: flex-end;
+    align-items: center;
+}

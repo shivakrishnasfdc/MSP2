@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AccountPlan__c</fullName>
+    <label>Account Plan</label>
+    <referenceTo>Account_Plan__c</referenceTo>
+    <relationshipLabel>Opportunity List User Filters</relationshipLabel>
+    <relationshipName>Opportunity_List_User_Filters</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>true</writeRequiresMasterRead>
+</CustomField>

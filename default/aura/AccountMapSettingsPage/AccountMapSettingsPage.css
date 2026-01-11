@@ -1,0 +1,31 @@
+.THIS .pro-grid {
+    background: white;
+    border: 1px solid rgb(217, 219, 221);
+    border-radius: 0.25rem 0.25rem 0 0;
+}
+
+.THIS .pro-tabset {
+    background: none;
+}
+
+.THIS .slds-section-title_divider {
+    background: none;
+}
+
+.THIS .slds-checkbox_toggle {
+    justify-content: space-between;
+}
+
+.THIS .pro-label-margin-left {
+    margin-left: 0.75rem;
+}
+
+.THIS .page-section {
+    border: solid 1px #ccc;
+    padding: 1rem;
+}
+
+.THIS .page-main,
+.THIS .page-right {
+    background: #f0efef;
+}

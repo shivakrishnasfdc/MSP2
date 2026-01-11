@@ -1,0 +1,18 @@
+.THIS .slds-listbox {
+    margin-top: 0;
+    border-top: none;
+}
+
+.THIS .slds-listbox__option {
+    align-items: center;
+}
+
+.THIS .slds-combobox__input.has-selection {
+    box-shadow: 0 0 0 2px #fff inset, 0 0 0 3px rgb(216, 221, 230) inset;
+    pointer-events: none;
+}
+
+.THIS .no-results {
+    font-style: italic;
+    padding: 0.25rem 0.5rem;
+}

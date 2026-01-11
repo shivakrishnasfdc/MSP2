@@ -1,0 +1,63 @@
+<apex:component access="global">
+
+    <apex:includeLightning />
+
+    <apex:attribute name="planOrMapId" description="The id for the account plan or relationship map" type="Id" required="true"
+        access="global" />
+    <apex:attribute name="sObjectType" description="The the object type that recordId is for" type="String" required="true" access="global"
+    />
+    <apex:attribute name="title" description="The title for the list" type="String" required="false" access="global"
+    />
+    <apex:attribute name="columns" description="The additional columns to show" type="String" required="false"
+        access="global" />
+
+    <div id="memberList"></div>
+
+    <script>
+        var recordId = '{! JSENCODE(planOrMapId) }';
+        var objectName = '{! JSENCODE(sObjectType) }';
+        var title = '{! JSENCODE(title) }';
+        var columns = '{! JSENCODE(columns) }';
+        var theme = '{! JSENCODE($User.UITheme) }';
+        var isMobile = theme === 'Theme4t';
+        var isLightning = theme === 'Theme4d' || theme === 'Theme4u';
+        var isClassic = theme === 'Theme3';
+
+        // Salesforce1
+        if (isMobile) {
+            document.body.style.margin = 0;
+
+            // Workaround for issue in mobile app that prevents overflow scrolling
+            var scrollOverride = document.createElement('style');
+            scrollOverride.innerHTML = 'html,html body{overflow:auto;-webkit-overflow-scrolling:touch;}body{position:absolute;left:0;right:0;top:0;bottom:0;}';
+            document.getElementsByTagName('head')[0].appendChild(scrollOverride);
+        }
+
+        function postEventToOneApp(name, params, fallbackAction) {
+            if (SfdcApp && SfdcApp.projectOneNavigator && SfdcApp.projectOneNavigator.fireContainerEvent) {
+                // Not officially supported by Salesforce
+                SfdcApp.projectOneNavigator.fireContainerEvent(name, params);
+            } else if (fallbackAction) {
+                // Fallback if no Salesforce support of fireContainerEvent
+                fallbackAction();
+            }
+        }
+
+        $Lightning.use("pqcrush:strategyApp", function () {
+            $Lightning.createComponent(
+                "pqcrush:DataTableMapMember",
+                {
+                    recordId: recordId,
+                    objectApiName: objectName,
+                    title: title,
+                    columns: columns
+                },
+                "memberList",
+                function (cmp) {
+                    console.log('component created');
+                    console.log(cmp);
+                }
+            );
+        });
+    </script>
+</apex:component>

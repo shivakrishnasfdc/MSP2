@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Relationship_Line_Global_Scope__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Check this to use Global Relationship Lines. Leave this unchecked to create and use lines that are visible only in this Relationship Map</description>
+    <inlineHelpText>Check this to use Global Relationship Lines. Leave this unchecked to create and use lines that are visible only in this Relationship Map</inlineHelpText>
+    <label>Is Relationship Line Global Scope</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

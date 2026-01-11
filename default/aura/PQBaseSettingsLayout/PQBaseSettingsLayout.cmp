@@ -1,0 +1,62 @@
+<aura:component extensible="true" abstract="true" controller="StrategySettingsController">
+    <aura:attribute name="activeSection" type="String" />
+    <aura:attribute name="pageTitle" type="String" default="{! $Label.c.CRUSH_Settings }" />
+    <aura:attribute name="isClassic" type="Boolean" default="false" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
+    <aura:attribute
+        name="navigationData"
+        type="List"
+        description="The list of sections and their items."
+        required="true"
+    />
+    <aura:attribute name="originalSettings" type="CrushSettings" />
+    <aura:attribute name="settings" type="CrushSettings" />
+
+    <div class="{! join(' ', 'pro-settings', v.isClassic ? 'classic' : '') }">
+        <!-- START PAGE HEADER -->
+        <div class="slds-page-header page-header">
+            <div class="slds-media">
+                <div class="slds-media__figure">
+                    <c:PQIcon iconName="utility:settings" size="small" />
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle">{! v.pageTitle }</h1>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE HEADER -->
+
+        <!-- START PAGE BODY -->
+        <div class="slds-grid page-body">
+            <aura:if isTrue="{! v.isLoading }">
+                <lightning:spinner alternativeText="{! $Label.c.Loading }" variant="brand" />
+            </aura:if>
+
+            <!-- START NAV CONTAINER -->
+            <div class="navigation-container slds-theme_shade">
+                <lightning:verticalNavigation
+                    selectedItem="{! v.activeSection }"
+                    onselect="{! c.navigationChangeHandler }"
+                    shaded="true"
+                >
+                    <aura:iteration items="{! v.navigationData }" var="item">
+                        <lightning:verticalNavigationItem label="{! item.label }" name="{! item.name }" />
+                    </aura:iteration>
+                </lightning:verticalNavigation>
+            </div>
+            <!-- END NAV CONTAINER -->
+
+            <!-- START PAGE CONTENTS -->
+            <div class="{! v.isLoading ? 'slds-hide' : 'page-content slds-col' }">
+                <!-- START SCROLL CONTAINER -->
+                <div class="scroll-container slds-p-around_large">
+                    <!-- SUB COMPONENT MARKUP -->
+                    <div aura:id="bodyContent">{! v.body }</div>
+                </div>
+                <!-- END SCROLL CONTAINER -->
+            </div>
+            <!-- END PAGE CONTENTS -->
+        </div>
+        <!-- END PAGE BODY -->
+    </div>
+</aura:component>

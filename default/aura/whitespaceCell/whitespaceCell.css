@@ -1,0 +1,21 @@
+.THIS.ws-cell {
+    border-radius: 4px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    background: #fff;
+    margin: 1rem;
+}
+
+.THIS.ws-cell:hover {
+    box-shadow: 0 7px 14px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.THIS .ws-list > .ws-list-item {
+    padding: 1rem;
+}
+
+.THIS .ws-list > .ws-list-item:not(:first-child) {
+    margin-top: 0.1rem;
+}

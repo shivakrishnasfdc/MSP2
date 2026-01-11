@@ -1,0 +1,2 @@
+<aura:event type="COMPONENT" description="A generic event for component notifications that don't need to pass parameters.">
+</aura:event>

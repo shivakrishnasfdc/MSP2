@@ -1,0 +1,39 @@
+.THIS .pro-main-row .pro-ul-appearance {
+    vertical-align: middle;
+}
+
+.THIS .pro-main-row:hover .pro-ul-appearance > li {
+    display: block;
+}
+
+.THIS .pro-main-row .pro-ul-appearance > li {
+    display: none;
+}
+
+.THIS .pro-edit-row {
+    min-height: 40px;
+    padding-top: 9px;
+}
+
+.THIS .column-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.THIS .config-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.THIS .pro-fixed-height {
+    height: 300px;
+}
+
+.THIS .config-list {
+    flex: 1;
+    max-height: 300px;
+    overflow: auto;
+    border: 1px solid rgb(221, 219, 218);
+}

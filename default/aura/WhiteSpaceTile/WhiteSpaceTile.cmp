@@ -1,0 +1,118 @@
+<aura:component>
+    <!--PUBLIC ATTRIBUTES-->
+    <aura:attribute name="record" type="Map" />
+    <aura:attribute name="isEditable" type="Boolean" default="false" />
+    <aura:attribute name="whiteSpaceObjectAccess" type="Object" />
+
+    <!--PRIVATE ATTRIBUTES-->
+    <aura:attribute
+        name="currentState"
+        type="String"
+        default="VIEW"
+        access="private"
+        description="Controls the current viewing state for the component. Valid values are VIEW, EDIT, and DELETE. Defaults to VIEW."
+    />
+    <aura:attribute name="tileHeaderSelectedValue" type="String" access="private" />
+    <aura:attribute name="headerTitle" type="String" default="" access="private" />
+    <aura:attribute name="headerBackgroundColor" type="String" access="private" />
+    <aura:attribute name="hasData" type="Boolean" default="false" access="private" />
+    <aura:attribute name="isElevated" type="Boolean" default="false" access="private" />
+    <aura:attribute name="isBrowserIE" type="Boolean" default="false" access="private" />
+
+    <!--SERVICE COMPONENTS-->
+    <c:UtilityForBrowserSupport aura:id="utilityForBrowserSupport" />
+
+    <!--EVENTS-->
+    <aura:registerEvent name="onDeleteTileConfirmed" type="c:PQDeleteItemEvent" />
+
+    <!--HANDLERS-->
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
+    <aura:handler name="change" value="{! v.record }" action="{! c.doInit }" />
+    <aura:handler name="editAction" event="c:PQActionEvent" action="{! c.handleEditStateChanged }" />
+
+    <!--COMPONENT MARKUP-->
+    <div
+        aura:id="wsTileContainer"
+        class="{! join(' ',
+                'ws-tile-container',
+                (or(v.hasData, v.currentState eq 'EDIT') ? 'ws-white-background' : 'ws-empty-background'),
+                (v.isBrowserIE ? 'ws-tile-container-ie' : 'ws-tile-container-not-ie'),
+                (v.isElevated ? 'ws-elevation' : '')) }"
+    >
+        <!-- HEADER AREA-->
+        <div
+            aura:id="wsTileHeader"
+            class="{! join(' ', 'ws-tile-header slds-text-body_small', (v.currentState != 'VIEW' ? 'ws-collapsed' : '')) }"
+        >
+            {! v.headerTitle }
+
+            <!--HEADER BUTTONS-->
+            <aura:if isTrue="{# and(v.isEditable, v.whiteSpaceObjectAccess.canUpdateCells) }">
+                <c:PQButtonIcon
+                    iconName="utility:edit"
+                    variant="bare"
+                    size="medium"
+                    alternativeText="{! $Label.c.Edit }"
+                    class="ws-edit-button"
+                    onclick="{! c.onEdit }"
+                />
+            </aura:if>
+            <aura:if isTrue="{# and(v.isEditable, v.whiteSpaceObjectAccess.canDeleteCells) }">
+                <c:PQButtonIcon
+                    iconName="utility:delete"
+                    variant="bare"
+                    size="medium"
+                    alternativeText="{! $Label.c.Delete }"
+                    class="ws-delete-button"
+                    onclick="{! c.onDelete }"
+                />
+            </aura:if>
+        </div>
+
+        <!-- CONTENT AREA-->
+        <div class="ws-tile-main">
+            <!--VIEW STATE-->
+            <aura:if isTrue="{! v.currentState == 'VIEW' }">
+                <!--READ VIEW-->
+
+                <aura:if isTrue="{! v.record.displayFields }">
+                    <ul class="ws-amount-list">
+                        <aura:iteration items="{! v.record.displayFields }" var="field">
+                            <c:WhiteSpaceTileDisplayField record="{# field }" />
+                        </aura:iteration>
+                    </ul>
+                </aura:if>
+            </aura:if>
+
+            <!--EDIT STATE-->
+            <aura:if isTrue="{! v.currentState == 'EDIT' }">
+                <c:WhiteSpaceTileEditor record="{! v.record }" />
+            </aura:if>
+
+            <!--DELETE STATE-->
+            <aura:if isTrue="{! v.currentState == 'DELETE' }">
+                <div class="ws-delete-confirmation">
+                    <div>
+                        <lightning:button
+                            type="button"
+                            class="slds-m-around_xx-small"
+                            accesskey="27"
+                            variant="neutral"
+                            label="{! $Label.c.Cancel }"
+                            onclick="{! c.handleDeleteCancel }"
+                        />
+                        <lightning:button
+                            type="button"
+                            class="slds-m-around_xx-small"
+                            variant="destructive"
+                            label="{! $Label.c.Delete }"
+                            onclick="{! c.handleDeleteConfirm }"
+                        />
+                    </div>
+                </div>
+            </aura:if>
+        </div>
+
+        <!--FOOTER AREA-->
+    </div>
+</aura:component>

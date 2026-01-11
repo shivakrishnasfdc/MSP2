@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_Plan_Sort__c</fullName>
+    <label>Account Plan Sort</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>CreatedDate DESC</fullName>
+                <default>true</default>
+                <label>Created: Newest to Oldest</label>
+            </value>
+            <value>
+                <fullName>CreatedDate ASC</fullName>
+                <default>false</default>
+                <label>Created: Oldest to Newest</label>
+            </value>
+            <value>
+                <fullName>Name ASC</fullName>
+                <default>false</default>
+                <label>Name: Alphabetical</label>
+            </value>
+            <value>
+                <fullName>Name DESC</fullName>
+                <default>false</default>
+                <label>Name: Reverse Alphabetical</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

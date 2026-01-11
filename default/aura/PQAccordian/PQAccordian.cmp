@@ -1,0 +1,26 @@
+<aura:component>
+    <aura:attribute name="isDefaultExpanded" type="Boolean" default="false" />
+    <aura:attribute name="title" type="String" />
+
+    <aura:attribute name="isExpanded" type="Boolean" default="false" access="private" />
+
+    <aura:handler name="init" action="{! c.doInit }" value="{! this }" />
+
+    <div class="" onclick="{! c.handleClick }">
+        <div class="slds-grid">
+            <c:PQIcon
+                iconName="{! v.isExpanded == false ? 'utility:chevronright' : 'utility:chevrondown' }"
+                size="x-small"
+                class="slds-m-right_x-small"
+            />
+            <div class="slds-col">
+                <div class="">{! v.title }</div>
+            </div>
+        </div>
+    </div>
+    <div
+        class="{! v.isExpanded == false ? 'slds-is-collapsed' : 'slds-is-expanded slds-border_top slds-p-left_xx-large' }"
+    >
+        {! v.body }
+    </div>
+</aura:component>

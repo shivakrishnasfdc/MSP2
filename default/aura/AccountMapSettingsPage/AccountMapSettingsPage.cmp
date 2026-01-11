@@ -1,0 +1,83 @@
+<aura:component
+    extends="PQBaseCrushFeature"
+    controller="OrgChartSettingsController"
+    implements="force:appHostable,flexipage:availableForAllPageTypes"
+    access="global"
+>
+    <ltng:require
+        scripts="{! join(',',
+                           $Resource.StrategyUtils,
+                           $Resource.lodash
+                           ) }"
+        afterScriptsLoaded="{! c.init }"
+    />
+
+    <!-- SERVICE COMPONENTS -->
+    <c:KeyStakeholderService aura:id="keyStakeholderService" />
+    <c:SettingsService aura:id="settingsService" />
+
+    <aura:attribute name="isLoading" type="Boolean" default="true" access="private" />
+    <aura:attribute name="hierarchyLevel" type="Integer" />
+    <aura:attribute name="maptype" type="String"/><!--Added By Navya-->
+    <aura:attribute name="objects" type="List" />
+    <aura:attribute name="orgChartFields" type="List" />
+    <aura:attribute name="orgChartFieldsToDelete" type="List" />
+    <aura:attribute name="orgSettings" type="Object" access="private" />
+    <aura:attribute name="orgSettingsLoading" type="Boolean" access="private" />
+    <aura:attribute name="originalHierarchyLevel" type="Integer" />
+    <aura:attribute name="originalOrgChartFields" type="List" />
+    <aura:attribute name="originalObjects" type="List" />
+    <aura:attribute name="originalSupportColorsMap" type="Map" />
+    <aura:attribute name="saveDisabled" type="Boolean" />
+    <aura:attribute name="support" type="List" />
+    <aura:attribute name="supportColorsMap" type="Map" />
+
+    <aura:method name="cancel" action="{! c.onCancel }" />
+    <aura:method name="save" action="{! c.onSave }" />
+    <aura:method name="updateHierarchy" action="{! c.onUpdateHierarchy }" />
+
+    <aura:if isTrue="{! v.isLoading }">
+        <lightning:spinner alternativeText="{! $Label.c.Loading }" variant="brand" />
+
+        <aura:set attribute="else">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem size="12">
+                    <div class="slds-text-body_regular slds-m-top_small slds-m-bottom_medium">
+                        <h2>{! $Label.c.AccountMap_Select_Fields_And_Labels}</h2>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small" size="12">
+                    <lightning:layout>
+                        <lightning:layoutItem padding="around-small" size="7">
+                            <div>
+                                <c:mapSettingsDisplayFields
+                                    memberFields="{! v.orgChartFields }"
+                                    ondisplayfieldchange="{! c.onChange }"
+                                />
+                            </div>
+                            <div class="slds-m-top_medium">
+                                <c:accountMapSettingsFeatureFlags settingType="Account" maptype="{!v.maptype}"/>
+                            </div>
+                            <div class="slds-m-top_medium">
+                                <c:accountMapSettingsDefaultValues
+                                    type="keystakeholder"
+                                    onsettingschange="{! c.handleSettingsChanged }"
+                                    maptype="{!v.maptype}"
+
+                                />
+                            </div>
+                            <aura:if isTrue="{!v.maptype !='accountrelation'}">
+                                <div class="slds-m-top_medium">
+                                    <c:mapSettingsSuggestedContacts />
+                                </div>
+                            </aura:if>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="5">
+                            <c:mapSettingsFieldSelection fields="{! v.objects }" onfieldtoggled="{! c.toggleField }" />
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:set>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,288 @@
+<aura:component
+    extends="PQBaseCrushFeature"
+    controller="TasksController"
+    implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:appHostable"
+    access="global"
+>
+    <ltng:require
+        scripts="{! join(',', $Resource.StrategyUtils, $Resource.lodash) }"
+        afterScriptsLoaded="{! c.init }"
+    />
+
+    <aura:attribute name="accessMap" type="Map" />
+    <aura:attribute name="statusMap" type="Map" />
+    <aura:attribute name="accountPlanFilterLabel" type="String" default="{! $Label.c.Account_Plans_Filter }" />
+    <aura:attribute name="accountPlanFilterName" type="String" default="AccountPlanFilters" />
+    <aura:attribute name="accountPlanFilters" type="List" />
+    <aura:attribute name="accountPlanFiltersSelected" type="List" />
+    <aura:attribute name="allStatusPickListValues" type="Map" />
+    <aura:attribute name="canEdit" type="Boolean" />
+    <aura:attribute name="canView" type="Boolean" />
+    <aura:attribute name="defaultRecordType" type="String" default="" />
+    <aura:attribute name="disableRecordTypeSave" type="Boolean" default="true" />
+    <aura:attribute name="filterArrays" type="List" />
+    <aura:attribute name="filterLabel" type="String" default="{! $Label.c.Filter_Tasks }" />
+    <aura:attribute name="isClassic" type="boolean" default="false" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
+    <aura:attribute name="isLoadingMore" type="Boolean" default="false" />
+    <aura:attribute name="isMobile" type="boolean" default="false" />
+    <aura:attribute name="latestFilters" type="Map[]" />
+    <aura:attribute name="pageNumber" type="Integer" default="1" />
+    <aura:attribute name="recordsPerPage" type="Integer" default="10" />
+    <aura:attribute name="recordTypeOptions" type="List" default="[]" />
+    <aura:attribute name="recordTypeSelection" type="String" default="" />
+    <aura:attribute name="showAccountPlanName" type="Boolean" />
+    <aura:attribute name="sortAsc" type="Boolean" default="true" />
+    <aura:attribute name="statusPickListValues" type="List" />
+    <aura:attribute name="statusSelected" type="String" />
+    <aura:attribute name="taskFilterName" type="String" default="TaskFilters" />
+    <aura:attribute name="taskId" type="String" />
+    <aura:attribute name="tasks" type="AccountPlanTaskWrapper[]" />
+    <aura:attribute name="tempTasks" type="AccountPlanTaskWrapper[]" />
+    <aura:attribute name="totalPages" type="Integer" default="1" />
+    <aura:attribute name="totalRecords" type="Integer" default="0" />
+
+    <aura:handler event="aura:locationChange" action="{! c.reloadData }" />
+
+    <aura:handler name="taskItemAction" event="c:TaskItemEvent" action="{! c.handleTaskAction }" />
+    <aura:handler
+        name="updateAppliedFilters"
+        event="c:appliedFiltersUpdate"
+        action="{! c.handleUpdateAppliedFilters }"
+    />
+
+    <aura:method name="changePageSizeMethod" action="{! c.init }" />
+
+    <aura:if isTrue="{! !$Browser.isDesktop }">
+        <lightning:card aura:id="card" class="pro-account-plan-list-print is-mobile">
+            <aura:set attribute="title">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        <c:PQIcon iconName="standard:task" size="medium" />
+                    </div>
+                    <div class="slds-media__body">
+                        <h2 class="slds-text-heading_small">Tasks</h2>
+                    </div>
+                </header>
+            </aura:set>
+        </lightning:card>
+    </aura:if>
+
+    <div aura:id="bodyContent" class="slds-p-horizontal_xsmall slds-theme_default pro-account-plan-list-print">
+        <!--HEADER-->
+        <div class="slds-page-header slds-page-header_object-home">
+            <div class="slds-grid">
+                <div class="slds-col slds-has-flexi-truncate">
+                    <div class="slds-media slds-no-space slds-grow">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-standard-task">
+                                <c:PQIcon iconName="standard:task" />
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h1
+                                class="slds-page-header__title slds-truncate slds-align-middle"
+                                title="{! $Label.c.Tasks }"
+                            >
+                                {! $Label.c.Tasks }
+                            </h1>
+                            <p class="slds-text-body_small slds-line-height_reset">
+                                {! v.totalRecords eq 1 ? $Label.c.Item_Count_Singular :
+                                format($Label.c.Item_Count_Plural, v.totalRecords) }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small">
+                    <lightning:button
+                        variant="neutral"
+                        aura:id="newTaskButton"
+                        label="{! $Label.c.New_Task }"
+                        onclick="{! c.handleCreateTask }"
+                    />
+                </div>
+            </div>
+            <div class="slds-grid slds-wrap slds-grid_align-end">
+                <aura:if isTrue="{! !v.recordId }">
+                    <div class="slds-col slds-max-small-size_1-of-1">
+                        <c:ListFilter
+                            name="{! v.accountPlanFilterName }"
+                            filterArrays="{! v.accountPlanFilters }"
+                            filterLabel="{! v.accountPlanFilterLabel }"
+                        />
+                    </div>
+                </aura:if>
+                <div class="slds-col slds-max-small-size_1-of-1">
+                    <c:ListFilter name="{! v.taskFilterName }" filterArrays="{! v.filterArrays }" filterLabel="" />
+                </div>
+            </div>
+        </div>
+        <!--END HEADER-->
+
+        <aura:if isTrue="{! v.isLoading }">
+            <div class="spinner">
+                <ui:spinner />
+            </div>
+        </aura:if>
+
+        <aura:if isTrue="{! empty(v.tasks) }">
+            <aura:if isTrue="{! !v.isLoading }">
+                <div class="no-tasks">{! $Label.c.No_Tasks }</div>
+            </aura:if>
+            <aura:set attribute="else">
+                <aura:if isTrue="{! v.isMobile }">
+                    <div class="slds-border_bottom">
+                        <lightning:button
+                            variant="base"
+                            label="{! $Label.c.Refresh }"
+                            class="slds-size_2-of-2"
+                            onclick="{! c.reloadData }"
+                            aura:id="reloadButton"
+                        />
+                    </div>
+                </aura:if>
+                <!-- TASKS  -->
+                <aura:iteration items="{! v.tasks }" var="task">
+                    <c:TaskRow
+                        task="{! task.taskRecord }"
+                        accountPlans="{! task.accountPlanRecords }"
+                        accessMap="{! v.accessMap }"
+                        statusMap="{! v.statusMap }"
+                        isMobile="{! v.isMobile }"
+                        showAccountPlanName="{! v.showAccountPlanName }"
+                    />
+                </aura:iteration>
+                <!--END TASKS-->
+                <aura:if isTrue="{! v.isLoadingMore }">
+                    <div class="spinner">
+                        <ui:spinner />
+                    </div>
+                </aura:if>
+                <div class="slds-text-align_center slds-is-relative slds-p-vertical_xsmall">
+                    <lightning:button
+                        label="{! $Label.c.Load_More }"
+                        class="{! v.pageNumber ge v.totalPages ? 'slds-hidden' : 'slds-m-vertical_medium slds-p-vertical_x-small slds-p-horizontal_medium slds-text-body_small' }"
+                        onclick="{! c.nextPage }"
+                    />
+                </div>
+            </aura:set>
+        </aura:if>
+
+        <div class="slds">
+            <div aria-hidden="true" role="dialog" class="slds-modal" aura:id="viewModal">
+                <div class="slds-modal__container main-header-top-padding">
+                    <div class="slds-modal__header">
+                        <c:PQButtonIcon
+                            class="slds-modal__close"
+                            iconName="utility:close"
+                            alternativeText="{! $Label.c.Close }"
+                            size="large"
+                            variant="bare-inverse"
+                            onclick="{! c.onViewCancel }"
+                        />
+                        <h2 class="slds-text-heading_medium">{! $Label.c.Task_Detail }</h2>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <form class="slds-form_stacked">
+                            <div>
+                                <aura:if isTrue="{! v.canView }">
+                                    <force:recordView aura:id="viewRecord" recordId="{! v.taskId }" />
+                                </aura:if>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <lightning:button variant="neutral" label="{! $Label.c.Close }" onclick="{! c.onViewCancel }" />
+                    </div>
+                </div>
+            </div>
+            <div aria-hidden="true" role="dialog" class="slds-modal" aura:id="deleteModal">
+                <div class="slds-modal__container main-header-top-padding">
+                    <div class="slds-modal__header slds-theme_default">
+                        <h2 class="slds-text-heading_medium">{! $Label.c.Delete_Task }</h2>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        {! $Label.c.Delete_Confirmation_Message }
+                    </div>
+                    <div class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick="{! c.onDeleteCancel }">
+                            {! $Label.c.Cancel }
+                        </button>
+                        <button
+                            value="{! v.taskId }"
+                            class="slds-button slds-button_brand"
+                            onclick="{! c.onDeleteConfirm }"
+                        >
+                            {! $Label.c.Confirm }
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div aria-hidden="true" role="dialog" class="slds-modal" aura:id="statusModal">
+                <div class="slds-modal__container main-header-top-padding">
+                    <div class="slds-modal__header slds-theme_default">
+                        <h2 class="slds-text-heading_medium">{! $Label.c.Status_Change }</h2>
+                    </div>
+                    <div class="slds-modal__content center-align slds-p-around_large">
+                        <div class="left-align">
+                            <aura:iteration items="{! v.statusPickListValues }" var="statusItem">
+                                <lightning:input
+                                    type="radio"
+                                    name="radioItem"
+                                    value="{! statusItem.value }"
+                                    label="{! statusItem.label }"
+                                    aura:id="radio"
+                                    onchange="{! c.handleRadioSelect }"
+                                    checked="false"
+                                />
+                            </aura:iteration>
+                        </div>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <lightning:button onclick="{! c.onStatusCancel }">{! $Label.c.Cancel }</lightning:button>
+                        <lightning:button
+                            aura:id="statusSaveButton"
+                            disabled="true"
+                            value="{! v.taskId }"
+                            variant="brand"
+                            onclick="{! c.onStatusSave }"
+                            >{! $Label.c.Save }</lightning:button
+                        >
+                    </div>
+                </div>
+            </div>
+            <div aria-hidden="true" role="dialog" class="slds-modal" aura:id="recordTypeModal">
+                <div class="slds-modal__container main-header-top-padding">
+                    <div class="slds-modal__header slds-theme_default">
+                        <h2 class="slds-text-heading_medium">{! $Label.c.New_Task }</h2>
+                    </div>
+                    <div class="slds-modal__content center-align slds-p-around_large record-type-content">
+                        <div class="left-align">
+                            <lightning:combobox
+                                aura:id="recordTypeCombo"
+                                name="recordTypes"
+                                label="{! $Label.c.Select_Record_Type }"
+                                value="{! v.defaultRecordType }"
+                                placeholder="-Select-"
+                                options="{! v.recordTypeOptions }"
+                                required="true"
+                                onchange="{! c.handleRecordTypeChange }"
+                            />
+                        </div>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <lightning:button onclick="{! c.onNewTaskCancel }">{! $Label.c.Cancel }</lightning:button>
+                        <lightning:button
+                            aura:id="recordTypeSaveButton"
+                            disabled="{! v.disableRecordTypeSave }"
+                            variant="brand"
+                            onclick="{! c.onRecordTypeContinue }"
+                            >{! $Label.c.Next }</lightning:button
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop" aura:id="backdrop" />
+    </div>
+</aura:component>

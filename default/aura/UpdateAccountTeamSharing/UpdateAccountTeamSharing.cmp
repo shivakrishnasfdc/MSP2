@@ -1,0 +1,14 @@
+<aura:component
+    implements="force:lightningQuickActionWithoutHeader,force:hasRecordId"
+    controller="UpdateAccountTeamSharingController"
+>
+    <ltng:require scripts="{!$Resource.StrategyUtils}" afterScriptsLoaded="{! c.init }" />
+
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="isClassic" type="Boolean" default="false" />
+    <aura:attribute name="isLoading" type="Boolean" default="false" />
+
+    <aura:if isTrue="{! v.isLoading }">
+        <lightning:spinner alternativeText="{! $Label.c.Loading }" variant="brand" />
+    </aura:if>
+</aura:component>

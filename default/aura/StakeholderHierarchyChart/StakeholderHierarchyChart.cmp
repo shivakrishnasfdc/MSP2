@@ -1,0 +1,11 @@
+<aura:component
+    implements="force:appHostable,lightning:actionOverride,flexipage:availableForAllPageTypes,force:hasRecordID,force:hasSObjectName"
+    access="global"
+>
+    <!-- Attributes -->
+    <aura:attribute name="isClassic" type="Boolean" default="false" />
+
+    <aura:attribute name="defaultMatrix" type="String" default="" access="global" />
+
+    <c:RelationshipMapShared isClassic="{! v.isClassic }" recordId="{! v.recordId }" sObjectName="{! v.sObjectName }" />
+</aura:component>

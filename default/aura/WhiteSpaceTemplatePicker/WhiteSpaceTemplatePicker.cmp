@@ -1,0 +1,29 @@
+<aura:component>
+    <!-- PUBLIC ATTRIBUTES -->
+    <aura:attribute name="selectedTemplateId" type="String" />
+    <aura:attribute name="accountPlanId" type="String" required="true" />
+    <aura:attribute name="canContinue" type="Boolean" default="false" access="private" />
+    <aura:attribute name="isLoading" type="Boolean" default="false" access="private" />
+
+    <!-- EVENTS -->
+    <aura:registerEvent name="PQApplicationEvent" type="c:PQApplicationEvent" />
+
+    <!-- MARKUP -->
+    <c:PQModal
+        title="{! $Label.c.Select_A_Template }"
+        primaryActionLabel="{! $Label.c.Continue }"
+        primaryActionVariant="brand"
+        primaryActionDisabled="{! or(!v.canContinue, v.isLoading) }"
+        onPrimaryActionClicked="{! c.handleContinue }"
+        closeModal="{! c.handleCancel }"
+    >
+        <aura:set attribute="content">
+            <c:wsTemplatePickerLwc
+                aura:id="templatePickerLwc"
+                accountPlanId="{# v.accountPlanId }"
+                onoptionselected="{! c.handleSelection }"
+                onloadstatechange="{! c.handleLoadState }"
+            />
+        </aura:set>
+    </c:PQModal>
+</aura:component>

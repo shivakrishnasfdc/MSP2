@@ -1,0 +1,21 @@
+.THIS .ws-field-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.THIS .ws-field-left {
+    flex-shrink: 0;
+    margin-right: 0.75rem;
+}
+
+.THIS .ws-field-label,
+.THIS .ws-field-value {
+    flex: 1;
+    max-width: 120px;
+}
+
+.THIS .ws-field-value {
+    display: flex;
+}

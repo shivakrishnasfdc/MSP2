@@ -1,0 +1,152 @@
+<aura:component>
+    <aura:handler name="init" action="{! c.init }" value="{! this }" />
+
+    <aura:attribute name="accessMap" type="Map" />
+    <aura:attribute name="statusMap" type="Map" />
+    <aura:attribute name="displayedStatus" type="String" default="" />
+    <aura:attribute name="canDelete" type="Boolean" />
+    <aura:attribute name="canEdit" type="Boolean" />
+    <aura:attribute name="canRead" type="Boolean" />
+    <aura:attribute name="isMobile" type="Boolean" />
+    <aura:attribute name="isOverdue" type="Boolean" default="false" access="private" />
+    <aura:attribute name="showDropdown" type="Boolean" />
+    <aura:attribute name="showAccountPlanName" type="Boolean" />
+    <aura:attribute name="task" type="Task" />
+    <aura:attribute name="accountPlans" type="Account_Plan__c[]" />
+    <aura:attribute name="menuItems" type="Map[]" default="[]" />
+
+    <aura:registerEvent name="taskItemAction" type="c:TaskItemEvent" />
+
+    <span class="slds-assistive-text">Task</span>
+    <div class="slds-media slds-border_bottom slds-p-around_small">
+        <div class="slds-media__figure">
+            <lightning:input
+                type="checkbox"
+                aura:id="checkbox"
+                label=" "
+                onchange="{! c.onCheck }"
+                checked="{! v.task.IsClosed eq true }"
+            />
+        </div>
+        <div class="slds-media__body pro-clickable" onclick="{! c.onRowSelect }">
+            <strong><ui:outputText aura:id="subjectText" class="slds_hyphenate" value="{! v.task.Subject }" /></strong>
+            <br />
+            <ui:outputText aura:id="statusText" value="{! v.displayedStatus }" />
+            <br /><br />
+            <ul class="slds-list_horizontal slds-wrap">
+
+
+
+
+                <aura:if isTrue="{! v.task.What.Type == 'pqcrush__Account_Plan__c' }">
+
+                    <li class="slds-m-right_large">
+                        <strong><ui:outputText class="slds-text-title" value="{!'Related to Account Plan: ' }" /></strong><br />
+                        <ui:outputText class="slds-text-body_small" value="{! v.task.What.Name }" />
+
+                    </li>
+
+                    <aura:set attribute="else">
+
+                        <aura:if isTrue="{! v.task.What.Type == 'pqcrush__Objective__c' }">
+
+                            <li class="slds-m-right_large">
+                                <strong><ui:outputText class="slds-text-title" value="{!'Related to Objective: ' }" /></strong><br />
+                                <ui:outputText class="slds-text-body_small" value="{! v.task.What.Name }" />
+        
+                            </li>
+
+                            <aura:set attribute="else">
+
+
+                                <aura:if isTrue="{!not(empty(v.task.What.Type))}">
+
+                                <li class="slds-m-right_large">
+                                    <strong><ui:outputText class="slds-text-title" value="{!'Related to ' + v.task.What.Type + ': ' }" /></strong><br />
+                                    <ui:outputText class="slds-text-body_small" value="{! v.task.What.Name }" />
+            
+                                </li>
+
+
+                                    <aura:set attribute="else">
+
+                                        <li class="slds-m-right_large">
+                                            <strong><ui:outputText class="slds-text-title" value="{!'Related to Contact: ' }" /></strong><br />
+                                            <ui:outputText class="slds-text-body_small" value="{! v.task.Who.Name }" />
+                    
+                                        </li>
+
+                                    </aura:set>
+
+                                </aura:if>
+                            
+                            </aura:set>
+
+                        </aura:if>
+
+                    </aura:set>
+
+
+                </aura:if>
+
+
+                <aura:if isTrue="{!v.showAccountPlanName}">
+                    <aura:if isTrue="{!v.accountPlans.length > 1 }">
+
+                        <li class="slds-m-right_large">
+                            <strong><ui:outputText class="slds-text-title" value="Related Account Plans: " /></strong><br />
+                        
+                            <aura:iteration items="{! v.accountPlans }" var="accountPlan">
+                                <ui:outputText class="slds-text-body_small" value="{! accountPlan.Name }" /><br />
+                            </aura:iteration>
+                        </li>
+
+                        <aura:set attribute="else">
+                            <li class="slds-m-right_large">
+                                <strong><ui:outputText class="slds-text-title" value="Related Account Plan: " /></strong><br />
+                            
+                                <aura:iteration items="{! v.accountPlans }" var="accountPlan">
+                                    <ui:outputText class="slds-text-body_small" value="{! accountPlan.Name }" />
+                                </aura:iteration>
+                            </li>
+                        </aura:set>
+
+                    </aura:if>
+                </aura:if> 
+
+
+                <aura:if isTrue="{! v.task.Who != NULL }">
+                    <li class="slds-m-right_large">
+                        <strong><ui:outputText class="slds-text-title" value="{! $Label.c.Contact + ': ' }" /></strong><br />
+                        <ui:outputText class="slds-text-body_small" value="{! v.task.Who.Name }" />
+                    </li>
+                </aura:if>
+                <li class="slds-m-right_large">
+                    <strong><ui:outputText class="slds-text-title" value="{! $Label.c.Assigned_To + ': ' }" /></strong><br />
+                    <ui:outputText class="slds-text-body_small" value="{! v.task.Owner.Name }" />
+                </li>
+            </ul>
+        </div>
+        <div class="slds-media__figure_reverse">
+            <div class="slds-timeline__actions">
+                <aura:if isTrue="{! v.task.ActivityDate == NULL }">
+                    <ui:outputText class="slds-text-title" value="{! $Label.c.No_Due_Date }" />
+                    <aura:set attribute="else">
+                        <ui:outputDate class="{! v.isOverdue ? 'pro-overdue' : '' }" value="{! v.task.ActivityDate }" />
+                    </aura:set>
+                </aura:if>
+            </div>
+        </div>
+        <aura:if isTrue="{! v.showDropdown }">
+            <div class="slds-media__figure_reverse slds-p-left_xx-small">
+                <c:PQButtonMenu
+                    menuAlignment="right"
+                    alternativeText="{! $Label.c.Actions }"
+                    iconSize="small"
+                    onselect="{! c.onMenuSelect }"
+                    itemList="{! v.menuItems }"
+                />
+            </div>
+        </aura:if>
+    </div>
+</aura:component>

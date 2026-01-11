@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="An event to mimic the event fired by onsuccess for lightning buttonMenu">
+        <aura:attribute name="value" type="String" />
+        <aura:attribute name="label" type="String" />
+</aura:event>

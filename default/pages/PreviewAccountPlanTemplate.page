@@ -1,0 +1,13 @@
+<apex:page standardController="Account_Plan_Template__c" extensions="AccountPlanTemplateController" standardStylesheets="false" lightningStylesheets="true" sidebar="false">
+    <style>
+        .ws-table-container{
+            max-height: none !important;
+            overflow: hidden !important;
+        }
+    </style>    
+    <script type="text/javascript">__sfdcSessionId = '{!JSENCODE($Api.Session_Id)}';</script>
+    <script src="../../soap/ajax/30.0/connection.js" type="text/javascript"></script>
+    <apex:pageBlock >
+        <c:PreviewAccountPlanTemplate title="{!headerTitle}" planRecId="{!JSENCODE(planId)}" recordId="{!JSENCODE(recordIdPlan)}" isShowAttribute="{!JSENCODE(showAttribute)}"/>
+    </apex:pageBlock>
+</apex:page>

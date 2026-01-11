@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WhitespaceTemplate__c</fullName>
+    <label>Cross-Sell Template</label>
+    <referenceTo>White_Space_Template__c</referenceTo>
+    <relationshipLabel>Cross-Sell Template Cell Fields</relationshipLabel>
+    <relationshipName>White_Space_Template_Cell_Fields</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

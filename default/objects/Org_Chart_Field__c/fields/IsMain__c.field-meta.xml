@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IsMain__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Check this if you want the field to show up in the main section of the card.  Otherwise, it will show up in the secondary area, that is hidden until users open the card</description>
+    <label>IsMain</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

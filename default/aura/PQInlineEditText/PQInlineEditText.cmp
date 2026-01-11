@@ -1,0 +1,90 @@
+<aura:component>
+    <!-- PUBLIC ATTRIBUTES -->
+    <aura:attribute name="canDelete" type="Boolean" default="false" access="public" />
+    <aura:attribute name="canUpdate" type="Boolean" default="false" access="public" />
+    <aura:attribute name="class" type="String" default="" access="public" />
+    <aura:attribute name="disabled" type="Boolean" default="false" access="public" />
+    <aura:attribute name="id" type="String" default="" access="public" />
+    <aura:attribute name="label" type="String" default="" access="public" />
+    <aura:attribute name="maxLength" type="Integer" default="80" access="public" />
+    <aura:attribute name="messageWhenPatternMismatch" type="String" access="public" />
+    <aura:attribute name="messageWhenValueMissing" type="String" access="public" />
+    <aura:attribute name="pattern" type="String" access="public" />
+    <aura:attribute name="required" type="Boolean" default="false" access="public" />
+    <aura:attribute name="showOnHover" type="Boolean" default="false" access="public" />
+    <aura:attribute name="value" type="String" default="" access="public" />
+    <aura:attribute name="inputVariant" type="String" default="" access="public" />
+
+    <!-- PRIVATE ATTRIBUTES -->
+    <aura:attribute name="editMode" type="Boolean" default="false" access="private" />
+    <aura:attribute name="oldValue" type="String" default="" access="private" />
+    <aura:attribute name="showErrorClass" type="Boolean" default="false" access="private" />
+
+    <!-- EVENTS -->
+    <aura:registerEvent name="onValueChanged" type="c:PQValueChangeEvent" />
+    <aura:registerEvent name="onDeleteClicked" type="c:PQDeleteItemEvent" />
+
+    <!-- MARKUP -->
+    <div
+        ondblclick="{! v.canUpdate ? c.editClicked : '' }"
+        class="{! join(' ', v.class, v.showOnHover ? 'pro-main-row' : '', v.showErrorClass == true ? 'slds-cell-edit slds-has-error' : 'slds-cell-edit') }"
+    >
+        <lightning:layout>
+            <!-- show input and output section based on boolean flag -->
+            <aura:if isTrue="{!v.editMode == false}">
+                <lightning:layoutItem size="10" class="slds-truncate">{! v.value }</lightning:layoutItem>
+                <aura:if isTrue="{! v.canUpdate }">
+                    <lightning:layoutItem size="{! v.canDelete ? 1 : 2 }">
+                        <c:PQButtonIcon
+                            onclick="{! c.editClicked }"
+                            variant="bare"
+                            iconName="utility:edit"
+                            title="{! $Label.c.Edit }"
+                            alternativeText="{! $Label.c.Edit }"
+                            iconClass="{! join(' ', v.showOnHover ? 'pro-btn-appearance' : '',
+                                'slds-m-bottom_xx-small',
+                                'slds-m-left_xx-small') }"
+                            size="small"
+                        />
+                    </lightning:layoutItem>
+                </aura:if>
+                <aura:if isTrue="{! v.canDelete }">
+                    <lightning:layoutItem size="{! v.canUpdate ? 1 : 2 }">
+                        <c:PQButtonIcon
+                            onclick="{! c.deleteClicked }"
+                            variant="bare"
+                            iconName="utility:delete"
+                            title="{! $Label.c.Delete }"
+                            alternativeText="{! $Label.c.Delete }"
+                            iconClass="{! join(' ', v.showOnHover ? 'pro-btn-appearance' : '',
+                                'slds-m-bottom_xx-small',
+                                'slds-m-left_xx-small') }"
+                            size="small"
+                        />
+                    </lightning:layoutItem>
+                </aura:if>
+
+                <!-- Inline Edit Section in else case-->
+                <aura:set attribute="else">
+                    <section tabindex="0" class="slds-popover" role="dialog">
+                        <div class="slds-popover__body" onkeypress="{! c.keyPressed }">
+                            <lightning:input
+                                aura:id="inputField"
+                                variant="{! v.inputVariant }"
+                                onblur="{! c.closePopover }"
+                                required="{! v.required }"
+                                disabled="{! v.disabled }"
+                                label="{! v.label }"
+                                value="{! v.value }"
+                                pattern="{! v.pattern }"
+                                messageWhenPatternMismatch="{! v.messageWhenPatternMismatch }"
+                                maxlength="{! v.maxLength }"
+                                messageWhenValueMissing="{! v.messageWhenValueMissing }"
+                            />
+                        </div>
+                    </section>
+                </aura:set>
+            </aura:if>
+        </lightning:layout>
+    </div>
+</aura:component>

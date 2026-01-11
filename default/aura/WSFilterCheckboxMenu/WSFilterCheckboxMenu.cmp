@@ -1,0 +1,65 @@
+<aura:component>
+    <aura:attribute name="menuAlignment" type="String" />
+    <aura:attribute name="iconSize" type="String" default="medium" />
+    <aura:attribute name="iconName" type="String" default="utility:down" />
+    <aura:attribute name="label" type="String" default="" />
+    <aura:attribute name="alternativeText" type="String" default="" />
+
+    <aura:attribute
+        name="amountTypes"
+        Type="List"
+        default="[{'label': 'Rossa', 'value': 'optiona1'},{'label': 'Rachela', 'value': 'optiona2'}]"
+    />
+    <aura:attribute name="selectedAmountTypes" Type="List" default="optiona1" />
+
+    <aura:attribute
+        name="rows"
+        Type="List"
+        default="[{'label': 'Rossb', 'value': 'optionb1'},{'label': 'Rachelb', 'value': 'optionb2'}]"
+    />
+    <aura:attribute name="selectedRows" Type="List" default="optionb1" />
+
+    <aura:attribute
+        name="columns"
+        Type="List"
+        default="[{'label': 'Rossc', 'value': 'optionc1'},{'label': 'Rachelc', 'value': 'optionc2'}]"
+    />
+    <aura:attribute name="selectedColumns" Type="List" default="optionc1" />
+
+    <!-- EVENTS -->
+    <aura:registerEvent name="onselect" type="c:WSFilterCheckboxGroupSelected" />
+
+    <lightning:buttonMenu
+        menuAlignment="{! v.menuAlignment }"
+        iconName="{! v.iconName }"
+        label="{# v.label }"
+        alternativeText="{! v.alternativeText }"
+        iconSize="{! v.iconSize }"
+        onselect="{! c.onselectInternal }"
+    >
+        <lightning:checkboxGroup
+            name="Checkbox Group"
+            label="{! $Label.c.Amount_Types }"
+            options="{! v.amountTypes }"
+            value="{! v.selectedAmountTypes }"
+            onchange="{! c.handleChange }"
+        />
+        <lightning:menuDivider variant="tighter" />
+        <lightning:checkboxGroup
+            name="Checkbox Group"
+            label="{! $Label.c.Rows }"
+            options="{! v.rows }"
+            value="{! v.selectedRows }"
+            onchange="{! c.handleChange }"
+        />
+
+        <lightning:menuDivider variant="tighter" />
+        <lightning:checkboxGroup
+            name="Checkbox Group"
+            label="{! $Label.c.Columns }"
+            options="{! v.columns }"
+            value="{! v.selectedColumns }"
+            onchange="{! c.handleChange }"
+        />
+    </lightning:buttonMenu>
+</aura:component>

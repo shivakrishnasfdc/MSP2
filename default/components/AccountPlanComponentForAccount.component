@@ -1,0 +1,72 @@
+<apex:component access="global">
+    <apex:includeLightning />
+
+    <apex:attribute access="global" name="accountId" description="The id for the account this component is associated to" type="Id" required="true"/>
+    <apex:attribute access="global" name="componentType" description="The type of components from the account plan to display" type="String" required="true" default="Account Plan Field History" />
+    <!-- Available values are:
+            Account Plan Field History
+            Account Plan Overview
+            Account Plan Tasks
+            Key Stakeholder Hierarchy
+            Key Stakeholder Influence
+            SWOT Analysis
+            White Space Report
+    -->
+
+    <div id="AccountPlanComponentForAccount"></div>
+
+    <script>
+        var recordId = '{! JSENCODE(accountId) }';
+        var theme = '{! JSENCODE($User.UITheme) }';
+        var isMobile = theme === 'Theme4t';
+        var compType = '{! JSENCODE(componentType) }';
+
+        $Lightning.use("pqcrush:strategyApp", function() {
+            $Lightning.createComponent(
+                "pqcrush:AccountPlanComponentForAccount",
+                {
+                    recordId: recordId,
+                    isClassic: true,
+                    componentType: compType
+                },
+                "AccountPlanComponentForAccount",
+                function(cmp) {
+                    console.log('component created');
+                    console.log(cmp);
+
+                    $A.eventService.addHandler({
+                        event: 'force:refreshView',
+                        handler: function (event) {
+                            // Do nothing - shouldn't need to refresh the account page if this updates
+                        }
+                    });
+
+                    $A.eventService.addHandler({
+                        event: 'force:navigateToSObject',
+                        handler: function(event) {
+                            var recordId = event.getParam('recordId');
+                            if (isMobile) {
+                                sforce.one.navigateToSObject(recordId);
+                            } else {
+                                window.open('/' + recordId);
+                            }
+                        }
+                    });
+
+                    $A.eventService.addHandler({
+                        event: 'force:editRecord',
+                        handler: function (event) {
+                            var currentURL = '{! JSENCODE($CurrentPage.URL) }';
+                            var recordId = event.getParam('recordId');
+                            if (isMobile) {
+                                sforce.one.editRecord(recordId);
+                            } else {
+                                window.open('/' + recordId);
+                            }
+                        }
+                    });
+                }
+            );
+        });
+     </script>
+</apex:component>

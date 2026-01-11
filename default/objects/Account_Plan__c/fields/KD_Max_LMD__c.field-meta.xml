@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>KD_Max_LMD__c</fullName>
+    <description>The most recently modified date for all the Key Dates related to this plan</description>
+    <inlineHelpText>Used in the account plan score</inlineHelpText>
+    <label>Key Date Max Modified Date</label>
+    <summarizedField>Key_Date__c.LastModifiedDate</summarizedField>
+    <summaryForeignKey>Key_Date__c.Account_Plan__c</summaryForeignKey>
+    <summaryOperation>max</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

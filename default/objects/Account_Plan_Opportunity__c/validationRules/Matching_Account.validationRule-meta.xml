@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Matching_Account</fullName>
+    <active>false</active>
+    <errorConditionFormula>Account_Plan__r.Account__c !=  Opportunity__r.AccountId</errorConditionFormula>
+    <errorMessage>Account must match on Account Plan and Opportunity</errorMessage>
+</ValidationRule>

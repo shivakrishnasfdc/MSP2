@@ -1,0 +1,70 @@
+.THIS.outer-container {
+    width: 100%;
+    border-radius: 4px;
+    margin: 0.3rem;
+    background-color: #dddbda;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.THIS.outer-container:hover {
+    box-shadow: 0 7px 14px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    transform: translateY(-3px);
+}
+
+.THIS .tile-container.highlight > div:hover {
+    background-color: rgb(255, 255, 230);
+}
+
+.THIS.outer-container-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.THIS.outer-container-non-grid {
+    position: relative;
+}
+
+.THIS.outer-container .list-content {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.THIS.outer-container .list-content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-gap: 0.2rem;
+}
+
+.THIS.outer-container .list-content-non-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.THIS .cell-non-grid {
+    width: 50%;
+    padding: 0 0 5px 0;
+}
+
+.THIS .cell-single-non-grid {
+    width: 100%;
+    padding: 0 0 5px 0;
+}
+
+.THIS.outer-container-grid .button-container {
+    position: relative;
+}
+
+.THIS .ws-add-button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+.THIS.outer-container:hover .ws-add-button {
+    opacity: 1;
+}

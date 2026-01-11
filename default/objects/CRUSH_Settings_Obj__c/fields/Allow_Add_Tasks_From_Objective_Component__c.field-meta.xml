@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Allow_Add_Tasks_From_Objective_Component__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Check this box to allow users to add tasks from the Objective Component</description>
+    <inlineHelpText>Check this box to allow users to add tasks from the Objective Component</inlineHelpText>
+    <label>Allow Add Tasks From Objective Component</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,64 @@
+<aura:component
+    extends="PQBaseCrushFeature"
+    controller="FieldHistoryController"
+    implements="flexipage:availableForAllPageTypes,force:hasRecordId"
+    access="global"
+>
+    <ltng:require scripts="{!$Resource.StrategyUtils}" afterScriptsLoaded="{! c.init }" />
+
+    <aura:attribute name="isLoading" type="Boolean" />
+    <aura:attribute name="histories" type="History[]" />
+    <aura:attribute name="filteredHistories" type="History[]" />
+    <aura:attribute name="iterationStart" type="Integer" default="0" />
+    <aura:attribute name="iterationEnd" type="Integer" default="5" />
+    <aura:attribute name="pageSize" type="Integer" default="5" access="private" />
+    <aura:attribute name="selectedFilter" type="String" />
+
+    <aura:handler event="c:PQApplicationEvent" action="{! c.handleApplicationEvent }" />
+    <aura:handler event="force:refreshView" action="{! c.handleSystemRefreshEvent }" />
+
+    <div class="slds-is-relative">
+        <aura:if isTrue="{! v.isLoading }">
+            <lightning:spinner alternativeText="{! $Label.c.Loading }" variant="brand" />
+        </aura:if>
+
+        <lightning:select
+            aura:id="selectFilter"
+            label="{! $Label.c.Select_A_Filter }"
+            onchange="{! c.filterHistories }"
+            value="{! v.selectedFilter }"
+        >
+            <option value="">{! $Label.c.Filter_By_Object }</option>
+            <option value="pqcrush__Account_Plan__c">{! $Label.c.Account_Plan }</option>
+            <option value="pqcrush__Account_Plan_Opportunity__c">{! $Label.c.Account_Plan_Opportunity }</option>
+            <option value="pqcrush__Key_Date__c">{! $Label.c.Key_Date }</option>
+            <option value="pqcrush__Relationship_Map_Member__c">{! $Label.c.Key_Stakeholder }</option>
+            <option value="pqcrush__Objective__c">{! $Label.c.Objective }</option>
+            <option value="pqcrush__Objective_Opportunity__c">{! $Label.c.Objective_Opportunity }</option>
+            <option value="pqcrush__pq_CRUSH_Plan_Overview__c">{! $Label.c.Plan_Overview }</option>
+            <option value="pqcrush__SWOT_Analysis__c">{! $Label.c.SWOT_Analysis_Title }</option>
+            <option value="pqcrush__Team_Member__c">{! $Label.c.Team_Member }</option>
+        </lightning:select>
+        <br />
+
+        <ul>
+            <aura:iteration
+                items="{! v.filteredHistories }"
+                var="history"
+                start="{! v.iterationStart }"
+                end="{! v.iterationEnd }"
+            >
+                <c:fieldHistoryItem history="{! history }" />
+            </aura:iteration>
+        </ul>
+        <br />
+
+        <div>
+            <lightning:button
+                label="{! $Label.c.Load_More }"
+                disabled="{! (v.iterationEnd ge v.filteredHistories.length) }"
+                onclick="{! c.loadMore }"
+            />
+        </div>
+    </div>
+</aura:component>

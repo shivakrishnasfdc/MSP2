@@ -1,0 +1,19 @@
+.THIS.pq .pro-backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.THIS.pq .pro-classic-modal-container {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    max-width: unset;
+    min-width: unset;
+    max-height: unset;
+    min-height: unset;
+}
+
+.THIS.pq-lex-zero-padding .modal-body {
+    padding: 0;
+    overflow: unset;
+}

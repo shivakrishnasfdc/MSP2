@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RowMapping__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Lookup to mapping object to dynamically create rows</description>
+    <label>Row Mapping</label>
+    <referenceTo>Mapping__c</referenceTo>
+    <relationshipLabel>White Space Templates (Row Mapping)</relationshipLabel>
+    <relationshipName>White_Space_Templates_Row</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

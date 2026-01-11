@@ -1,0 +1,4 @@
+<aura:component access="public">
+    <aura:method name="isBrowserIE" action="{! c.handleIsBrowserIE }"> </aura:method>
+    <aura:method name="supportsExternalSVG" action="{! c.handleSupportsExternalSVG }"> </aura:method>
+</aura:component>

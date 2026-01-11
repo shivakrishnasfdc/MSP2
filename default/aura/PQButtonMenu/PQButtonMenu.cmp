@@ -1,0 +1,117 @@
+<aura:component>
+    <aura:attribute name="menuAlignment" type="String" />
+    <aura:attribute name="iconSize" type="String" default="medium" />
+    <aura:attribute name="iconName" type="String" default="utility:down" />
+    <aura:attribute name="label" type="String" default="" />
+    <aura:attribute name="alternativeText" type="String" default="" />
+    <aura:attribute name="itemList" Type="Map[]" default="[]" required="true" />
+
+    <aura:attribute name="supportsExternalSVG" type="Boolean" default="true" access="private" />
+    <aura:attribute name="iconURL" type="string" default="" access="private" />
+    <aura:attribute name="downIconURL" type="string" default="" access="private" />
+    <aura:attribute name="isLoaded" type="Boolean" default="false" access="private" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!--SERVICE COMPONENTS-->
+    <c:UtilityForBrowserSupport aura:id="utilityForBrowserSupport" />
+
+    <!-- EVENTS -->
+    <aura:registerEvent name="onselect" type="c:PQButtonMenuSelected" />
+
+    <aura:if isTrue="{! v.isLoaded }">
+        <aura:if isTrue="{! v.supportsExternalSVG }">
+            <lightning:buttonMenu
+                menuAlignment="{! v.menuAlignment }"
+                iconName="{! v.iconName }"
+                label="{# v.label }"
+                alternativeText="{! v.alternativeText }"
+                iconSize="{! v.iconSize }"
+                onselect="{! c.onselectInternal }"
+            >
+                <aura:iteration items="{! v.itemList }" var="item">
+                    <aura:if isTrue="{! item.hasDivider }">
+                        <lightning:menuDivider variant="tighter" />
+                    </aura:if>
+                    <lightning:menuItem
+                        label="{! item.label }"
+                        value="{! item.value }"
+                        prefixIconName="{! item.iconName }"
+                        class="{! item.class }"
+                    />
+                </aura:iteration>
+            </lightning:buttonMenu>
+            <aura:set attribute="else">
+                <div aura:id="dropdown" class="slds-dropdown-trigger slds-dropdown-trigger_click">
+                    <button
+                        class="slds-button slds-button_icon slds-button_icon-more"
+                        aria-haspopup="true"
+                        title="{! v.alternativeText }"
+                        onclick="{! c.menuClick }"
+                        onblur="{! c.hideOnBlur }"
+                    >
+                        {# v.label }
+                        <aura:if isTrue="{! v.iconName == 'utility:down' }">
+                            <img
+                                class="{! join(' ',
+                                    'slds-button__icon',
+                                    'slds-button__icon_' + v.iconSize) }"
+                                src="{! v.downIconURL }"
+                                title="{! v.alternativeText }"
+                            />
+                            <aura:set attribute="else">
+                                <img
+                                    class="{! join(' ',
+                                    'slds-button__icon',
+                                    'slds-button__icon_' + v.iconSize) }"
+                                    src="{! v.iconURL }"
+                                    title="{! v.alternativeText }"
+                                    alt="{! v.alternativeText }"
+                                />
+                                <img
+                                    class="slds-button_icon slds-button__icon_x-small slds-m-left_xx-small"
+                                    src="{! v.downIconURL }"
+                                    title="{! v.alternativeText }"
+                                    alt="{! v.alternativeText }"
+                                />
+                            </aura:set>
+                        </aura:if>
+                        <span class="slds-assistive-text">{! v.alternativeText }</span>
+                    </button>
+                    <div
+                        class="{! join(' ',
+                            'slds-dropdown',
+                            'slds-dropdown_'+v.menuAlignment) }"
+                    >
+                        <ul class="dropdown__list" role="menu">
+                            <aura:iteration items="{! v.itemList }" indexVar="index" var="itemMap">
+                                <aura:if isTrue="{! itemMap.hasDivider }">
+                                    <lightning:menuDivider variant="tighter" />
+                                </aura:if>
+                                <li
+                                    class="{! join(' ', 'slds-dropdown__item', itemMap.class) }"
+                                    role="presentation"
+                                    tabindex="{! index }"
+                                    onclick="{! c.menuItemClicked }"
+                                >
+                                    <a href="javascript:void(0);" role="menuitem" tabindex="{! index }">
+                                        <span class="slds-truncate" title="{! itemMap.label }" tabindex="{! index }">
+                                            <aura:if isTrue="{! itemMap.iconName }">
+                                                <img
+                                                    class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small"
+                                                    src="{! itemMap.iconURL }"
+                                                    title="{! v.alternativeText }"
+                                                    alt="{! v.alternativeText }"
+                                                /> </aura:if
+                                            >{! itemMap.label }</span
+                                        >
+                                    </a>
+                                </li>
+                            </aura:iteration>
+                        </ul>
+                    </div>
+                </div>
+            </aura:set>
+        </aura:if>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ProperColorFormat</fullName>
+    <active>true</active>
+    <description>Validation to make sure color is in #RGB or #RRGGBB</description>
+    <errorConditionFormula>NOT(REGEX( Color_RGB__c , &apos;^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$&apos;))</errorConditionFormula>
+    <errorDisplayField>Color_RGB__c</errorDisplayField>
+    <errorMessage>You must enter a valid 3 or 6 digit hexadecimal color code (ex. #f82 or #ff11bb)</errorMessage>
+</ValidationRule>

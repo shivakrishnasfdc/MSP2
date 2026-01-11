@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>GroupResults__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Group the records matching this mapping</description>
+    <inlineHelpText>Records fetched for this mapping will be grouped together if they have the same label (used for row/column template)</inlineHelpText>
+    <label>Group Results</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

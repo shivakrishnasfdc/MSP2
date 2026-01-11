@@ -1,0 +1,32 @@
+<aura:component>
+    <aura:attribute name="id" type="String" required="true" />
+    <aura:attribute name="boxTitle" type="String" />
+    <aura:attribute name="bodyTitle" type="String" />
+    <aura:attribute name="bodyDescription" type="String" />
+    <aura:attribute name="checked" type="Boolean" />
+
+    <aura:registerEvent name="onchange" type="c:PQComponentEvent" />
+
+    <div class="slds-visual-picker slds-visual-picker_medium">
+        <input
+            type="radio"
+            id="{! v.id }"
+            name="options"
+            value="{! v.id }"
+            onchange="{! c.handleRadioSelect }"
+            checked="{! v.checked }"
+        />
+        <label for="{! v.id }">
+            <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center">
+                <span>
+                    <span class="slds-text-heading_medium slds-hyphenate slds-p-around_small">{! v.boxTitle }</span>
+                </span>
+            </span>
+            <span class="slds-visual-picker__body">
+                <span class="slds-text-heading_small">{! v.bodyTitle }</span>
+                <span class="slds-text-title">{! v.bodyDescription }</span>
+            </span>
+            <c:PQIcon iconName="utility:check" size="x-small" class="slds-visual-picker__text-check" />
+        </label>
+    </div>
+</aura:component>

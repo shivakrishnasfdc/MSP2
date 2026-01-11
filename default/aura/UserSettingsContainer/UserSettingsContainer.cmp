@@ -1,0 +1,32 @@
+<aura:component extends="c:PQBaseSettingsLayout" controller="StrategySettingsController" access="global">
+    <ltng:require scripts="{! $Resource.StrategyUtils }" afterScriptsLoaded="{! c.init }" />
+
+    <!-- Super component attributes -->
+    <aura:attribute name="activeSection" type="String" default="notifications" />
+    <aura:set attribute="navigationData" value="[{ label: 'Notifications', name: 'notifications' }]" />
+
+    <!-- Component attributes -->
+    <aura:attribute name="orgNotificationsEnabled" type="Boolean" default="true" />
+
+    <!-- Event handlers -->
+    <aura:handler name="SaveClickEvent" event="c:PQButtonClickEvent" action="{! c.saveHandler }" />
+
+    <aura:if isTrue="{! v.activeSection == 'notifications' }">
+        <aura:if isTrue="{! v.orgNotificationsEnabled }">
+            <c:NotificationsSettingsPage
+                pageTitle="{! $Label.c.Email_Notifications }"
+                pageDescription="{! $Label.c.Notifications_Account_Plan_Changes }"
+                notificationSettings="{! v.settings.notifications }"
+                notificationsEnabled="{! v.settings.enableNotifications }"
+            />
+            <aura:set attribute="else">
+                <div class="slds-media__body">
+                    <h3 class="slds-setup-assistant__step-summary-title slds-text-heading_small">
+                        {! $Label.c.Notifications_Disabled_In_Org }
+                    </h3>
+                    <p>{! $Label.c.Notifications_Contact_Support_Message }</p>
+                </div>
+            </aura:set>
+        </aura:if>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,65 @@
+<aura:component
+    extends="PQBaseCrushFeature"
+    controller="AccountPlanController"
+    implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:appHostable"
+    access="global"
+>
+    <ltng:require scripts="{! $Resource.StrategyUtils }" afterScriptsLoaded="{! c.init }" />
+
+    <aura:attribute name="accountPlans" type="Account_Plan__c[]" />
+    <aura:attribute name="loaded" type="Boolean" default="false" />
+    <aura:attribute name="componentType" type="String" default="Key Stakeholder Hierarchy" access="global" />
+    <aura:attribute name="isClassic" type="Boolean" default="false" />
+
+    <!-- Update the design file when adding new components.
+        available values are:
+            Account Plan Field History
+            Account Plan Overview
+            Account Plan Tasks
+            Key Stakeholder Hierarchy
+            Key Stakeholder Influence
+            SWOT Analysis
+            White Space Report
+    -->
+
+    <aura:if isTrue="{! v.loaded }">
+        <aura:if isTrue="{! v.accountPlans.length eq 0 }">
+            <lightning:card title="{! v.componentType }" class="slds-p-horizontal_small">
+                <p>There are no account plans for this account</p>
+            </lightning:card>
+        </aura:if>
+        <aura:iteration items="{! v.accountPlans }" var="accountPlan">
+            <lightning:card title="{! accountPlan.Name }" class="slds-p-horizontal_small">
+                <aura:if isTrue="{! v.componentType eq 'Account Plan Field History' }">
+                    <c:fieldHistory recordId="{! accountPlan.Id }" />
+                </aura:if>
+                <aura:if isTrue="{! v.componentType eq 'Account Plan Overview' }">
+                    <c:planOverview recordId="{! accountPlan.Id }" />
+                </aura:if>
+                <aura:if isTrue="{! v.componentType eq 'Account Plan Tasks' }">
+                    <c:AccountPlanTaskList recordId="{! accountPlan.Id }" />
+                </aura:if>
+                <aura:if isTrue="{! v.componentType eq 'Key Stakeholder Hierarchy' }">
+                    <c:StakeholderHierarchyChart
+                        recordId="{! accountPlan.Id }"
+                        sObjectName="pqcrush__Account_Plan__c"
+                        isClassic="{! v.isClassic }"
+                    />
+                </aura:if>
+                <aura:if isTrue="{! v.componentType eq 'Key Stakeholder Influence' }">
+                    <c:relationshipMatrix
+                        recordId="{! accountPlan.Id }"
+                        sObjectName="pqcrush__Account_Plan__c"
+                        isClassic="{! v.isClassic }"
+                    />
+                </aura:if>
+                <aura:if isTrue="{! v.componentType eq 'SWOT Analysis' }">
+                    <c:swotMatrix recordId="{! accountPlan.Id }" />
+                </aura:if>
+                <aura:if isTrue="{! v.componentType eq 'White Space Report' }">
+                    <c:WhiteSpaceReport recordId="{! accountPlan.Id }" />
+                </aura:if>
+            </lightning:card>
+        </aura:iteration>
+    </aura:if>
+</aura:component>

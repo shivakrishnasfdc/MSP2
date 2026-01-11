@@ -1,0 +1,107 @@
+<aura:component>
+    <!-- Public Attributes -->
+    <aura:attribute name="displayType" type="String" />
+    <aura:attribute name="fieldValue" type="Object" required="true" />
+    <aura:attribute name="displayValue" type="Object" />
+
+    <!-- Even Handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <c:dataFormatUtils aura:id="dataFormatUtils" />
+
+    <!-- Markup -->
+    <!--
+        Input type is determined based on the field's display type
+        More info: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
+    -->
+
+    <!-- ADDRESS - TODO -->
+    <!-- BASE64 - TODO -->
+    <!-- COMBOBOX - TODO -->
+    <!-- DATACATEGORYGROUPREFERENCE - TODO -->
+    <!-- ENCRYPTEDSTRING - TODO -->
+    <!-- TIME - TODO -->
+
+    <!-- FALLBACK/DEFAULT -->
+    <aura:if isTrue="{! empty(v.displayType) }">
+        {! v.displayValue }
+    </aura:if>
+
+    <!-- CURRENCY -->
+    <aura:if isTrue="{! v.displayType == 'currency' }">
+        <lightning:formattedNumber style="currency" value="{! v.displayValue }" />
+    </aura:if>
+
+    <!-- DATE -->
+    <aura:if isTrue="{! v.displayType == 'date' }">
+        <lightning:formattedDateTime
+            value="{! v.displayValue }"
+            year="numeric"
+            month="short"
+            day="2-digit"
+            weekday="long"
+        />
+    </aura:if>
+
+    <!-- DATETIME -->
+    <aura:if isTrue="{! v.displayType == 'datetime' }">
+        <lightning:formattedDateTime
+            value="{! v.displayValue }"
+            year="numeric"
+            month="numeric"
+            day="numeric"
+            hour="2-digit"
+            minute="2-digit"
+            timeZoneName="short"
+            hour12="true"
+        />
+    </aura:if>
+
+    <!-- DOUBLE or INTEGER -->
+    <aura:if isTrue="{! or(v.displayType == 'double', v.displayType == 'integer') }">
+        <lightning:formattedNumber
+            value="{! v.displayValue }"
+            maximumFractionDigits="{! v.displayType == 'double' ? 6 : 0 }"
+        />
+    </aura:if>
+
+    <!-- EMAIL -->
+    <!-- <aura:if isTrue="{!v.displayType == 'EMAIL'}">
+                        <ui:outputEmail aura:id="outputField" value="{!v.displayValue}" />
+                    </aura:if> -->
+
+    <!-- ID or REFERENCE -->
+    <!-- <aura:if isTrue="{!or(v.displayType == 'ID', v.displayType == 'REFERENCE')}">
+                        <ui:outputURL aura:id="outputField" value="{! '/' + v.displayValue}" label="{!v.parentRecordName}" />
+                    </aura:if> -->
+
+    <!-- MULTIPICKLIST or PICKLIST -->
+    <aura:if isTrue="{! or(v.displayType == 'multipicklist', v.displayType == 'picklist') }">
+        <ui:outputText aura:id="outputField" value="{! v.displayValue }" />
+    </aura:if>
+
+    <!-- PERCENT -->
+    <aura:if isTrue="{! v.displayType == 'percent' }">
+        <lightning:formattedNumber value="{! v.displayValue }" style="percent-fixed" />
+    </aura:if>
+
+    <!-- PHONE -->
+    <!-- <aura:if isTrue="{!v.displayType == 'PHONE'}">
+                        <ui:outputPhone aura:id="outputField" value="{!v.displayValue}" />
+                    </aura:if> -->
+
+    <!-- STRING OR TEXTAREA -->
+    <aura:if isTrue="{! or(or(v.displayType == 'string', v.displayType == 'textarea'), v.displayType == 'text') }">
+        <lightning:formattedText value="{! v.displayValue }" />
+    </aura:if>
+
+    <!-- BOOLEAN -->
+    <aura:if isTrue="{! v.displayType == 'boolean' }">
+        <lightning:formattedText value="{! if(v.displayValue , 'true', 'false') }" />
+    </aura:if>
+
+    <!-- URL -->
+    <!-- <aura:if isTrue="{!v.displayType == 'URL'}">
+        <ui:outputURL aura:id="outputField" value="{!v.displayValue}" />
+    </aura:if> -->
+</aura:component>

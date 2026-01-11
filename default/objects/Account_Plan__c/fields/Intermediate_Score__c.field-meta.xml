@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Intermediate_Score__c</fullName>
+    <description>This field holds the score that is calculated from the Account Plan trigger</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If you want to create your own score you can save it to this field to allow it to show up in the account score component</inlineHelpText>
+    <label>Intermediate Score</label>
+    <precision>5</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

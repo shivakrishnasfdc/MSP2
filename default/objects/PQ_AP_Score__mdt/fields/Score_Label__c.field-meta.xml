@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Score_Label__c</fullName>
+    <description>The label to show in the individual score breakdown, see help text for additional info</description>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>Please note - You can use this field to overwrite the label on packaged scores but it is recommended to edit the custom labels for those instead.  For admin created scores if this field is left blank it will instead display the metadata record name for the score</inlineHelpText>
+    <label>Score Label</label>
+    <length>32768</length>
+    <type>LongTextArea</type>
+    <visibleLines>2</visibleLines>
+</CustomField>

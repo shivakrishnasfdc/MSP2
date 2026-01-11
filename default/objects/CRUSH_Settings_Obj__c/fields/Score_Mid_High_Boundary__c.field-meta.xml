@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Score_Mid_High_Boundary__c</fullName>
+    <description>The boundary between middle &amp; high.  Anything equal or above this value is considered high.</description>
+    <inlineHelpText>The boundary between middle &amp; high.  Anything equal or above this value is considered high.</inlineHelpText>
+    <label>Score Middle High Boundary</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

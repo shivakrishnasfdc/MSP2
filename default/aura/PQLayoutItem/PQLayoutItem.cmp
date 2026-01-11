@@ -1,0 +1,25 @@
+<aura:component>
+    <aura:attribute name="class" type="String" default="" access="public" />
+    <aura:attribute name="title" type="String" default="" access="public" />
+    <!-- TODO: We should add in flexibility at some point but not needed for current usage -->
+    <!--<aura:attribute name="flexibility" type="Object" default="" access="public" />-->
+    <aura:attribute name="largeDeviceColumns" type="Integer" access="public" />
+    <aura:attribute name="mediumDeviceColumns" type="Integer" access="public" />
+    <aura:attribute name="padding" type="String" default="" access="public" />
+    <aura:attribute name="columns" type="Integer" access="public" />
+    <aura:attribute name="smallDeviceColumns" type="Integer" access="public" />
+    <div
+        title="{! v.title }"
+        class="{! join(' ',
+        'slds-col',
+        v.class,
+        (empty(v.padding) ? '' : ('slds-p-' + v.padding)),
+        (empty(v.columns) ? '' : ('slds-size_1-of-' + v.columns)),
+        (empty(v.smallDeviceColumns) ? '' : ('slds-small-size_1-of-' + v.smallDeviceColumns)),
+        (empty(v.mediumDeviceColumns) ? '' : ('slds-medium-size_1-of-' + v.mediumDeviceColumns)),
+        (empty(v.largeDeviceColumns) ? '' : ('slds-large-size_1-of-' + v.largeDeviceColumns))
+        ) }"
+    >
+        {! v.body }
+    </div>
+</aura:component>

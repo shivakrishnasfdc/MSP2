@@ -1,0 +1,11 @@
+.custom-label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0; 
+}
+.custom-combobox {
+    margin-top: 0; 
+}
+lightning-combobox .slds-form-element__label {
+    margin-bottom: 0;  
+}

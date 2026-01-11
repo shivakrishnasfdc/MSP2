@@ -1,0 +1,35 @@
+<!--The c:PQCardExample example component for showing usage of the pqCard component in its documentation.-->
+<aura:component>
+    <!-- BASIC EXAMPLE -->
+    <c:PQCard title="Basic Example" footer="Basic footer">
+        <p>This is a basic example of using the pqCard component</p>
+    </c:PQCard>
+
+    <br /><br />
+
+    <!-- ADVANCED EXAMPLE -->
+    <c:PQCard class="slds-p-around_small" iconName="custom:custom11">
+        <!-- TITLE -->
+        <aura:set attribute="title">
+            <div>Advanced Example</div>
+        </aura:set>
+
+        <!-- ACTIONS -->
+        <aura:set attribute="actions">
+            <c:PQButtonIcon class="refresh-button" alternativeText="{! $Label.c.Refresh }" iconName="utility:refresh" />
+        </aura:set>
+
+        <!-- BODY -->
+        This is a more advanced card with various attributes set and more body content
+        <lightning:layout>
+            <lightning:layoutItem size="4" padding="around-large"> left Item </lightning:layoutItem>
+            <lightning:layoutItem size="4" padding="around-large"> middle Item </lightning:layoutItem>
+            <lightning:layoutItem size="4" padding="around-large"> right Item </lightning:layoutItem>
+        </lightning:layout>
+
+        <!-- FOOTER -->
+        <aura:set attribute="footer">
+            <span class="slds-text-title_caps"> Advanced Example Footer </span>
+        </aura:set>
+    </c:PQCard>
+</aura:component>

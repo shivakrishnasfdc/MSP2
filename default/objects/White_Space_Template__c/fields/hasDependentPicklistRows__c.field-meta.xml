@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>hasDependentPicklistRows__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Row values are generated based on possible picklist values from the records mapped to cell data and the picklist field&apos;s controlling field.</description>
+    <label>Has Dependent Picklist Rows</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

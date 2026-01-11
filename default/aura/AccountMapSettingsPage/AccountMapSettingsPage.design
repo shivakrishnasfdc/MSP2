@@ -1,0 +1,5 @@
+<design:component label="Key stakeholders settings page">
+    <sfdc:objects>
+        <sfdc:object>CRUSH_Settings_Obj__c</sfdc:object>
+    </sfdc:objects>
+</design:component>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enable_Group_Selection_Context_Menu__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Flag for the abilty to create and adjust groups in the Relationship Map</description>
+    <inlineHelpText>Check this to allow creating deleting and editing groups in Relationship Maps</inlineHelpText>
+    <label>Enable Grouping</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

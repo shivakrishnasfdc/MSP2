@@ -1,0 +1,24 @@
+<aura:component>
+    <aura:attribute name="backgroundColor" type="String" default="#fff" access="public" />
+    <aura:attribute name="class" type="string" default="" access="public" />
+
+    <aura:attribute name="leftBorder" type="Boolean" default="false" access="public" />
+    <aura:attribute name="rightBorder" type="Boolean" default="false" access="public" />
+    <aura:attribute name="topBorder" type="Boolean" default="false" access="public" />
+    <aura:attribute name="bottomBorder" type="Boolean" default="false" access="public" />
+
+    <div
+        aura:id="cellBackground"
+        class="{! join(' ',
+            'slds-p-around_x-small',
+            'pro-cell-wrapper',
+            (v.leftBorder ? 'slds-border_left' : ''),
+            (v.rightBorder ? 'slds-border_right' : ''),
+            (v.topBorder ? 'slds-border_top' : ''),
+            (v.bottomBorder ? 'slds-border_bottom' : ''),
+            v.class)
+            }"
+        style=""
+        >{! v.body }</div
+    >
+</aura:component>

@@ -1,0 +1,37 @@
+<apex:page standardController="Account_Plan__c">
+    <apex:includeLightning />
+
+    <div id="fieldHistory"></div>
+
+    <script>
+        var recordId = '{! pqcrush__Account_Plan__c.Id }';
+        var theme = '{! JSENCODE($User.UITheme) }';
+        var isMobile = theme === 'Theme4t';
+        var isLightning = theme === 'Theme4d' || theme === 'Theme4u';
+        var isClassic = theme === 'Theme3';
+
+        $Lightning.use("pqcrush:strategyApp", function() {
+            $Lightning.createComponent(
+                "pqcrush:fieldHistory",
+                { recordId: recordId },
+                "fieldHistory",
+                function(cmp) {
+                    console.log('component created');
+                    console.log(cmp);
+
+                    $A.eventService.addHandler({
+                        event: 'force:navigateToSObject',
+                        handler: function(event) {
+                            var recordId = event.getParam('recordId');
+                            if (isClassic) {
+                                window.location.assign('/' + recordId);
+                            } else if (isMobile || isLightning) {
+                                sforce.one.navigateToSObject(recordId);
+                            }
+                        }
+                    });
+                }
+            );
+        });
+     </script>
+</apex:page>

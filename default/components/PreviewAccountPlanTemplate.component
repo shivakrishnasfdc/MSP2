@@ -1,0 +1,880 @@
+<apex:component controller="AccountPlanTemplateController">
+    <apex:includeLightning />
+    <apex:slds />
+    <apex:attribute type="String" name="templateImg" description=""/>
+    <apex:attribute type="String" name="planImg" description=""/>
+    <apex:attribute type="String" name="title" description=""/>
+    <apex:attribute type="String" name="templateComp" description=""/>
+    <apex:attribute type="String" name="planRecId" description=""/>
+    <apex:attribute type="String" name="templateBase" description=""/>
+    <apex:attribute type="String" name="fileName" description=""/>
+    <apex:attribute type="String" name="recId" description=""/>
+    <apex:attribute type="string" name="isShowAttribute" description=""/>
+    <apex:attribute type="string" name="recordId" description=""/>
+
+    <style>
+            .bPageBlock.apexDefaultPageBlock {
+                padding: 0 !important;
+                margin-bottom: 0;
+                border-radius: 0;
+                border: 0;
+                background: #f3f3f3;
+            }
+            .header-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                /* height: 163px; */
+                background: #fff;
+                padding: 1rem;
+                box-shadow: 0px 4px 4px 0px #00000033;
+            }
+            .imgDiv {
+                width: 150px;
+                height: 150px;
+                overflow: hidden;
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                }
+            }
+            .headerTitle {
+                color: #181818;
+                font-size: 2rem;
+                font-weight: 600;
+                text-align: center;
+            }
+            .components{
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            .comp {
+                background: #fff !important;
+                padding: 1rem;
+                border-radius: 8px;
+            }
+            .back {
+                width: 80px;
+                height: 40px;
+                position: fixed;
+                left: -5px;
+                bottom: 8rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #2D50E2;
+                color: white;
+                z-index: 98;
+                font-size: 18px;
+                transform: rotate(90deg);
+                border-radius: 4px 4px 0 0;
+                cursor: pointer;
+            }
+            .pdfHeader{
+                background-color: blue;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                display: none;
+            }
+            .pdfName{
+                color: white;
+                font-size: 20px;
+                padding: 1rem;
+            }
+            .pdfButton{
+                display: flex;
+                gap: 7px;
+                padding: 1rem;
+            }
+            .btncls{
+            background: white;
+            padding: 10px;
+            border-radius: 2px;
+            cursor: pointer;
+            }
+            .myicon{
+            font-size: 20px;
+            width: 1em !important;
+            }
+            #toast-message {
+                    visibility: hidden;
+                    min-width: 250px;
+                    margin-left: -125px;
+                    /* background-color: #2e844a; */
+                    color: #fff;
+                    text-align: center;
+                    border-radius: 2px;
+                    padding: 16px;
+                    position: fixed;
+                    z-index: 10000;
+                    left: 50%;
+                    font-size: 17px;
+                }
+                #toast-message.show {
+                    visibility: visible;
+                    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+                    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+                }
+                .shareButton{
+                    pointer-events: none;
+                    opacity: 0.4;
+                }
+                .slds-spinner_container{
+                    position:fixed;
+                }
+    </style>
+    <div id="toast-message"></div>
+    <div id="spinner" class="slds-spinner_container" style="position:fixed">
+        <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+            <span class="slds-assistive-text">{!$Label.Loading}</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </div>
+
+    <div id="accountPlanTemplateHeader" />
+    <div class ="pdfHeader" id="pdfHeader">
+            <div class="pdfName" id="pdfName">
+            </div>
+        <div class="pdfButton" id="pdfButton">
+            <div class="saveButton btncls" id="saveButton" title="Save" onclick="generatePdf()">
+                <i class="fas fa-save myicon"></i>
+            </div>
+            <div class="shareButton btncls" id="shareButton" title="Share" onclick="handleShare()">
+                <i class="fas fa-share-alt myicon"></i>
+            </div>
+            <div class="cancelButton btncls" id="cancelButton" title="Cancel" onclick="handleBack()">
+                <i class="far fa-times myicon"></i>
+            </div>
+        </div>
+    </div>
+
+    <div id="outerMostDiv1">
+        <div class="OuterMostDiv" id="OuterMostDiv">
+            <div class="header-container" id="MainHeaderpart">
+                <div class="imgDiv" id="canvasImg"></div>
+                <span class="headerTitle" id="headerTitle"></span>
+                <div class="imgDiv" id="planedImg"></div>
+            </div>
+                <div class="back" id="back" onclick="handleBack()">{!$Label.Back}</div>
+                <div class="components" id="componentsId"></div>
+        </div>
+    </div>
+    <!-- Libarary Used  -->
+    <apex:includeScript value="{!$Resource.Icon}"/>
+    <apex:includeScript value="{!$Resource.html2Image}"/>
+    <apex:includeScript value="{!$Resource.jsPDF}"/>
+    <apex:includeScript value="{!$Resource.html2Canvas}"/>
+    <script src="https://unpkg.com/gojs/release/go.js"></script>
+
+        <script>
+            if({!isShowAttribute}) {
+                document.getElementById("back").style.display = "none";
+                var pqpresentData = JSON.parse(localStorage.getItem('pqPrsentPreviewItem'));
+                var tempTitle2=pqpresentData.headerTitle;
+                var accountPlanName=pqpresentData.AccountplanName;
+                var pdfCount=pqpresentData.pdfCount;
+                var finalPDFName=accountPlanName+'_'+tempTitle2+'.pdf';
+                var contentVersionTitle=accountPlanName+'_'+tempTitle2+'_V'+pdfCount+'.pdf';
+                document.getElementById("pdfName").innerHTML=finalPDFName;
+                document.getElementById("headerTitle").innerHTML=pqpresentData.AccountplanName;
+                var spinner = document.getElementById('spinner');
+                spinner.style.display = 'block';
+                var componentList = [];
+                var componentListWithoutCross=[];
+                var componentListWithoutRelation=[];
+                var componentListWithoutCrossandRealtion=[];
+                var finalTempList=[];
+                var finalTempList1=[];
+                var finalTempList2=[];
+                var finalTempList3=[];
+                var templateList = pqpresentData.componentAvailable;
+                window.jsPDF = window.jspdf.jsPDF;
+                var tempArray=document.getElementsByClassName('Imagecomp');
+                var headerArray=document.getElementById('MainHeaderpart');
+                var base64String;
+                var j;
+                var PageHeight=0;
+                var imgHeight=0;
+                var imageheight=0;
+                var tempheight=35;
+                var compHeight=0;
+                var customHeight=0;
+                var tempCompHeight=0;
+                var tempImageHeight=0;
+                var tempheight=35;
+                var finalScreenShotList=[];
+                var timeOutVar=0;
+                var previewItem = JSON.parse(localStorage.getItem('pqPrsentPreviewItem'));
+                var tempItemList=JSON.parse(previewItem.screenShotImage);
+                document.getElementById("pdfHeader").style.display = "flex";
+                if(pqpresentData.headerImageURL !== '' && pqpresentData.headerImageURL !== undefined){
+                    let tempImg = document.getElementById('canvasImg');
+                    let img = document.createElement('img');
+                    img.setAttribute('src', pqpresentData.headerImageURL);
+                    tempImg.appendChild(img);
+                }
+                if(pqpresentData.accountPlanImage !== '' && pqpresentData.accountPlanImage !== undefined){
+                    let planImg = document.getElementById('planedImg');
+                    let img = document.createElement('img');
+                    img.setAttribute('src', pqpresentData.accountPlanImage);
+                    planImg.appendChild(img);
+                }
+
+                componentList=JSON.parse(templateList);
+                for(var i=0;i<componentList.length;i++){
+                    let tempList=componentList[i].split(" ");
+                    finalTempList.push(tempList[0]+tempList[1]);
+                }
+
+                componentList=finalTempList;
+
+                //creating list of component in which cross sell is not persent
+                componentListWithoutCross = componentList.filter(e => e !== 'pqcrush:WhiteSpaceReport$pqcrush__Account_Plan__c');
+
+                //creating list of component in which relationship map is not persent
+                componentListWithoutRelation=componentList.filter(e => e !== 'pqcrush:StakeholderHierarchyChart$pqcrush__Account_Plan__c');
+
+                //creating list of component in which relationship map and cross sell is not persent
+                componentListWithoutCrossandRealtion=componentListWithoutRelation.filter(e => e !== 'pqcrush:WhiteSpaceReport$pqcrush__Account_Plan__c');
+                
+                 //Function of handling back button
+                function handleBack() {
+                    spinner.style.display = 'block';
+                    window.open('/apex/pqcrush__PqPresentAccountPlan?recordId='+ encodeURIComponent('{!recordId}') +
+                    '&planId=' + '{!planRecId}', '_self');
+                }
+
+                //Showing component on UI when screen shot data is null
+                if(tempItemList[0]===''){
+                    tempCompHeight=tempCompHeight+100;
+                    $Lightning.use("pqcrush:strategyApp", function() {
+                        var componentsDiv = document.getElementById('componentsId');
+                        var index = 0;
+                        componentList.forEach(ele => {
+                            let newDiv = document.createElement("div");
+                            newDiv.style.height="auto";
+                            newDiv.setAttribute('id', index.toString());
+                            newDiv.setAttribute('class', 'Imagecomp');
+                            componentsDiv.appendChild(newDiv);
+                                    $Lightning.createComponent(
+                                        ele.split('$')[0],
+                                        {recordId : pqpresentData.planRecordID ,sObjectName: ele.split('$')[1]},
+                                        index.toString(),
+                                        function(component) {
+                                            if(component){
+                                                console.log('component value ',component);
+                                                setTimeout(function(){
+                                                    if(index===componentList.length){
+                                                        document.getElementById('spinner').style.display = 'none';
+                                                    }
+                                                }, 3000);    
+                                            }
+
+                                        }
+                                    );    
+                            index += 1;
+                        });
+                    });
+                }
+                //show image on ui when screen shot is present
+                else{
+                    document.getElementById('spinner').style.display = 'block';
+                    var componentsDiv = document.getElementById('componentsId');
+                    var index = 0;
+                    //condiiton for checking for cross sell or relation map screenshot persent
+                    if(tempItemList.length===1){
+                        //condition for checking relation ship map persent or not
+                        if(tempItemList[0].split('-->')[1]==='Relationship'){
+                            if(componentList.includes('pqcrush:StakeholderHierarchyChart$pqcrush__Account_Plan__c')){
+                                let tempSrc='data:image/png;base64,'+tempItemList[0].split('-->')[0];
+                                var img = new Image();
+                                img.src = tempSrc;
+                                img.onload = function(){
+                                    img.height = img.naturalHeight;
+                                    img.width=img.naturalWidth;
+                                    componentsDiv.appendChild(img);
+                                    //document.getElementById('spinner').style.display = 'none';
+                                    imageheight=imageheight+((img.naturalHeight)*25.4)/96;
+                                }
+                            }
+                                $Lightning.use("pqcrush:strategyApp", function() {
+                                    componentListWithoutRelation.forEach(ele => {
+                                        tempCompHeight=tempCompHeight+100
+                                        let newDiv = document.createElement("div");
+                                        newDiv.setAttribute('id', index.toString());
+                                        newDiv.setAttribute('class', 'Imagecomp');
+                                        componentsDiv.appendChild(newDiv);
+                                            $Lightning.createComponent(
+                                                ele.split('$')[0],
+                                                {recordId : pqpresentData.planRecordID ,sObjectName: ele.split('$')[1]},
+                                                index.toString(),
+                                                function(component) {
+                                                    if(component){
+                                                        console.log('component value ',component);
+                                                        setTimeout(function(){
+                                                            if(index===componentList.length){
+                                                                document.getElementById('spinner').style.display = 'none';
+                                                            }
+                                                        }, 3000);
+                                                                
+                                                    }
+
+                                                }
+                                            );    
+                                        index += 1;
+                                        if(index===componentListWithoutRelation.length-1){
+                                            document.getElementById('spinner').style.display = 'none';
+                                        }
+                                    });
+                                });
+                        }
+                        //condiiton for checking cross Sell Screen shot persent
+                        if(tempItemList[0].split('-->')[1]==='Crosssell'){
+                            if(componentList.includes('pqcrush:WhiteSpaceReport$pqcrush__Account_Plan__c')){
+                                let tempSrc='data:image/png;base64,'+tempItemList[0].split('-->')[0];
+                                var img = new Image();
+                                img.src = tempSrc;
+                                img.onload = function(){
+                                    img.height = img.naturalHeight;
+                                    img.width=img.naturalWidth;
+                                    componentsDiv.appendChild(img);
+                                    //document.getElementById('spinner').style.display = 'none';
+                                    imageheight=imageheight+((img.naturalHeight)*25.4)/96;
+                                }
+                            }
+                                $Lightning.use("pqcrush:strategyApp", function() {
+                                    componentListWithoutCross.forEach(ele => {
+                                        tempCompHeight=tempCompHeight+100;
+                                        let newDiv = document.createElement("div");
+                                        newDiv.setAttribute('id', index.toString());
+                                        newDiv.setAttribute('class', 'Imagecomp');
+                                        componentsDiv.appendChild(newDiv);
+                                            $Lightning.createComponent(
+                                                ele.split('$')[0],
+                                                {recordId : pqpresentData.planRecordID ,sObjectName: ele.split('$')[1]},
+                                                index.toString(),
+                                                function(component) {
+                                                    if(component){
+                                                        console.log('component value ',component);
+                                                        setTimeout(function(){
+                                                            if(index===componentList.length){
+                                                                document.getElementById('spinner').style.display = 'none';
+                                                            }
+                                                        }, 3000);
+                                                            
+                                                    }
+
+                                                }
+                                            );    
+                                        index += 1;
+                                        if(index===componentListWithoutCross.length-1){
+                                            document.getElementById('spinner').style.display = 'none';
+                                        }
+                                    });
+                                });
+                        }
+
+                    }
+                    //condition for checking both Component screenshot persent.
+                    if(tempItemList.length===2){
+                        //condition for checking both screenshot present and only relationship map is present in template.
+                        if(componentList.includes('pqcrush:StakeholderHierarchyChart$pqcrush__Account_Plan__c') && componentList.indexOf('pqcrush:WhiteSpaceReport$pqcrush__Account_Plan__c') === -1){
+                            for(var g=0;g<tempItemList.length;g++){
+                                if(tempItemList[g].includes('Relationship')){
+                                    finalScreenShotList.push(tempItemList[g]);
+                                    let tempSrc='data:image/png;base64,'+tempItemList[g].split('-->')[0];
+                                    var img = new Image();
+                                    img.src = tempSrc;
+                                    img.onload = function(){
+                                        img.height = img.naturalHeight;
+                                        img.width=img.naturalWidth;
+                                        componentsDiv.appendChild(img);
+                                        //document.getElementById('spinner').style.display = 'none';
+                                        imageheight=imageheight+((img.naturalHeight)*25.4)/96;
+                                    }
+                                }
+                            }
+                            $Lightning.use("pqcrush:strategyApp", function() {
+                                    componentListWithoutRelation.forEach(ele => {
+                                        tempCompHeight=tempCompHeight+100;
+                                        let newDiv = document.createElement("div");
+                                        newDiv.setAttribute('id', index.toString());
+                                        newDiv.setAttribute('class', 'Imagecomp');
+                                        componentsDiv.appendChild(newDiv);
+                                            $Lightning.createComponent(
+                                                ele.split('$')[0],
+                                                {recordId : pqpresentData.planRecordID ,sObjectName: ele.split('$')[1]},
+                                                index.toString(),
+                                                function(component) {
+                                                    console.log('component value ',component);
+                                                    if(component){
+                                                        // console.log('component value ',component);
+                                                        setTimeout(function(){
+                                                            if(index===componentList.length){
+                                                                document.getElementById('spinner').style.display = 'none';
+                                                            }
+                                                        }, 3000);
+                                                                
+                                                    }
+
+                                                }
+                                            );  
+                                        index += 1;
+                                        if(index===componentListWithoutRelation.length-1){
+                                            document.getElementById('spinner').style.display = 'none';
+                                        }
+                                    });
+                            });
+                        }
+                        //condition for checking both screenshot present and only cross sell map is present in template.
+                        if(componentList.includes('pqcrush:WhiteSpaceReport$pqcrush__Account_Plan__c') && componentList.indexOf('pqcrush:StakeholderHierarchyChart$pqcrush__Account_Plan__c') === -1){
+                            for(var d=0;d<tempItemList.length;d++){
+                                if(tempItemList[d].includes('Crosssell')){
+                                    finalScreenShotList.push(tempItemList[d]);
+                                    let tempSrc='data:image/png;base64,'+tempItemList[d].split('-->')[0];
+                                    var img = new Image();
+                                    img.src = tempSrc;
+                                    img.onload = function(){
+                                        img.height = img.naturalHeight;
+                                        img.width=img.naturalWidth;
+                                        componentsDiv.appendChild(img);
+                                        //document.getElementById('spinner').style.display = 'none';
+                                        imageheight=imageheight+((img.naturalHeight)*25.4)/96;
+                                    }
+                                }
+                            }
+                            $Lightning.use("pqcrush:strategyApp", function() {
+                                    componentListWithoutCross.forEach(ele => {
+                                        tempCompHeight=tempCompHeight+100;
+                                        let newDiv = document.createElement("div");
+                                        newDiv.setAttribute('id', index.toString());
+                                        newDiv.setAttribute('class', 'Imagecomp');
+                                        componentsDiv.appendChild(newDiv);
+                                            $Lightning.createComponent(
+                                                ele.split('$')[0],
+                                                {recordId : pqpresentData.planRecordID ,sObjectName: ele.split('$')[1]},
+                                                index.toString(),
+                                                function(component) {
+                                                    if(component){
+                                                        //setTimeout(function(){
+                                                            if(index===componentList.length){
+                                                                document.getElementById('spinner').style.display = 'none';
+                                                            }
+                                                        //}, 3000);
+                                                            
+                                                    }
+
+                                                }
+                                            );    
+                                        index += 1;
+                                        if(index===componentListWithoutCross.length-1){
+                                            document.getElementById('spinner').style.display = 'none';
+                                        }
+                                    });
+                                });
+                        }
+                        //condition for checking both screenshot present and both component(relationship map and cross sell) is present in template.
+                        if(componentList.includes('pqcrush:StakeholderHierarchyChart$pqcrush__Account_Plan__c') && componentList.includes('pqcrush:WhiteSpaceReport$pqcrush__Account_Plan__c')){
+                            for(let b=0;b<tempItemList.length;b++){
+                                finalScreenShotList.push(tempItemList[b]);
+                                let imageTempData=tempItemList[b].split('-->')[0];
+                                    setTimeout(function(){
+                                        let tempSrc='data:image/png;base64,'+tempItemList[b].split('-->')[0];
+                                        var img = new Image();
+                                        img.src = tempSrc;
+                                        img.onload = function(){
+                                            img.height = img.naturalHeight;
+                                            img.width=img.naturalWidth;
+                                            componentsDiv.appendChild(img);
+                                            //document.getElementById('spinner').style.display = 'none';
+                                            imageheight=imageheight+((img.naturalHeight)*25.4)/96;
+                                        }
+                                    }, 5000);
+                            }
+                            setTimeout(function(){
+                                $Lightning.use("pqcrush:strategyApp", function() {
+                                    componentListWithoutCrossandRealtion.forEach(ele => {
+                                        tempCompHeight=tempCompHeight+100;
+                                        let newDiv = document.createElement("div");
+                                        newDiv.setAttribute('id', index.toString());
+                                        newDiv.setAttribute('class', 'Imagecomp');
+                                        componentsDiv.appendChild(newDiv);
+                                            $Lightning.createComponent(
+                                                ele.split('$')[0],
+                                                {recordId : pqpresentData.planRecordID ,sObjectName: ele.split('$')[1]},
+                                                index.toString(),
+                                                function(component) {
+                                                    if(component){
+                                                        //setTimeout(function(){
+                                                            if(index===componentList.length){
+                                                                //document.getElementById('spinner').style.display = 'none';
+                                                            }
+                                                        //}, 3000);
+                                                                
+                                                    }
+
+                                                }
+                                            );    
+                                        index += 1;
+                                        if(index===componentListWithoutCrossandRealtion.length-1){
+                                                document.getElementById('spinner').style.display = 'none';
+                                            }
+                                    });
+                                });
+                            }, 12000);
+                        }
+                    }
+                }
+                async function pdfPageSizeGeneration(tempArray) {
+                    //condition for calculating page size when screen shot not persent
+                    if(tempItemList[0]===''){
+                        //setTimeout(function(){
+                            for(var i=0;i<tempArray.length;i++){
+                                await new Promise((resolve, reject) => {
+                                    htmlToImage.toPng(tempArray[i])
+                                    .then(function (dataUrl) {
+                                        var img = new Image();
+                                        img.src = dataUrl;
+                                        img.onload = function() {
+                                            PageHeight=PageHeight+((img.naturalHeight)*25.4)/96;
+                                        }
+                                        if(i==tempArray.length-1){
+                                            setTimeout(function(){
+                                                if(PageHeight<290){
+                                                    j = new jsPDF();
+                                                }
+                                                else{
+                                                    j = new jsPDF({
+                                                        format: [210, PageHeight]
+                                                    });
+                                                }
+                                                    
+                                                if(j!=undefined){
+                                                    handleSave(tempArray);
+                                                }
+                                            }, 5000);
+                                        }
+                                                
+                                        resolve();
+                                                
+                                    })
+                                    .catch(error => {
+                                        reject(error);
+                                    });
+
+                                })
+                            }
+                        //},3000)
+                    }
+                    //condition for calculating page size when screenShot is persent
+                    else{
+                        let finalHeight=0;
+                        for(var i=0;i<tempArray.length;i++){
+                                await new Promise((resolve, reject) => {
+                                    htmlToImage.toPng(tempArray[i])
+                                        .then(function (dataUrl) {
+                                            var img = new Image();
+                                            img.src = dataUrl;
+                                            img.onload = function() {
+                                                PageHeight=PageHeight+((img.naturalHeight)*25.4)/96;
+                                            }
+                                            resolve();
+                                                
+                                        })
+                                        .catch(error => {
+                                            reject(error);
+                                        });
+
+                                })
+                                
+                        }
+                        setTimeout(function(){
+                            finalHeight=PageHeight+imageheight;
+                            if(finalHeight<290){
+                                j = new jsPDF();
+                            }
+                            else{
+                                customHeight=tempImageHeight+tempCompHeight;
+                                j = new jsPDF({
+                                    format: [210, finalHeight]//finalHeight
+                                });
+                            }
+                                                        
+                            if(j!=undefined){
+                                handleSave(tempArray);
+                            }
+
+                        }, 8000);
+                    }
+                }
+
+                //test function for gojs
+                // function exportDivToImage() {
+                //     // Get the HTML div
+                //     var htmlDiv = tempArray[4];
+                //     console.log('html div value ',htmlDiv);
+                //     console.log('html div innerhtml value ',htmlDiv.innerHTML);
+
+                //     // Create a GoJS Diagram
+                //     var $ = go.GraphObject.make;
+                //     var diagram = $(go.Diagram);
+                //     diagram.div = document.createElement("div"); // Create a new div
+                //     diagram.div.style.display = "none"; // Hide the diagram
+                //     diagram.div.style.width = "100px";//htmlDiv.offsetWidth + "px";
+                //     diagram.div.style.height = "100px";//htmlDiv.offsetHeight + "px";
+
+                //     // Add a node to represent the HTML div content
+                //     diagram.nodeTemplate =
+                //         $(go.Node, "Auto",
+                //         $(go.Shape, "RoundedRectangle", { fill: "lightgray", strokeWidth: 0 }),
+                //         $(go.TextBlock, { margin: 10 }, new go.Binding("text", "text"))
+                //         );
+
+                //     // Create a model with the HTML div content
+                //     var model = $(go.GraphLinksModel);
+                //     model.nodeDataArray = [{ key: 1, text: htmlDiv.innerHTML }];
+                //     diagram.model = model;
+
+                //     // Render the diagram to an image with higher scale
+                //     diagram.makeImage({
+                //         scale: 10, // Increase scale for higher resolution
+                //         type: "image/png",
+                //         callback: function(img) {
+                //         // Open the image in a new window (you can also save it, etc.)
+                //         //var win = window.open("");
+                //         //win.document.write("<img src='" + img.src + "' width='" + (htmlDiv.offsetWidth) + "' height='" + (htmlDiv.offsetHeight) + "'/>");
+                //         console.log('image data are ',img.src);
+                //         }
+                //     });
+                // }
+                //End here
+
+                function generatePdf(){
+                    spinner.style.display = 'block';
+                    document.getElementById('shareButton').style.pointerEvents = 'all';
+                    document.getElementById('shareButton').style.opacity = 1;
+                    pdfPageSizeGeneration(tempArray);
+                    //exportDivToImage();
+                }
+
+                async function handleSave(tempArray) {
+                    timeOutVar=((tempArray.length)*2000)+5;
+                    //Insert header in PDF file
+                    htmlToImage.toPng(headerArray)
+                    .then(function (dataUrl) {
+                        var img = new Image();
+                        img.src = dataUrl;
+                        j.addImage(img,'PNG',0,0,210,0,'header');
+                    })
+                    //code for inserting screen shot in PDF file
+                    let tempList=JSON.parse(previewItem.screenShotImage);
+                    if(finalScreenShotList[0]!=''){
+                        await new Promise((resolve, reject) => {
+                            //code for inserting screenShot into pdf
+                                for(let i=0; i < finalScreenShotList.length; i++){
+                                    let tempSrc='data:image/png;base64,'+finalScreenShotList[i].split('-->')[0];
+                                    setTimeout(function(){
+                                        var img = new Image();
+                                        img.src = tempSrc;
+                                        
+                                        img.onload = function() {
+                                            let finalImageHeight=0;
+                                            if((((img.naturalWidth)*25.4)/96)>210){
+                                                finalImageHeight=210;
+                                            }
+                                            else{
+                                                finalImageHeight=(((img.naturalWidth)*25.4)/96);
+                                            }
+                                            j.addImage(img, 'PNG', 0, tempheight, finalImageHeight, (((img.naturalHeight)*25.4)/96), 'htmlContent'+i);
+                                           tempheight=tempheight+(((img.naturalHeight)*25.4)/96);
+                                        }
+                                    }, 3000);
+                                }
+                            //Code for inserting HTML content in PDF file
+                                for (let m = 0; m < tempArray.length; m++) {
+                                    setTimeout(function(){
+                                        htmlToImage.toPng(tempArray[m])
+                                        .then(function (dataUrl) {
+                                            var img = new Image();
+                                            img.src = dataUrl;
+                                            img.onload = function() {
+                                                document.getElementById('componentsId').appendChild(img);
+                                                j.addImage(img, 'PNG', 0, tempheight, 210, 0, 'htmlContent1'+m);
+                                                tempheight = tempheight+(((img.naturalHeight)*25.4)/96);
+                                            }
+                                        }) 
+                                    }, 2000); 
+                                }
+                            //Code for Save PDF
+                            setTimeout(function(){
+                                const pdfDataUri = j.output('blob');
+                                var reader = new FileReader();
+                                reader.readAsDataURL(pdfDataUri);
+                                reader.onloadend = function () {
+                                    var base64String = reader.result;
+                                    var contentVersion = new sforce.SObject('ContentVersion');
+                                    contentVersion.Title = contentVersionTitle;
+                                    contentVersion.PathOnClient = '/' + 'test.pdf';
+                                    contentVersion.FirstPublishLocationId = pqpresentData.planRecordID;
+                                    var tt1 = base64String.split('base64,')[1];
+                                    contentVersion.VersionData = tt1;
+                                    contentVersion.Description = '{!$Label.Prolifiq_PDF}';
+                                    var results = sforce.connection.create([contentVersion]);
+                                    spinner.style.display = 'none';
+                                    var toastMessage = document.getElementById("toast-message");
+                                    toastMessage.style.background = '#2e844a';
+                                    toastMessage.innerHTML = 'PDF Saved Successfully';
+                                    toastMessage.className = "show";
+                                    setTimeout(function(){
+                                        toastMessage.className = toastMessage.className.replace("show", "");
+                                    }, 3000);
+                                }
+                            }, timeOutVar);
+                        })
+                    }
+                     
+                    //Code for inserting HTML content in PDF file when screenshot image is not persent.
+                    else{
+                        for (let m = 0; m < tempArray.length; m++) {
+                            await new Promise((resolve, reject) => {
+                                htmlToImage.toPng(tempArray[m])
+                                .then(function (dataUrl) {
+                                    var img = new Image();
+                                    img.src = dataUrl;
+                                    img.onload = function() {
+                                            if(m>0){
+                                                // tempheight=tempheight+(((img.naturalHeight)*25.4)/96);
+                                            }
+                                            j.addImage(img, 'PNG', 0, tempheight, 210, 0, 'htmlContent'+m);
+                                            //imgHeight = imgHeight+img.naturalHeight;
+                                            tempheight=tempheight+(((img.naturalHeight)*25.4)/96);
+                                        
+                                    }
+                                    //Save pdf
+                                    setTimeout(function(){
+                                        if (m === tempArray.length - 1) {
+                                            const pdfDataUri = j.output('blob');
+                                            var reader = new FileReader();
+                                            reader.readAsDataURL(pdfDataUri);
+                                            reader.onloadend = function () {
+                                                var base64String = reader.result;
+                                                var contentVersion = new sforce.SObject('ContentVersion');
+                                                contentVersion.Title = contentVersionTitle;
+                                                contentVersion.PathOnClient = '/' + 'test.pdf';
+                                                contentVersion.FirstPublishLocationId = pqpresentData.planRecordID;
+                                                var tt1 = base64String.split('base64,')[1];
+                                                contentVersion.VersionData = tt1;
+                                                contentVersion.Description = '{!$Label.Prolifiq_PDF}';
+
+                                                var results = sforce.connection.create([contentVersion]);
+                                                spinner.style.display = 'none';
+                                                var toastMessage = document.getElementById("toast-message");
+                                                toastMessage.style.background = '#2e844a';
+                                                toastMessage.innerHTML = 'PDF Saved Successfully';
+                                                toastMessage.className = "show";
+                                                setTimeout(function(){
+                                                    toastMessage.className = toastMessage.className.replace("show", "");
+                                                }, 3000);
+                                            }
+                                        }
+                                    }, 10000);
+
+                                    resolve();
+                                })
+                                .catch(error => {
+                                    spinner.style.display = 'none';
+                                    var toastMessage = document.getElementById("toast-message");
+                                    toastMessage.style.background = '#ea001e';
+                                    toastMessage.innerHTML = 'Something went wrong';
+                                    toastMessage.className = "show";
+                                    setTimeout(function(){
+                                        toastMessage.className = toastMessage.className.replace("show", "");
+                                    }, 3000);
+                                    reject(error); // Reject the promise if there's an error
+                                });
+                            });
+                        }
+                    }
+                }
+                //Function for sharing pdf on button click
+                function handleShare(){
+                    $Lightning.createComponent(
+                        "pqcrush:PQSharePDFViaEmail",
+                        {},
+                        "accountPlanTemplateHeader",
+                        function(component) {
+                            if(component){
+                            }
+                        }
+                    );
+                }
+            }
+            else {
+                var previewItem = JSON.parse(localStorage.getItem('previewItem'));
+
+                var spinner = document.getElementById('spinner');
+                spinner.style.display = 'block';
+
+                // Title as Account plan Name
+                document.getElementById("headerTitle").innerHTML=previewItem.planName;
+                var componentList = [];
+                var templateList = previewItem.componentAvailable;
+                if(previewItem.headerImageURL !== '' && previewItem.headerImageURL !== undefined) {
+                    let tempImg = document.getElementById('canvasImg');
+                    let img = document.createElement('img');
+                    img.setAttribute('src', previewItem.headerImageURL);
+                    tempImg.appendChild(img);
+                }
+                if(previewItem.accountPlanImage !== '' && previewItem.accountPlanImage !== undefined){
+                    let planImg = document.getElementById('planedImg');
+                    let img = document.createElement('img');
+                    img.setAttribute('src', previewItem.accountPlanImage);
+                    planImg.appendChild(img);
+                }
+                previewItem.componentAvailable.forEach(element => {
+                    if(element.isRelatedObject === true) {
+                        componentList.push('pqcrush:genericDataTableComponent$' + element.componentApiName);
+                    }
+                    else {
+                        componentList.push('pqcrush:' + element.componentApiName + '$pqcrush__Account_Plan__c');
+                    }
+                });
+                function handleBack() {
+                    localStorage.clear();
+                    localStorage.setItem('previewBackItem', JSON.stringify(previewItem));
+                    if(previewItem.templateRecordID !== '') {
+                        var templateId = previewItem.templateRecordID;
+                        window.open('/apex/pqcrush__AccountPlanTemplate?id='+ encodeURIComponent(templateId), '_self');
+                    }
+                    else {
+                        window.open('/apex/pqcrush__AccountPlanTemplate', '_self');
+                    }
+                }
+                $Lightning.use("pqcrush:strategyApp", function() {
+                    var componentsDiv = document.getElementById('componentsId');
+                    var index = 0;
+                    componentList.forEach(ele => {
+                        let newDiv = document.createElement("div");
+                        newDiv.setAttribute('id', index.toString());
+                        newDiv.setAttribute('class', 'comp');
+                        componentsDiv.appendChild(newDiv);
+                        $Lightning.createComponent(
+                            ele.split('$')[0],
+                            {recordId : previewItem.planId ,sObjectName: ele.split('$')[1]},
+                            index.toString(),
+                            function(component) {
+                            }
+                        );
+                        index += 1;
+                        spinner.style.display = 'none';
+                    });
+                });
+            }
+        </script>
+</apex:component>

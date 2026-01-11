@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Score_CS__c</fullName>
+    <description>Value for the Cross Sell portion of the Account Plan Score</description>
+    <externalId>false</externalId>
+    <formula>IF( Default_Plan_Scoring__c ,
+
+(IF( $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Score_Object__c,
+CASE(1,
+IF(White_Space_Cell_Count__c &lt; $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Count_BP_Low__c, 1, 0), 0,
+IF(White_Space_Cell_Count__c &lt; $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Count_BP_Mid__c, 1, 0), $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Score_BP_Low__c,
+IF(White_Space_Cell_Count__c &lt; $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Count_BP_High__c, 1, 0), $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Score_BP_Mid__c,
+$CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Score_BP_High__c)
+*
+IF( $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Use_Time_Decay__c,
+CASE(1,
+IF(TODAY() - DATEVALUE(Cell_Max_LMD__c) &lt; $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Time_BP_Low__c, 1, 0), 1,
+IF(TODAY() - DATEVALUE(Cell_Max_LMD__c) &lt; $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Time_BP_Mid__c, 1, 0), $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Time_BP_Mult_Low__c,
+IF(TODAY() - DATEVALUE(Cell_Max_LMD__c) &lt; $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Time_BP_High__c, 1, 0), $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Time_BP_Mult_Mid__c,
+$CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Time_BP_Mult_High__c), 1), 0)),
+
+(IF( White_Space_Cell_Count__c &gt; $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Threshold_Limit__c , $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Category_Point_Total__c, (White_Space_Cell_Count__c / $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Threshold_Limit__c)* $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Category_Point_Total__c))
+*
+IF( $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Use_Time_Decay__c,
+CASE(1,
+IF(TODAY() - DATEVALUE(Cell_Max_LMD__c) &lt; $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Time_BP_Low__c, 1, 0), 1,
+IF(TODAY() - DATEVALUE(Cell_Max_LMD__c) &lt; $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Time_BP_Mid__c, 1, 0), $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Time_BP_Mult_Low__c,
+IF(TODAY() - DATEVALUE(Cell_Max_LMD__c) &lt; $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Time_BP_High__c, 1, 0), $CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Time_BP_Mult_Mid__c,
+$CustomMetadata.PQ_AP_Score__mdt.CS_Cells.Time_BP_Mult_High__c), 1))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>You can modify this by adjusting the custom metadata record corresponding to the Cross Sell Values</inlineHelpText>
+    <label>Cross Sell Score</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

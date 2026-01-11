@@ -1,0 +1,142 @@
+<aura:component>
+    <!-- RESOURCES -->
+    <ltng:require
+        scripts="{! join(',', $Resource.StrategyUtils, $Resource.lodash) }"
+        afterScriptsLoaded="{! c.onUtilsLoaded }"
+    />
+
+    <aura:handler name="render" value="{! this }" action="{! c.onRender }" />
+
+    <!-- PUBLIC ATTRIBUTES -->
+    <aura:attribute name="whitespaceObj" type="Object" access="public" />
+    <aura:attribute name="whitespaceObjAccess" type="Object" access="public" required="true" />
+
+    <!-- PRIVATE ATTRIBUTES -->
+    <aura:attribute name="afterRender" type="Boolean" default="false" access="private" />
+    <aura:attribute name="changesMade" type="Boolean" default="false" />
+    <aura:attribute name="isLoadingUtils" type="Boolean" default="true" access="private" />
+    <aura:attribute name="isSaving" type="Boolean" default="false" access="private" />
+    <aura:attribute name="originalWhitespaceObj" type="Object" access="private" />
+    <aura:attribute name="regexForInput" type="String" default="" access="private" />
+    <aura:attribute name="regexForInputDescription" type="String" default="" access="private" />
+    <aura:attribute name="selectedColumnRelatedObjectIds" type="List" />
+    <aura:attribute name="selectedRowRelatedObjectIds" type="List" />
+    <aura:attribute name="isBrowserIE" type="Boolean" default="false" access="private" />
+
+    <!-- SERVICES COMPONENTS -->
+    <c:WhiteSpaceService aura:id="whiteSpaceService" />
+    <c:UtilityForInputs aura:id="utilityForInputs" />
+    <c:UtilityForBrowserSupport aura:id="utilityForBrowserSupport" />
+
+    <!-- EVENTS -->
+    <aura:registerEvent name="onChangesSaved" type="c:PQValueChangeEvent" />
+    <aura:registerEvent name="closeModal" type="c:PQComponentNotificationEvent" />
+
+    <!-- MARKUP -->
+    <c:PQModal
+        title="{! $Label.c.Edit_Rows_Columns }"
+        primaryActionLabel="{! $Label.c.Save }"
+        primaryActionVariant="brand"
+        primaryActionDisabled="{! !v.changesMade }"
+        onPrimaryActionClicked="{! c.onSaveClicked }"
+        closeModal="{! c.onCancelClicked }"
+    >
+        <aura:set attribute="content">
+            <aura:if isTrue="{! v.isLoadingUtils || v.isSaving }">
+                <lightning:spinner
+                    alternativeText="{! $Label.c.Loading }"
+                    title="{! $Label.c.Loading }"
+                    variant="brand"
+                />
+            </aura:if>
+
+            <lightning:layout
+                class="{! join(', ', 'pro-configuration-content', (v.isBrowserIE ? 'pro-fixed-height' : '')) }"
+            >
+                <lightning:layoutItem size="6" padding="around-small" class="column-container">
+                    <div class="slds-m-bottom_x-small slds-p-bottom_xx-small slds-p-left_large slds-text-title_caps">
+                        {! $Label.c.White_Space_Rows }
+                    </div>
+                    <div class="config-container">
+                        <div class="config-list">
+                            <aura:iteration items="{! v.whitespaceObj.rows }" var="rowObj" indexVar="index">
+                                <c:WhiteSpaceReportConfigurationRow
+                                    canReorder="{! v.whitespaceObjAccess.canUpdateRows }"
+                                    canUpdate="{! and(v.whitespaceObjAccess.canUpdateRows, empty(rowObj.collection.pqcrush__Related_Object_Id__c)) }"
+                                    canDelete="{! v.whitespaceObjAccess.canDeleteRows }"
+                                    index="{! index }"
+                                    isLastItem="{! index >= (v.whitespaceObj.rows.length - 1) }"
+                                    textValue="{# rowObj.name }"
+                                    onDelete="{! c.deleteRowClicked }"
+                                    onOrderChanged="{! c.rowOrderChanged }"
+                                    onValueChanged="{! c.rowUpdated }"
+                                    messageWhenPatternMismatch="{! v.regexForInputDescription }"
+                                    pattern="{! v.regexForInput }"
+                                    fixedHeight="{! v.isBrowserIE }"
+                                />
+                            </aura:iteration>
+                        </div>
+
+                        <aura:if isTrue="{! v.whitespaceObjAccess.canAddRows }">
+                            <lightning:layout verticalAlign="end" class="slds-m-top_x-small slds-p-top_xx-small">
+                                <c:AddWhiteSpaceReportConfigItem
+                                    aura:id="addRow"
+                                    isLookup="{! !empty(v.whitespaceObj.template.rowConfiguration.mapping.objectName) }"
+                                    lookupType="{# v.whitespaceObj.template.rowConfiguration.mapping.objectName }"
+                                    lookupDisplayField="{# v.whitespaceObj.template.rowConfiguration.mapping.labelFieldName }"
+                                    lookupIgnoreIds="{! v.selectedRowRelatedObjectIds }"
+                                    onAdd="{! c.handleAddRowClick }"
+                                    messageWhenPatternMismatch="{! v.regexForInputDescription }"
+                                    pattern="{! v.regexForInput }"
+                                    placeholder="{! empty(v.whitespaceObj.template.rowConfiguration.mapping.objectName) ? $Label.c.New_White_Space_Row : format($Label.c.Search_Object, v.whitespaceObj.template.rowConfiguration.mapping.objectLabelPlural) }"
+                                />
+                            </lightning:layout>
+                        </aura:if>
+                    </div>
+                </lightning:layoutItem>
+
+                <lightning:layoutItem size="6" padding="around-small" class="column-container">
+                    <div class="slds-m-bottom_x-small slds-p-bottom_xx-small slds-p-left_large slds-text-title_caps">
+                        {! $Label.c.White_Space_Columns }
+                    </div>
+                    <div class="config-container">
+                        <div class="config-list">
+                            <aura:iteration items="{! v.whitespaceObj.columns }" var="columnObj" indexVar="index">
+                                <c:WhiteSpaceReportConfigurationRow
+                                    canReorder="{! v.whitespaceObjAccess.canUpdateColumns }"
+                                    canUpdate="{! and(v.whitespaceObjAccess.canUpdateColumns, empty(columnObj.collection.pqcrush__Related_Object_Id__c)) }"
+                                    canDelete="{! v.whitespaceObjAccess.canDeleteColumns }"
+                                    index="{! index }"
+                                    isLastItem="{! index >= (v.whitespaceObj.columns.length - 1) }"
+                                    textValue="{# columnObj.name }"
+                                    onDelete="{! c.deleteColumnClicked }"
+                                    onOrderChanged="{! c.columnOrderChanged }"
+                                    onValueChanged="{! c.columnUpdated }"
+                                    messageWhenPatternMismatch="{! v.regexForInputDescription }"
+                                    pattern="{! v.regexForInput }"
+                                    fixedHeight="{! v.isBrowserIE }"
+                                />
+                            </aura:iteration>
+                        </div>
+
+                        <aura:if isTrue="{! v.whitespaceObjAccess.canAddColumns }">
+                            <lightning:layout verticalAlign="end" class="slds-m-top_x-small slds-p-top_xx-small">
+                                <c:AddWhiteSpaceReportConfigItem
+                                    aura:id="addColumn"
+                                    isLookup="{# !empty(v.whitespaceObj.template.columnConfiguration.mapping.objectName) }"
+                                    lookupType="{# v.whitespaceObj.template.columnConfiguration.mapping.objectName }"
+                                    lookupDisplayField="{# v.whitespaceObj.template.columnConfiguration.mapping.labelFieldName }"
+                                    lookupIgnoreIds="{! v.selectedColumnRelatedObjectIds }"
+                                    onAdd="{! c.handleAddColumnClick }"
+                                    messageWhenPatternMismatch="{! v.regexForInputDescription }"
+                                    pattern="{! v.regexForInput }"
+                                    placeholder="{! empty(v.whitespaceObj.template.columnConfiguration.mapping.objectName) ? $Label.c.New_White_Space_Column : format($Label.c.Search_Object, v.whitespaceObj.template.columnConfiguration.mapping.objectLabelPlural) }"
+                                />
+                            </lightning:layout>
+                        </aura:if>
+                    </div>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:set>
+    </c:PQModal>
+</aura:component>

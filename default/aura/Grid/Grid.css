@@ -1,0 +1,7 @@
+.THIS.pro-grid-wrapper {
+    overflow: auto;
+}
+
+.THIS .empty-row {
+    font-style: italic;
+}

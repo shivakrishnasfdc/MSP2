@@ -1,0 +1,8 @@
+<aura:component>
+    <aura:registerEvent name="PQApplicationEvent" type="c:PQApplicationEvent" />
+
+    <aura:method name="fireAppEvent" action="{! c.handleFireApplicationEvent }">
+        <aura:attribute name="eventKey" type="String" required="true" />
+        <aura:attribute name="eventValue" type="Object" />
+    </aura:method>
+</aura:component>

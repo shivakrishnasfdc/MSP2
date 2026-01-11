@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Objective_High_Color__c</fullName>
+    <description>The RGB color when the number of objectives completed is High (in format #aabbcc)</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The RGB color when the number of objectives completed is in High (in format #aabbcc)</inlineHelpText>
+    <label>Objective High Color</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

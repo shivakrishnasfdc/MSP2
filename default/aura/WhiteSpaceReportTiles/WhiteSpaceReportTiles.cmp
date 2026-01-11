@@ -1,0 +1,59 @@
+<aura:component>
+    <ltng:require scripts="{! $Resource.StrategyUtils }" afterScriptsLoaded="{! c.init }" />
+    <aura:dependency resource="markup://c:WhiteSpaceTileList" />
+    <aura:dependency resource="markup://c:whitespaceCell" />
+
+    <!-- SERVICE COMPONENTS -->
+    <c:WhiteSpaceService aura:id="whiteSpaceService" />
+
+    <!-- ATTRIBUTES -->
+    <aura:attribute name="accountPlanId" type="String" default="" required="true" />
+    <aura:attribute name="data" type="List" />
+    <aura:attribute name="whiteSpace" type="Map" />
+    <aura:attribute name="whiteSpaceObjectAccess" type="Object" />
+
+    <aura:attribute name="isClassic" type="Boolean" default="false" access="public" />
+    <aura:attribute name="isPrinterFriendly" type="Boolean" default="false" access="public" />
+
+    <aura:attribute name="numberOfColumns" type="Integer" default="0" access="private" />
+    <aura:attribute name="smallSizeColumns" type="Integer" default="2" />
+    <aura:attribute name="mediumSizeColumns" type="Integer" default="3" />
+    <aura:attribute name="largeSizeColumns" type="Integer" default="4" />
+    <aura:attribute name="originalLargeSizeColumns" type="Integer" access="private" />
+
+    <aura:handler name="change" value="{! v.whiteSpace }" action="{! c.updateWhitespace }" />
+    <aura:handler name="onCellDataChanged" event="c:PQValueChangeEvent" action="{! c.cellDataUpdated }" />
+    <aura:handler name="onDeleteTileConfirmed" event="c:PQDeleteItemEvent" action="{! c.cellDeleteConfirmed }" />
+
+    <!-- METHODS -->
+    <aura:method name="adjustForFullScreen" action="{! c.fullScreenHandler }">
+        <aura:attribute name="isExpanding" type="Boolean" />
+    </aura:method>
+
+    <!-- MARK UP -->
+
+    <div aura:id="gridWrapper">
+        <c:Grid
+            gridData="{! v.data }"
+            columns="{! v.whiteSpace.columns }"
+            rows="{! v.whiteSpace.rows }"
+            showGridTopBorder="false"
+            showGridBottomBorder="false"
+            showGridLeftBorder="false"
+            showGridRightBorder="false"
+            showCellBorders="false"
+            smallColumns="{! v.smallSizeColumns }"
+            mediumColumns="{! v.mediumSizeColumns }"
+            largeColumns="{! v.largeSizeColumns }"
+            fixedFirstColumnWidth="true"
+            expandColumnsToFit="true"
+            cornerColor="#f3f2f2"
+            columnHeaderColor="#f3f2f2"
+            rowHeaderColor="#f3f2f2"
+            cellColor="#f3f2f2"
+            rowHeaderClass="row-header slds-align_absolute-center"
+            columnHeaderClass="col-header slds-align_absolute-center"
+            class="{! 'ws-grid ' + (v.isPrinterFriendly ? 'ace-printer' : '') }"
+        />
+    </div>
+</aura:component>

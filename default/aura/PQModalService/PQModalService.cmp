@@ -1,0 +1,43 @@
+<aura:component>
+    <aura:method name="presentDynamicModal" action="{! c.handlePresentDynamicModal }">
+        <aura:attribute name="componentName" type="String" />
+        <aura:attribute name="componentParams" type="Map" />
+        <aura:attribute name="namespace" type="String" />
+        <aura:attribute name="cssClass" type="String" />
+    </aura:method>
+    <aura:method name="presentStaticModal" action="{! c.handlePresentStaticModal }">
+        <aura:attribute name="body" type="Aura.Component[]" />
+        <aura:attribute name="cssClass" type="String" />
+    </aura:method>
+    <aura:method name="closeModal" action="{! c.handleCloseModal }" />
+
+    <aura:attribute name="isClassic" type="Boolean" default="false" access="public" />
+    <aura:attribute name="modalBody" type="Aura.Component[]" access="private" />
+    <aura:attribute name="cssClass" type="String" access="private" />
+    <aura:attribute name="modalPromise" type="Aura.Action" access="private" />
+
+    <div class="pq">
+        <aura:if isTrue="{! v.isClassic }">
+            <div aria-hidden="true" role="dialog" class="slds-modal" aura:id="modal">
+                <div class="slds-modal__container">
+                    <div
+                        ><c:PQButtonIcon
+                            class="slds-float_right"
+                            iconName="utility:close"
+                            variant="bare-inverse"
+                            onclick="{! c.handleCloseModal }"
+                            alternativeText="{! $Label.c.Close }"
+                    /></div>
+                    <div class="{! v.cssClass }" aura:id="modalContent">
+                        <!-- dynamically create modal content here -->
+                        {!v.modalBody}
+                    </div>
+                </div>
+            </div>
+            <div class="pro-backdrop slds-backdrop" aura:id="backdrop" />
+            <aura:set attribute="else">
+                <lightning:overlayLibrary aura:id="overlayLib" />
+            </aura:set>
+        </aura:if>
+    </div>
+</aura:component>

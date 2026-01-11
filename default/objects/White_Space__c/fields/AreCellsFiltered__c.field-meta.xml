@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AreCellsFiltered__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Determines whether cell data is populated based on having a parent relationship to the Account</description>
+    <label>Filter Cells</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

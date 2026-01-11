@@ -1,0 +1,66 @@
+<aura:component
+    extends="PQBaseCrushFeature"
+    implements="flexipage:availableForRecordHome,force:hasRecordId"
+    access="global"
+    controller="WhiteSpaceController"
+>
+    <ltng:require scripts="{! $Resource.StrategyUtils }" afterScriptsLoaded="{! c.init }" />
+
+    <!-- SERVICE COMPONENTS -->
+    <c:WhiteSpaceService aura:id="whiteSpaceService" />
+    <c:PQModalService aura:id="modalService" isClassic="{! v.isClassic }" />
+    <c:stringUtils aura:id="stringUtilService" />
+
+    <!-- ATTRIBUTES -->
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="hiddenHeaderItems" type="List" default="delete,recordPageNavLink" />
+    <aura:attribute name="isClassic" type="Boolean" default="false" access="public" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
+    <aura:attribute name="whiteSpace" type="Map" />
+    <aura:attribute name="whiteSpaceObjectAccess" type="Object" access="private" />
+    <aura:attribute name="openModal" type="Boolean" default="false" access="private" />
+
+    <aura:attribute name="errorMessage" type="String" />
+    <aura:attribute name="stateBody" type="String" />
+    <aura:attribute name="stateTitle" type="String" />
+
+    <aura:registerEvent name="onDelete" type="c:PQComponentEvent" />
+    <aura:registerEvent name="onError" type="c:PQComponentEvent" />
+
+    <!-- EVENT HANDLING -->
+    <aura:handler event="c:PQApplicationEvent" action="{! c.handleApplicationEvent }" />
+
+    <div>
+        <aura:if isTrue="{! v.isLoading }">
+            <lightning:spinner variant="brand" size="large" class="ws-spinner" />
+        </aura:if>
+
+        <aura:if isTrue="{! v.errorMessage }">
+            <c:PQIllustration
+                stateTitle="{! v.stateTitle }"
+                stateBody="{! v.stateBody }"
+                stateDetail="{! v.errorMessage }"
+            >
+            </c:PQIllustration>
+
+            <aura:set attribute="else">
+                <aura:if isTrue="{! and(!v.isLoading, !empty(v.whiteSpace)) }">
+                    <c:whiteSpaceReportLwc
+                        aura:id="wsReportTable"
+                        whiteSpaceReport="{! v.whiteSpace }"
+                        oneditrecord="{! c.handleEditRecord }"
+                        permissions="{! v.whiteSpaceObjectAccess }"
+                        onwhitespaceupdated="{! c.handleWhiteSpaceUpdated }"
+                        onmenuactionselected="{! c.onMenuSelect }"
+                        hiddenHeaderItems="{! v.hiddenHeaderItems }"
+                        ondatatypecreated="{! c.init }"
+                        onrecordcreated="{! c.init }"
+                        oncreateclassic="{! c.handleCreateClassic }"
+                        isClassic="{! v.isClassic }"
+                        onrefresh="{! c.handleRefresh }"
+                    />
+                </aura:if>
+            </aura:set>
+        </aura:if>
+    </div>
+</aura:component>

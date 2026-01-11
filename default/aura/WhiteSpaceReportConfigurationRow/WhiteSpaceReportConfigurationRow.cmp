@@ -1,0 +1,74 @@
+<aura:component>
+    <!-- PUBLIC ATTRIBUTES -->
+    <aura:attribute name="index" type="Integer" access="public" />
+    <aura:attribute name="isLastItem" type="Boolean" access="public" />
+    <aura:attribute name="messageWhenPatternMismatch" type="String" access="public" />
+    <aura:attribute name="pattern" type="String" access="public" />
+    <aura:attribute name="textValue" type="String" access="public" />
+    <aura:attribute name="canUpdate" type="Boolean" access="public" />
+    <aura:attribute name="canDelete" type="Boolean" access="public" />
+    <aura:attribute name="canReorder" type="Boolean" access="public" />
+    <aura:attribute name="fixedHeight" type="Boolean" default="false" />
+
+    <!-- PRIVATE ATTRIBUTES -->
+    <aura:attribute name="maxLength" type="Integer" default="80" access="private" />
+
+    <!-- EVENTS -->
+    <aura:registerEvent name="onOrderChanged" type="c:PQListItemChangeEvent" />
+    <aura:registerEvent name="onDelete" type="c:PQListItemChangeEvent" />
+    <aura:registerEvent name="onValueChanged" type="c:PQListItemChangeEvent" />
+
+    <!-- MARKUP -->
+    <div
+        class="{! join(', ',
+                        'pro-main-row',
+                        (v.fixedHeight ? 'pro-fixed-height-row' : '')) }"
+    >
+        <lightning:layout>
+            <lightning:layoutItem size="1">
+                <aura:if isTrue="{! v.canReorder }">
+                    <ul class="pro-ul-appearance">
+                        <li>
+                            <c:PQButtonIcon
+                                iconName="utility:up"
+                                name="up"
+                                variant="bare"
+                                onclick="{! c.upClicked }"
+                                alternativeText="{! $Label.c.Move_Up }"
+                                class="{! (v.index == 0) ? 'slds-hidden': '' }"
+                            />
+                        </li>
+                        <li>
+                            <c:PQButtonIcon
+                                iconName="utility:down"
+                                name="down"
+                                variant="bare"
+                                onclick="{! c.downClicked }"
+                                alternativeText="{! $Label.c.Move_Down }"
+                                class="{! v.isLastItem ? 'slds-hidden': '' }"
+                            />
+                        </li>
+                    </ul>
+                </aura:if>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="11">
+                <c:PQInlineEditText
+                    value="{# v.textValue }"
+                    onValueChanged="{! c.onEditTextValueChanged }"
+                    maxLength="{! v.maxLength }"
+                    class="pro-edit-row"
+                    onDeleteClicked="{! c.onEditTextDelete }"
+                    showOnHover="true"
+                    canDelete="{! v.canDelete }"
+                    canUpdate="{! v.canUpdate }"
+                    pattern="{! v.pattern }"
+                    messageWhenPatternMismatch="{! v.messageWhenPatternMismatch }"
+                    messageWhenValueMissing="{! v.messageWhenPatternMismatch }"
+                    required="true"
+                    inputVariant="label-hidden"
+                />
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+</aura:component>

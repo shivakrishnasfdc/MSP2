@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="An event related to a SWOT Analysis item">
+
+  <aura:attribute name="item" type="SWOT_Analysis__c"/>
+
+</aura:event>

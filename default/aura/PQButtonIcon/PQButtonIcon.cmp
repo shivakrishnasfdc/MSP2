@@ -1,0 +1,78 @@
+<aura:component>
+    <aura:attribute name="iconName" type="String" />
+    <aura:attribute name="class" type="String" />
+    <aura:attribute name="iconClass" type="String" />
+    <aura:attribute name="size" type="String" default="medium" />
+    <aura:attribute name="variant" type="String" default="medium" />
+    <aura:attribute name="alternativeText" type="String" default="" />
+    <aura:attribute name="title" type="String" default="" />
+    <aura:attribute name="name" type="String" default="" />
+    <aura:attribute name="onclick" type="Aura.Action" />
+    <aura:attribute name="onfocus" type="Aura.Action" />
+    <aura:attribute name="onblur" type="Aura.Action" />
+    <aura:attribute name="disabled" type="Boolean" default="false" />
+    <aura:attribute name="tabIndex" type="Integer" />
+
+    <aura:attribute name="supportsExternalSVG" type="Boolean" default="true" access="private" />
+    <aura:attribute name="iconURL" type="string" default="" access="private" />
+    <aura:attribute name="iconCategory" type="string" default="" access="private" />
+    <aura:attribute name="icon" type="string" default="" access="private" />
+    <aura:attribute name="isLoaded" type="Boolean" default="false" access="private" />
+
+    <!--SERVICE COMPONENTS-->
+    <c:UtilityForBrowserSupport aura:id="utilityForBrowserSupport" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <aura:if isTrue="{! v.isLoaded }">
+        <aura:if isTrue="{! v.supportsExternalSVG }">
+            <lightning:buttonIcon
+                class="{! v.class }"
+                iconName="{! v.iconName }"
+                alternativeText="{! v.alternativeText }"
+                size="{! v.size }"
+                variant="{! v.variant }"
+                onclick="{! v.onclick }"
+                onfocus="{! v.onfocus }"
+                onblur="{! v.onblur }"
+                disabled="{! v.disabled }"
+                tabindex="{! v.tabIndex }"
+                iconClass="{! v.iconClass }"
+                title="{! v.title }"
+                name="{! v.name }"
+            />
+            <aura:set attribute="else">
+                <button
+                    class="{! join(' ',
+                                'slds-button',
+                                'slds-button_icon',
+                                'slds-button_icon-' + v.variant,
+                                v.class) }"
+                    title="{! v.title }"
+                    disabled="{! v.disabled }"
+                    onclick="{! v.onclick }"
+                    onfocus="{! v.onfocus }"
+                    onblur="{! v.onblur }"
+                    name="{! v.name }"
+                >
+                    <span
+                        class="{! join(' ',
+                                'slds-icon_container',
+                                'slds-icon-'+v.iconCategory+'-'+v.icon) }"
+                    >
+                        <img
+                            class="{! join(' ',
+                                'slds-button__icon',
+                                'slds-button__icon_' + v.size,
+                                v.iconClass) }"
+                            src="{! v.iconURL }"
+                            title="{! v.title }"
+                            alt="{! v.alternativeText }"
+                        />
+                    </span>
+                    <span class="slds-assistive-text">{! v.title }</span>
+                </button>
+            </aura:set>
+        </aura:if>
+    </aura:if>
+</aura:component>

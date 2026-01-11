@@ -1,0 +1,12 @@
+.THIS .strikethrough {
+    text-decoration: line-through;
+}
+
+.THIS .pro-overdue {
+    color: rgb(194, 57, 52);
+    font-weight: bold;
+}
+
+.THIS .pro-clickable {
+    cursor: pointer;
+}

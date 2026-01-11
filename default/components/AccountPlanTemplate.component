@@ -1,0 +1,338 @@
+<apex:component controller="AccountPlanTemplateController">
+    <apex:includeLightning />
+    <apex:slds />
+    <apex:attribute type="String" name="recId" description=""/>
+
+    <style>
+        html {
+            background: #A9C5DF;
+            padding: 0.75rem 0.75rem 0 0.75rem;
+        }
+        .pbBody {
+            user-select: none;
+        }
+        body {
+            .bPageBlock.apexDefaultPageBlock {
+                border: none;
+                padding: 0;
+        		background:#F5F5F5;
+            }
+            #accountPlanTemplateHeader {
+                margin: 1rem;
+                padding: 1rem;
+                background: #fff;
+                border: 1px solid #DDDBDA;
+                border-radius: 0.25rem;
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
+            }
+             #accountPlanTemplate {
+                margin: 1rem;
+            }
+            .btn-container {
+                display:flex;
+                justify-content: center;
+                gap: 1%;
+                padding: 1% 0 2% 0;
+                background: #f3f3f3;
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
+                .btn {
+                    width: 6rem;
+                    height: 2.5rem;
+                    border-width: 1px;
+                    border-radius: 5px;
+                    font-size: 16px;
+                    font-weigth: 500;
+                }
+                .btn-preview{
+                    background: #FFFFFF;
+                    color: #2D50E2;
+                    border: 1px solid #2D50E2;
+        			border-radius: 4px;
+                }
+                .btn-save {
+                    background: #2D50E2;
+                    color: #FFFFFF;
+                    border: #3274CC;
+                }
+                .btn-cancel {
+                    background: #E22D38;
+                    color: #FFFFFF;
+                    border: #AA2422;
+                }
+            }
+            #toast-message {
+                visibility: hidden;
+                color: #fff;
+                text-align: center;
+                border-radius: 4px;
+                padding: 12px;
+                position: fixed;
+                z-index: 10000;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 14px;
+                width: 30%;
+                display: flex;
+                align-items: center;
+            }
+            #toast-message.show {
+                visibility: visible;
+                -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+                animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            }
+            .toast-icon-left {
+                width: 1.5rem;
+                margin-right: 0.5rem;
+            }
+            .toast-container {
+                display: flex;
+                flex-direction: column;
+                align-items: baseline;
+                justify-content: center;
+                flex: 1;
+                margin-right: 1rem;
+            }
+            #toast-heading {
+                font-size: 1rem;
+            }
+            .toast-icon-right {
+                width: 1.5rem;
+            }
+            .toast-icon-right:hover {
+                cursor: pointer;
+                border: 1px solid #FFF;
+                border-radius: 4px;
+            }
+
+            @media only screen
+            and (min-device-width: 768px)
+            and (max-device-width: 1024px)
+            and (-webkit-min-device-pixel-ratio: 1) {
+                /* Adjust for smaller screens */
+                #toast-message {
+                    width: 58vw;
+                }
+            }
+            .slds-spinner_container{
+                position:fixed;
+            }
+        }
+    </style>
+    <div id="spinner" class="slds-spinner_container" >
+        <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+            <span class="slds-assistive-text">{!$Label.Loading}</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </div>
+    <div id="toast-message">
+        <div class="toast-icon-left">
+            <img id="toast-icon-left"/>
+        </div>
+        <div class='toast-container'>
+            <span id="toast-heading"></span>
+            <span id="toast-msg"></span>
+        </div>
+        <div class="toast-icon-right">
+            <img class="toast-icon" src="{!$Resource.closeIconToast}" onclick="handleToastClose()"/>
+        </div>
+    </div>
+    <div id="accountPlanTemplateHeader"/>
+    <div id="accountPlanTemplate" />
+    <div class="btn-container">
+       <button type="button" class="btn btn-preview" id="previewBtn" onclick="openPreview()">{!$Label.preview_button}</button>
+       <button type="button" class="btn btn-save" id="saveBtn" onclick="openModal()">{!$Label.Save}</button>
+       <button type="button" class="btn btn-cancel" onclick="redirectToListView()">{!$Label.Cancel}</button>
+    </div>
+
+    <script>
+        var headerTitle = '';
+        var headerImage;
+        var uploadfileName;
+        var componentAvailable;
+        var headerImageURL;
+        var tempComponentAvailable;
+        var toastColor = '';
+        var spinner = document.getElementById('spinner');
+        var previewBtn = document.getElementById('previewBtn');
+        var saveBtn = document.getElementById('saveBtn');
+        var previewBackItem = JSON.parse(localStorage.getItem('previewBackItem'));
+
+        if(previewBackItem !== null) {
+            var previewDataMap = {};
+            previewDataMap['templateImage'] = previewBackItem.headerImageURL;
+            previewDataMap['templateTitle'] = previewBackItem.headerTitle;
+            previewDataMap['templateFileName'] = previewBackItem.uploadfileName;
+            previewDataMap['templateComp'] = previewBackItem.componentAvailable;
+            localStorage.clear();
+        }
+        if('{!recId}' == '') {
+            previewBtn.setAttribute("disabled","true");
+            saveBtn.setAttribute("disabled","true");
+            previewBtn.style.opacity= 0.5;
+            saveBtn.style.opacity=0.5;
+        }
+
+		function openModal(){
+            spinner.style.display = 'block';
+            $Lightning.createComponent(
+                "pqcrush:saveModalAccountPlanTemplate",
+                {headerTitle: headerTitle, headerImage: headerImage, componentAvailable: componentAvailable, uploadfileName: uploadfileName, recordId : '{!recId}'},
+                "accountPlanTemplateHeader",
+                function(component) {
+                    spinner.style.display = 'none';
+                }
+            );
+        }
+
+    	function openPreview(){
+            spinner.style.display = 'block';
+            $Lightning.createComponent(
+                "pqcrush:previewAccountPlanTemplate",
+                {},
+                "accountPlanTemplateHeader",
+                function(component) {
+                    spinner.style.display = 'none';
+                }
+            );
+        }
+
+        function redirectToListView() {
+            spinner.style.display = 'block';
+            localStorage.clear();
+            // Construct the URL for the AccountPlanTemplate list view
+            var listViewUrl = '/lightning/o/pqcrush__Account_Plan_Template__c/list?filterName=Recent';
+            // Redirect to the list view
+            window.location.href = listViewUrl;
+        }
+
+        function showToastMessageFunction (msg, toastType) {
+            var toastMessage = document.getElementById("toast-message");
+            var toastIcon = document.getElementById('toast-icon-left');
+            var toastHeading = document.getElementById('toast-heading');
+            if(toastType === 'create') {
+                toastMessage.style.background = '#2e844a';
+                toastIcon.setAttribute('src','{!$Resource.success}');
+                toastHeading.innerHTML = 'Success';
+                spinner.style.display = 'block';
+            }
+            else if(toastType === 'info') {
+                toastMessage.style.background = '#747474';
+                toastIcon.setAttribute('src','{!$Resource.infoIconToast}');
+                toastHeading.innerHTML = 'Information';
+            }
+            else if(toastType === 'error') {
+                toastMessage.style.background = '#ea001e';
+                toastIcon.setAttribute('src','{!$Resource.errorIconToast}');
+                toastHeading.innerHTML = 'Error';
+            }
+            var toastMsg = document.getElementById('toast-msg');
+            toastMsg.innerHTML = msg;
+            // Show the toast message
+            toastMessage.className = "show";
+            // After 3 seconds, hide the toast message
+            if(toastType === 'create') {
+                setTimeout(function(){
+                    redirectToListView();
+                }, 1000);
+            }
+            setTimeout(function(){
+                toastMessage.className = toastMessage.className.replace("show", "");
+            }, 3000);
+        }
+
+        function handleToastClose() {
+            var toastMessage = document.getElementById("toast-message");
+            toastMessage.className = toastMessage.className.replace("show", "");
+        }
+
+        document.addEventListener("fromLwc", function(event){
+            headerTitle = event.detail.titleHeader;
+            headerImage = event.detail.headerImage;
+            uploadfileName = event.detail.fileTitle;
+            headerImageURL = event.detail.imageURL;
+        });
+
+    	document.addEventListener("fromtemplate", function(event){
+            componentAvailable = JSON.stringify(event.detail.components);
+            tempComponentAvailable = event.detail.components;
+            let componentList = event.detail.components;
+            if(componentList.length != 0) {
+                previewBtn.removeAttribute("disabled");
+                saveBtn.removeAttribute("disabled");
+                previewBtn.style.opacity=1;
+                saveBtn.style.opacity=1;
+            }
+            else {
+                previewBtn.setAttribute("disabled","true");
+                saveBtn.setAttribute("disabled","true");
+                previewBtn.style.opacity=0.5;
+                saveBtn.style.opacity=0.5;
+            }
+        });
+
+        document.addEventListener("showToast", function(event){
+            showToastMessageFunction(event.detail.showToastMessage, 'info');
+        });
+
+   	 	document.addEventListener("navigateRecordPage", function(event){
+            var reccId = event.detail.recId;
+            var err = event.detail.error;
+            var objectApiName = 'pqcrush__Account_Plan_Template__c';
+            if(err == '') {
+                var msg = '';
+                if('{!recId}' != '') {
+                    msg = 'Record Successfully Updated';
+                }
+                else {
+                    msg = 'Record Successfully Created';
+                }
+                showToastMessageFunction(msg, 'create');
+            }
+            else {
+                showToastMessageFunction('Record have an error', 'error');
+            }
+        });
+
+        document.addEventListener("previewTemplate", function(event){
+            localStorage.clear();
+            spinner.style.display = 'block';
+            var data1 = event.detail.accountPlanImage;
+            var data2 = event.detail.planId;
+            var accountPlanName = event.detail.planName;
+            if(headerTitle == undefined) {
+                headerTitle = '';
+            }
+            var rectempId = '{!recId}'!= null ? '{!recId}' : previewTemplateRecId;
+            let previewList = {
+                                'headerTitle':headerTitle,
+                                'planName':accountPlanName,
+                                'headerImageURL':headerImageURL,
+                                'accountPlanImage':data1,
+                                'componentAvailable':tempComponentAvailable,
+                                'planId':data2,
+                                'uploadfileName':uploadfileName,
+                                'templateRecordID': '{!recId}'
+                            };
+
+            localStorage.setItem('previewItem', JSON.stringify(previewList));
+            window.location.href = '/apex/pqcrush__PreviewAccountPlanTemplate?param1='+ encodeURIComponent(headerTitle);
+        });
+        $Lightning.use("pqcrush:strategyApp", function() {
+            $Lightning.createComponent(
+                "pqcrush:accountPlanTemplateHeader",
+                {recordId : '{!recId}', previewData: previewDataMap},
+                "accountPlanTemplateHeader",
+                function(component) {
+                    spinner.style.display = 'none';
+                }
+            );
+            $Lightning.createComponent(
+                "pqcrush:accountPlanTemplate",
+                {recordId : '{!recId}', previewData: previewDataMap},
+                "accountPlanTemplate",
+                function(component) {}
+            );
+        });
+    </script>
+</apex:component>

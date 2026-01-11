@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Team_Member_Added_Removed_All__c</fullName>
+    <defaultValue>true</defaultValue>
+    <label>Team Member Added Removed - All</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

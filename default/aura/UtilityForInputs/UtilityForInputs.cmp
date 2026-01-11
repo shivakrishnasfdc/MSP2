@@ -1,0 +1,8 @@
+<aura:component access="public">
+    <aura:method name="getRegexForObjectName" action="{! c.handleGetRegexForObjectName }"> </aura:method>
+    <aura:method name="getRegexForObjectNameDescription" action="{! c.handleGetRegexForObjectNameDescription }">
+    </aura:method>
+    <aura:method name="getRegexForNonBlankString" action="{! c.handleGetRegexForNonBlankString }"> </aura:method>
+    <aura:method name="getRegexForNonBlankStringDescription" action="{! c.handleGetRegexForNonBlankStringDescription }">
+    </aura:method>
+</aura:component>

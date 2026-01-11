@@ -1,0 +1,42 @@
+.THIS.pro-settings {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.THIS.pro-settings.classic {
+    height: 75vh;
+}
+
+.THIS .page-header {
+    border-bottom: 1px solid rgb(216, 221, 230);
+}
+
+.THIS .page-body {
+    flex: 1 1 0%;
+    position: relative;
+    align-items: stretch;
+}
+
+.THIS .page-content {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.THIS .scroll-container {
+    overflow-y: auto;
+    flex: 1 1 0%;
+}
+
+.THIS .navigation-container {
+    border-right: 1px solid rgb(216, 221, 230);
+    width: 250px;
+    flex-shrink: 0;
+}
+
+.THIS .slds-docked-form-footer {
+    position: relative;
+    display: flex;
+}

@@ -1,0 +1,6 @@
+<design:component label="PROLIFIQ OM Relationship Map">
+    <sfdc:objects>
+        <sfdc:object>Opportunity</sfdc:object>
+        <sfdc:object>PQ_Opportunity_Plan__c</sfdc:object>
+    </sfdc:objects>
+</design:component>

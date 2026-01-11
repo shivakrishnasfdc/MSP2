@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Use_Account_Team_Permissions__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>If enabled, will grant Account Plan permissions based on the Account permissions from the Account Team.</description>
+    <inlineHelpText>If enabled, will grant Account Plan permissions based on the Account permissions from the Account Team.</inlineHelpText>
+    <label>Use Account Team Permissions</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

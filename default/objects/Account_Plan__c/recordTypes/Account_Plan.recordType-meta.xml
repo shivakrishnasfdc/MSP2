@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_Plan</fullName>
+    <active>true</active>
+    <compactLayoutAssignment>AccountPlanCompactLayout</compactLayoutAssignment>
+    <label>Account Plan</label>
+    <picklistValues>
+        <picklist>Goal__c</picklist>
+        <values>
+            <fullName>Grow</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Maintain</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Save</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Win</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Status__c</picklist>
+        <values>
+            <fullName>Closed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Open</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+</RecordType>

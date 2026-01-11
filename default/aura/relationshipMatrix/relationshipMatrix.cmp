@@ -1,0 +1,17 @@
+<aura:component
+    extends="PQBaseCrushFeature"
+    implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:hasSObjectName"
+    controller="RelationshipMapMemberController"
+    access="global"
+>
+    <aura:attribute name="mapId" type="Id" />
+    <aura:attribute name="isClassic" type="Boolean" default="false" access="global" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <c:relationshipInfluenceShared
+        recordId="{! v.mapId }"
+        sObjectName="{! v.sObjectName }"
+        isClassic="{! v.isClassic }"
+    />
+</aura:component>

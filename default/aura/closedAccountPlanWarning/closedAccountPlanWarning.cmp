@@ -1,0 +1,44 @@
+<aura:component
+    extends="PQBaseCrushFeature"
+    controller="AccountPlanController"
+    implements="flexipage:availableForAllPageTypes,force:hasRecordId"
+    access="global"
+>
+    <ltng:require scripts="{!$Resource.StrategyUtils}" afterScriptsLoaded="{!c.init}" />
+
+    <aura:attribute name="recordAccess" type="UserRecordAccess" />
+    <aura:attribute name="record" type="Object" />
+    <aura:attribute name="simpleRecord" type="Account_Plan__c" />
+    <aura:attribute name="recordError" type="String" />
+
+    <force:recordData
+        aura:id="recordLoader"
+        recordId="{!v.recordId}"
+        layoutType="FULL"
+        targetRecord="{!v.record}"
+        targetFields="{!v.simpleRecord}"
+        targetError="{!v.recordError}"
+        recordUpdated="{!c.handleRecordUpdated}"
+    />
+
+    <aura:if isTrue="{! v.simpleRecord.pqcrush__Status__c == 'Closed' }">
+        <div class="slds-notify slds-notify_alert slds-theme_warning slds-theme_alert-texture ">
+            <span class="slds-assistive-text">{! $Label.c.Warning }</span>
+            <h2>
+                <c:PQIcon
+                    iconName="utility:warning"
+                    class="slds-m-right_x-small"
+                    size="x-small"
+                    alternativeText="{! $Label.c.Warning }"
+                />
+                <aura:if isTrue="{! v.recordAccess.HasEditAccess }">
+                    <ui:outputText value="{! $Label.c.warning_closed_account_plan_edit_message }" />
+
+                    <aura:set attribute="else">
+                        <ui:outputText value="{! $Label.c.warning_closed_account_plan_message }" />
+                    </aura:set>
+                </aura:if>
+            </h2>
+        </div>
+    </aura:if>
+</aura:component>

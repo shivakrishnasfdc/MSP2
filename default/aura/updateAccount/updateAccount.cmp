@@ -1,0 +1,145 @@
+<aura:component
+    extends="PQBaseCrushFeature"
+    controller="AccountController"
+    implements="force:lightningQuickActionWithoutHeader,force:hasRecordId"
+    access="global"
+>
+    <ltng:require scripts="{!$Resource.StrategyUtils}" />
+
+    <aura:attribute name="account" type="Account" default="{ 'sobjectType': 'Account' }" />
+
+    <aura:attribute name="isLoading" type="Boolean" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+    <!-- Output Field Workaround -->
+    <force:outputField
+        aura:id="accountIndustryLookupOutput"
+        value="{!v.account.Industry}"
+        class="slds-hide"
+    ></force:outputField>
+
+    <div class="slds-page-header" role="banner">
+        <div class="slds-grid">
+            <div class="slds-col">
+                <p class="slds-text-heading_label">{! $Label.c.Edit }</p>
+                <h1 class="slds-text-heading_medium">{! $Label.c.Account_Info }</h1>
+            </div>
+        </div>
+    </div>
+
+    <aura:if isTrue="{! v.isLoading }">
+        <lightning:spinner variant="brand" aura:id="spinner" />
+        <aura:set attribute="else">
+            <div />
+        </aura:set>
+    </aura:if>
+
+    <div aura:id="mainForm" class="slds-col slds-col_padded slds-p-top_large slds-hide">
+        <div aria-labelledby="editsummaryform">
+            <!-- EDIT ACCOUNT FORM -->
+            <form class="slds-form_stacked">
+                <div class="slds-form-element slds-is-required">
+                    <div aura:id="accountNameForm" class="slds-form-element__control slds-hide">
+                        <ui:inputText
+                            aura:id="accountName"
+                            label="{! $Label.c.Account_Name }"
+                            class="slds-input"
+                            labelClass="slds-form-element__label"
+                            value="{!v.account.Name}"
+                            required="true"
+                            disabled="true"
+                        />
+                    </div>
+                </div>
+
+                <div class="slds-form-element">
+                    <div aura:id="accountTypeInputForm" class="slds-form-element__control slds-hide">
+                        <label class="slds-form-element__label">{! $Label.c.Type }</label>
+                        <force:inputField aura:id="accountType" value="{!v.account.Type}"></force:inputField>
+                    </div>
+                    <div aura:id="accountTypeOutputForm" class="slds-form-element__control slds-hide">
+                        <ui:inputText
+                            label="{! $Label.c.Type }"
+                            class="slds-input"
+                            labelClass="slds-form-element__label"
+                            value="{!v.account.Type}"
+                            disabled="true"
+                        />
+                    </div>
+                </div>
+
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                        <ui:inputText
+                            aura:id="accountowner"
+                            label="{! $Label.c.Owner }"
+                            class="slds-input"
+                            labelClass="slds-form-element__label"
+                            value="{!v.account.Owner.Name}"
+                            disabled="true"
+                        />
+                    </div>
+                </div>
+
+                <div class="slds-form-element">
+                    <div aura:id="accountOwnershipInputForm" class="slds-form-element__control slds-hide">
+                        <label class="slds-form-element__label">{! $Label.c.Ownership }</label>
+                        <force:inputField aura:id="accountOwnership" value="{!v.account.Ownership}"></force:inputField>
+                    </div>
+                    <div aura:id="accountOwnershipOutputForm" class="slds-form-element__control slds-hide">
+                        <ui:inputText
+                            label="{! $Label.c.Ownership }"
+                            class="slds-input"
+                            labelClass="slds-form-element__label"
+                            value="{!v.account.Ownership}"
+                            disabled="true"
+                        />
+                    </div>
+                </div>
+
+                <div class="slds-form-element">
+                    <div aura:id="accountIndustryInputForm" class="slds-form-element__control slds-hide">
+                        <label class="slds-form-element__label">{! $Label.c.Industry }</label>
+                        <force:inputField aura:id="accountIndustry" value="{!v.account.Industry}"></force:inputField>
+                    </div>
+                    <div aura:id="accountIndustryOutputForm" class="slds-form-element__control slds-hide">
+                        <lightning:input
+                            label="{! $Label.c.Industry }"
+                            class="slds-input"
+                            labelClass="slds-form-element__label"
+                            value="{!v.account.Industry}"
+                            disabled="true"
+                        />
+                    </div>
+                </div>
+
+                <div class="slds-form-element">
+                    <div aura:id="accountAnnualRevenueForm" class="slds-form-element__control slds-hide">
+                        <ui:inputCurrency
+                            aura:id="annualRevenue"
+                            label="{! $Label.c.Annual_Revenue }"
+                            class="slds-input"
+                            labelClass="slds-form-element__label"
+                            value="{!v.account.AnnualRevenue}"
+                            disabled="true"
+                        />
+                    </div>
+                </div>
+
+                <div class="slds-form-element slds-text-align_right">
+                    <ui:button
+                        label="{! $Label.c.Cancel }"
+                        press="{!c.handleCancel}"
+                        class="slds-button slds-button_neutral"
+                    />
+                    <ui:button
+                        label="{! $Label.c.Save }"
+                        press="{!c.handleUpdateAccount}"
+                        class="slds-button slds-button_brand"
+                    />
+                </div>
+            </form>
+            <!-- / EDIT ACCOUNT FORM -->
+        </div>
+    </div>
+</aura:component>

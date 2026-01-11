@@ -1,0 +1,23 @@
+<aura:component extensible="true">
+    <aura:attribute name="oppPlanEnabled" type="Boolean" default="false" access="private" />
+    <aura:attribute name="isLicensed" type="Boolean" default="false" access="private" />
+    <aura:attribute name="loading" type="Boolean" default="true" access="private" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <c:featureService aura:id="featureService" />
+
+    <aura:if isTrue="{! not(v.loading) }">
+        <aura:if isTrue="{! v.isLicensed }">
+            <aura:if isTrue="{! v.oppPlanEnabled }">
+                {! v.body }
+                <aura:set attribute="else">
+                    <p class="slds-text-color_error">
+                        <lightning:formattedText
+                            value="{! $Label.c.error_insufficient_license_OppPlan }"
+                        ></lightning:formattedText>
+                    </p>
+                </aura:set>
+            </aura:if>
+        </aura:if>
+    </aura:if>
+</aura:component>

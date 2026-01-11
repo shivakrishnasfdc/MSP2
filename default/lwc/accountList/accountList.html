@@ -1,0 +1,20 @@
+<template>
+    <lightning-card title="Accounts List" class=" slds-m-around_small slds-p-around_none">
+        <template if:true={accounts}>
+            <div class="scroll-container">
+                <template for:each={accounts} for:item="account">
+                    <div key={account.id} class="slds-box slds-m-around_small item-card">
+                        <lightning-card title={account.name} icon-name="standard:account">
+                            <div class="slds-var-m-around_small">
+                                <p><strong>Account Name: </strong>{account.name}</p>
+                            </div>
+                        </lightning-card>
+                    </div>
+                </template>
+            </div>
+        </template>
+        <template if:false={accounts}>
+            <p>Error fetching accounts</p>
+        </template>
+    </lightning-card>
+</template>

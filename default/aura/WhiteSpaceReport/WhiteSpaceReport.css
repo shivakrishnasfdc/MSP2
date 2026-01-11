@@ -1,0 +1,27 @@
+.THIS .ws-spinner {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.THIS.whitespaceReport .slds-card__body {
+    margin-bottom: 0px;
+}
+
+.THIS .destructive-action.slds-dropdown__item > a {
+    color: rgb(194, 57, 52);
+}
+
+.THIS .destructive-action.slds-dropdown__item .slds-icon-text-default {
+    fill: rgb(194, 57, 52);
+}
+
+.THIS .destructive-action.slds-dropdown__item:hover > a {
+    color: rgb(161, 43, 43);
+}
+
+.THIS .destructive-action.slds-dropdown__item:hover .slds-icon-text-default {
+    fill: rgb(161, 43, 43);
+}
+
+.THIS .pq-no-results-text {
+    margin-top: -20px;
+}

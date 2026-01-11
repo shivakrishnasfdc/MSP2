@@ -1,0 +1,6 @@
+<aura:component
+    controller="WhiteSpaceTemplateController"
+    implements="force:appHostable,lightning:actionOverride,force:hasSObjectName,force:hasRecordId"
+>
+    <c:builderPage recordId="{! v.recordId}" onclosebuilder="{! c.handleClose }" />
+</aura:component>

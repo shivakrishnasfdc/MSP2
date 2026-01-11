@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Time_breakpoints_valid</fullName>
+    <active>true</active>
+    <description>Validates that the time decay breakpoints are not below zero days and are in order</description>
+    <errorConditionFormula>Time_BP_Low__c &lt; 0 || Time_BP_Low__c &gt; Time_BP_Mid__c || Time_BP_Mid__c &gt; Time_BP_High__c</errorConditionFormula>
+    <errorMessage>One or more of the time breakpoints is out of order or has a negative value</errorMessage>
+</ValidationRule>

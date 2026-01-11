@@ -1,0 +1,72 @@
+<apex:component >
+
+    <apex:includeLightning />
+    <apex:slds />
+
+    <apex:attribute name="recordId" description="The id of the template record if viewing or modifying an existing template"
+        type="Id" />
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .pqcrushWhiteSpaceTemplateBuilder.pqContainer {
+            height: 75vh;
+        }
+
+        .pqcrushWhiteSpaceTemplateBuilder .slds-panel_docked {
+            display: flex !important;
+        }
+    </style>
+
+    <div id="WhiteSpaceTemplateBuilder" />
+
+    <script>
+        var theme = '{! JSENCODE($User.UITheme) }';
+        var isMobile = theme === 'Theme4t';
+        var isLightning = theme === 'Theme4d' || theme === 'Theme4u';
+        var isClassic = theme === 'Theme3';
+        var recordId = '{! JSENCODE(recordId) }';
+
+        // Salesforce1
+        if (isMobile) {
+            document.body.style.margin = 0;
+            // Workaround for issue in mobile app that prevents overflow scrolling
+            var scrollOverride = document.createElement('style');
+            scrollOverride.innerHTML = 'html,html body{overflow:auto;-webkit-overflow-scrolling:touch;}body{position:absolute;left:0;right:0;top:0;bottom:0;}';
+            document.getElementsByTagName('head')[0].appendChild(scrollOverride);
+        }
+
+        document.addEventListener("closebuilder", function (event) {
+            console.log('vf event data window listener => ', event.detail);
+            if (isClassic) {
+                window.location = '{!URLFOR($Action.White_Space_Template__c.Tab, $ObjectType.White_Space_Template__c)}';
+            } else if (isMobile || isLightning) {
+                sforce.one.navigateToObjectHome(event.getParam('scope'));
+            }
+        });
+
+        document.addEventListener("lightning__showtoast", function (event) {
+            alert(event.toastAttributes.message);
+        });
+
+        $Lightning.use('pqcrush:strategyApp', function () {
+
+            $Lightning.createComponent(
+                'pqcrush:builderPage',
+                {
+                    recordId: recordId
+                },
+                'WhiteSpaceTemplateBuilder',
+                function (cmp) {
+                    console.log('WhiteSpaceTemplateBuilder Created!');
+                }
+            );
+        });
+    </script>
+
+</apex:component>

@@ -1,0 +1,31 @@
+@media print {
+    .THIS .pro-matrix-print {
+        page-break-inside: avoid;
+        background-color: white;
+    }
+}
+
+.THIS.is-mobile {
+    background: inherit;
+    border: none;
+    padding-top: 12px;
+    margin-left: -16px;
+}
+
+.THIS.no-header .slds-card__header {
+    padding-top: 0;
+}
+
+.THIS .header {
+    padding: 0;
+}
+
+.THIS.swot-fullscreen {
+    overflow: auto;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 8888;
+}

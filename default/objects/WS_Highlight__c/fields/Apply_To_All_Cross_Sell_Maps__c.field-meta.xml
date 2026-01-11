@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Apply_To_All_Cross_Sell_Maps__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Check this to apply this highlight option to all Cross-Sell Maps</description>
+    <inlineHelpText>Check this to apply this highlight option to all Cross-Sell Maps</inlineHelpText>
+    <label>Apply To All Cross Sell Maps</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

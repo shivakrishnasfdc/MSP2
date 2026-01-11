@@ -1,0 +1,67 @@
+<aura:component>
+    <!--PUBLIC ATTRIBUTES-->
+    <aura:attribute name="records" type="List" />
+    <aura:attribute name="columnId" type="String" />
+    <aura:attribute name="rowId" type="String" />
+    <aura:attribute name="whiteSpaceId" type="String" />
+    <aura:attribute name="supportsGridElement" type="Boolean" default="true" />
+    <aura:attribute name="isEditable" type="Boolean" default="false" />
+    <aura:attribute name="whiteSpaceObjectAccess" type="Object" />
+
+    <!--PRIVATE ATTRIBUTES-->
+    <aura:attribute name="isEditing" type="Boolean" default="false" access="private" />
+
+    <!--EVENTS-->
+    <aura:registerEvent name="onCellDataChanged" type="c:PQValueChangeEvent" />
+
+    <!--HANDLERS-->
+    <aura:handler name="onDeleteTileConfirmed" event="c:PQDeleteItemEvent" action="{! c.cellDeleteConfirmed }" />
+    <aura:handler name="editAction" event="c:PQActionEvent" action="{! c.handleOnEdit }" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!--SERVICE COMPONENTS-->
+    <c:WhiteSpaceService aura:id="whiteSpaceService" />
+    <c:UtilityForBrowserSupport aura:id="utilityForBrowserSupport" />
+
+    <!--COMPONENT MARKUP-->
+    <div
+        class="{! join(' ',
+                    'outer-container',
+                    v.supportsGridElement ? 'outer-container-grid' : 'outer-container-non-grid') }"
+    >
+        <div
+            class="{! join(' ',
+                        'list-content',
+                        v.supportsGridElement ? 'list-content-grid' : 'list-content-non-grid') }"
+        >
+            <aura:iteration items="{! v.records }" var="record">
+                <div
+                    class="{! join(' ',
+                                'tile-container',
+                                (!v.isEditing ? 'highlight' : ''),
+                                v.supportsGridElement ? '' : (or(v.records.length eq 1, and(v.isEditing, record.editing)) ? 'cell-single-non-grid' : 'cell-non-grid'),
+                                (and(v.isEditing, !record.editing)) ? 'slds-hide' : 'slds-show') }"
+                >
+                    <c:WhiteSpaceTile
+                        record="{# record }"
+                        isEditable="{! v.isEditable }"
+                        whiteSpaceObjectAccess="{! v.whiteSpaceObjectAccess }"
+                    />
+                </div>
+            </aura:iteration>
+        </div>
+        <aura:if isTrue="{# and(v.whiteSpaceObjectAccess.canAddCells, v.isEditable) }">
+            <span class="button-container">
+                <c:PQButtonIcon
+                    aura:id="addButton"
+                    iconName="utility:new"
+                    variant="bare"
+                    size="medium"
+                    alternativeText="{! $Label.c.Add }"
+                    class="{! join(' ', 'ws-add-button', v.isEditing ? 'slds-hide' : 'slds-show') }"
+                    onclick="{! c.addHandler }"
+                />
+            </span>
+        </aura:if>
+    </div>
+</aura:component>

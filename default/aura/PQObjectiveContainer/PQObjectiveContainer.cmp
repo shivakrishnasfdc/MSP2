@@ -1,0 +1,8 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:hasSObjectName" access="global">
+    <c:pqObjective
+        recordId="{! v.recordId }"
+        objectApiName="{! v.sObjectName }"
+        onobjectedit="{! c.handleObjectEdit }"
+        hasContainer="true"
+    />
+</aura:component>

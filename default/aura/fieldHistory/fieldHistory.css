@@ -1,0 +1,8 @@
+.THIS .slds-timeline__media_event::before {
+    z-index: 1;
+}
+
+.THIS .slds-media__figure,
+.THIS .slds-timeline__icon {
+    z-index: 2;
+}

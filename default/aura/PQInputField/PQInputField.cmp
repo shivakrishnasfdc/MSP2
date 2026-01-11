@@ -1,0 +1,133 @@
+<aura:component>
+    <!-- Public Attributes -->
+    <aura:attribute name="type" type="String" required="true" />
+    <aura:attribute name="displayName" type="String" required="true" />
+    <aura:attribute name="fieldValue" type="Object" required="true" />
+    <aura:attribute name="value" type="Object" />
+    <aura:attribute name="booleanValue" type="Boolean" />
+
+    <!-- Even Handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <c:dataFormatUtils aura:id="dataFormatUtils" />
+
+    <!-- TEXT AREA / TEXT -->
+    <aura:if isTrue="{# v.type eq 'textarea' || v.type eq 'text' }">
+        <div class="slds-form-element">
+            <label class="slds-form-element__label slds-no-flex">
+                <span>{# v.displayName }</span>
+            </label>
+            <textarea
+                aura:id="wsTextArea"
+                value="{! v.value }"
+                maxlength="255"
+                oninput="{! c.onTextInput }"
+                class="slds-textarea ws-textarea"
+                onchange="{! c.onValueChange }"
+            />
+        </div>
+    </aura:if>
+    <!-- CURRENCY -->
+    <aura:if isTrue="{# v.type == 'currency' }">
+        <lightning:input
+            aura:id="wsAmountArea"
+            type="number"
+            label="{# v.displayName }"
+            value="{! v.value }"
+            formatter="currency"
+            step=".01"
+            max="1000000000000"
+            messageWhenRangeOverflow="{! $Label.c.Amount_Exceeded_One_Trillion }"
+            onfocus="{! c.onAmountFocus }"
+            onblur="{! c.cleanupAmount }"
+            class="slds-truncate"
+            title="{! v.displayName + ': ' + v.value }"
+            onwheel="{! c.preventValueChange }"
+            onchange="{! c.onValueChange }"
+        />
+    </aura:if>
+    <!-- DOUBLE -->
+    <aura:if isTrue="{# v.type == 'double' }">
+        <lightning:input
+            aura:id="wsAmountArea"
+            type="number"
+            label="{# v.displayName }"
+            value="{! v.value }"
+            formatter="decimal"
+            step=".000001"
+            max="1000000000000"
+            messageWhenRangeOverflow="{! $Label.c.Amount_Exceeded_One_Trillion }"
+            onfocus="{! c.onAmountFocus }"
+            onblur="{! c.cleanupAmount }"
+            class="slds-truncate"
+            title="{! v.displayName + ': ' + v.value }"
+            onwheel="{! c.preventValueChange }"
+            onchange="{! c.onValueChange }"
+        />
+    </aura:if>
+    <!-- PERCENT -->
+    <aura:if isTrue="{# v.type == 'percent' }">
+        <lightning:input
+            aura:id="wsAmountArea"
+            type="number"
+            label="{# v.displayName }"
+            value="{! v.value }"
+            formatter="percent-fixed"
+            step=".01"
+            max="1000000000000"
+            messageWhenRangeOverflow="{! $Label.c.Percent_Exceeded_One_Trillion }"
+            onfocus="{! c.onAmountFocus }"
+            onblur="{! c.cleanupAmount }"
+            class="slds-truncate"
+            title="{! v.displayName + ': ' + v.value }"
+            onwheel="{! c.preventValueChange }"
+            onchange="{! c.onValueChange }"
+        />
+    </aura:if>
+    <!-- INTEGER -->
+    <aura:if isTrue="{# v.type == 'integer' }">
+        <lightning:input
+            aura:id="wsAmountArea"
+            type="number"
+            label="{# v.displayName }"
+            value="{! v.value }"
+            formatter="decimal"
+            step="1"
+            max="1000000000000"
+            messageWhenRangeOverflow="{! $Label.c.Amount_Exceeded_One_Trillion }"
+            onfocus="{! c.onAmountFocus }"
+            onblur="{! c.cleanupAmount }"
+            class="slds-truncate"
+            title="{! v.displayName + ': ' + v.value }"
+            onwheel="{! c.preventValueChange }"
+            onchange="{! c.onValueChange }"
+        />
+    </aura:if>
+    <!-- BOOLEAN -->
+    <aura:if isTrue="{# v.type == 'boolean' }">
+        <ui:inputCheckbox
+            aura:id="wsBooleanArea"
+            label="{# v.displayName }"
+            value="{! v.booleanValue }"
+            class="slds-truncate"
+            change="{! c.onValueChange }"
+        />
+    </aura:if>
+    <!-- DATE -->
+    <aura:if isTrue="{# v.type == 'date' }">
+        <lightning:input
+            aura:id="wsDateArea"
+            type="date"
+            label="{# v.displayName }"
+            value="{! v.value }"
+            class="slds-truncate"
+            title="{! v.displayName + ': ' + v.value }"
+            onwheel="{! c.preventValueChange }"
+            onchange="{! c.onValueChange }"
+        />
+    </aura:if>
+    <!-- PICKLIST -->
+    <aura:if isTrue="{# v.type == 'picklist' }">
+        {# v.displayName }: {! $Label.c.Picklist_Not_Supported }
+    </aura:if>
+</aura:component>

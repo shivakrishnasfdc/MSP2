@@ -1,0 +1,96 @@
+<aura:component>
+    <aura:attribute name="filterCountForLabel" type="String" />
+    <aura:attribute name="filterArrays" type="List" />
+    <aura:attribute name="filtering" type="Boolean" default="false" />
+    <aura:attribute name="filterLabel" type="String" />
+    <aura:attribute name="name" type="String" />
+    <aura:attribute name="tempFilterArrays" type="List" />
+
+    <aura:attribute name="finalLabel" type="String" access="private" />
+
+    <aura:handler name="render" action="{!c.onRender}" value="{!this}" />
+
+    <aura:registerEvent name="updateAppliedFilters" type="c:appliedFiltersUpdate" />
+
+    <c:stringUtils aura:id="stringUtilService" />
+
+    <aura:if isTrue="{! v.filtering }">
+        <div class="popover-backdrop" onclick="{! c.handleFilterCancel }"></div>
+    </aura:if>
+
+    <div class="slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open">
+        <lightning:button
+            iconName="utility:down"
+            label="{! v.finalLabel }"
+            iconPosition="right"
+            variant="base"
+            onclick="{! c.handleFilterButtonClick }"
+            class="slds-float_right"
+        />
+    </div>
+    <aura:if isTrue="{! v.filtering }">
+        <div class="slds-dropdown slds-dropdown_right slds-dropdown_large pro-list-filter-dropdown">
+            <div class="slds-popover__body">
+                <div class="slds-popover__body">
+                    <div class="slds-grid slds-wrap slds-grid_pull-padded">
+                        <aura:iteration items="{! v.tempFilterArrays }" var="section">
+                            <div
+                                class="{! 'slds-col slds-p-horizontal_small slds-max-medium-size_1-of-1 slds-medium-size_1-of-' + v.tempFilterArrays.length }"
+                            >
+                                <fieldset class="slds-form-element slds-hyphenate">
+                                    <legend class="slds-form-element__legend slds-form-element__label">
+                                        {! section.label }
+                                    </legend>
+                                    <aura:iteration items="{! section.filters }" var="filter">
+                                        <aura:if isTrue="{! section.isSingleSelect }">
+                                            <lightning:input
+                                                class="slds-m-vertical_xx-small"
+                                                type="radio"
+                                                name="{! section.label }"
+                                                value="{! filter.value }"
+                                                label="{! filter.label }"
+                                                checked="{! filter.isSelected }"
+                                                onchange="{! c.handleRadioSelect }"
+                                                aura:id="radio"
+                                            />
+                                            <aura:set attribute="else">
+                                                <lightning:input
+                                                    class="slds-m-vertical_xx-small"
+                                                    type="checkbox"
+                                                    name="checkboxItem"
+                                                    value="{! filter.value }"
+                                                    label="{! filter.label }"
+                                                    checked="{! filter.isSelected }"
+                                                    aura:id="checkbox"
+                                                />
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </fieldset>
+                            </div>
+                        </aura:iteration>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-popover__footer">
+                <lightning:button
+                    type="button"
+                    accesskey="27"
+                    variant="neutral"
+                    label="{! $Label.c.Cancel }"
+                    onclick="{! c.handleFilterCancel }"
+                />
+                <lightning:button
+                    type="button"
+                    variant="brand"
+                    label="{! $Label.c.Apply }"
+                    onclick="{! c.handleFilterApply }"
+                />
+            </div>
+        </div>
+        <div
+            class="pro-filter-item-backdrop slds-backdrop slds-backdrop_open"
+            onclick="{! c.handleFilterCancel }"
+        ></div>
+    </aura:if>
+</aura:component>

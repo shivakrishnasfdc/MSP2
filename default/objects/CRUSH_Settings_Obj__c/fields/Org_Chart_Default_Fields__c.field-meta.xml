@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Org_Chart_Default_Fields__c</fullName>
+    <defaultValue>&quot;Contact.Name.Required,Contact.Title,Contact.Email,Key_Stakeholder__c.Influence__c.Required,Key_Stakeholder__c.Support__c.Required&quot;</defaultValue>
+    <description>Determines the default fields for the Org Chart display</description>
+    <externalId>false</externalId>
+    <label>Org Chart Default Fields</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

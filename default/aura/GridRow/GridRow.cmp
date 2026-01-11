@@ -1,0 +1,85 @@
+<aura:component>
+    <ltng:require scripts="{! $Resource.lodash }" afterScriptsLoaded="{! c.resourcesLoaded }" />
+
+    <!-- PUBLIC ATTRIBUTES -->
+    <aura:attribute name="columns" type="List" default="[]" access="public" />
+    <aura:attribute name="rowTitle" type="String" default="" access="public" />
+    <aura:attribute name="rowData" type="Map" default="{}" access="public" />
+    <aura:attribute name="isHeaderRow" type="Boolean" default="false" access="public" />
+    <aura:attribute name="isFooterRow" type="Boolean" default="false" access="public" />
+
+    <aura:attribute name="fixedFirstColumnWidth" type="Boolean" default="true" />
+    <aura:attribute name="smallColumns" type="Integer" default="4" access="public" />
+    <aura:attribute name="mediumColumns" type="Integer" default="3" access="public" />
+    <aura:attribute name="largeColumns" type="Integer" default="2" access="public" />
+
+    <aura:attribute name="showCellBorders" type="Boolean" default="true" access="public" />
+    <aura:attribute name="showGridTopBorder" type="Boolean" default="true" access="public" />
+    <aura:attribute name="showGridBottomBorder" type="Boolean" default="true" access="public" />
+    <aura:attribute name="showGridLeftBorder" type="Boolean" default="true" access="public" />
+    <aura:attribute name="showGridRightBorder" type="Boolean" default="true" access="public" />
+
+    <aura:attribute name="rowTitleColor" type="String" default="#fff" access="public" />
+    <aura:attribute name="rowCellColor" type="String" default="#fff" access="public" />
+
+    <aura:attribute name="headerClass" type="String" default="" access="public" />
+
+    <!-- PRIVATE ATTRIBUTES -->
+    <aura:attribute name="orderedRowData" type="List" default="[]" access="private" />
+
+    <!-- HANDLERS -->
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
+    <aura:handler name="change " value="{! v.rowData }" action="{! c.dataChanged }" />
+
+    <!-- METHODS -->
+    <aura:method name="dataChanged" action="{! c.dataChanged }" />
+
+    <lightning:layout verticalAlign="stretch" class="x-large">
+        <c:PQLayoutItem
+            columns="{! v.smallColumns }"
+            smallDeviceColumns="{! v.smallColumns }"
+            mediumDeviceColumns="{! v.mediumColumns }"
+            largeDeviceColumns="{! v.largeColumns }"
+            class="{# v.fixedFirstColumnWidth ? 'fixed-header-width' : '' }"
+        >
+            <c:GridCell
+                backgroundColor="{# v.rowTitleColor }"
+                class="{! v.headerClass }"
+                leftBorder="{! v.showGridLeftBorder }"
+                rightBorder="{! or(and(v.showCellBorders, v.orderedRowData.length gt 0), and(v.showGridRightBorder, v.orderedRowData.length eq 0)) }"
+                topBorder="{! and(v.isHeaderRow, v.showGridTopBorder) }"
+                bottomBorder="{! or(and(!v.isFooterRow, v.showCellBorders), and(v.isFooterRow, v.showGridBottomBorder)) }"
+                >{! v.isHeaderRow ? '' : v.rowTitle }</c:GridCell
+            >
+        </c:PQLayoutItem>
+        <aura:if isTrue="{! and(empty(v.orderedRowData), v.isHeaderRow) }">
+            <c:GridCell
+                backgroundColor="{# v.rowCellColor }"
+                class="{! v.isHeaderRow ? v.headerClass : '' }"
+                leftBorder="false"
+                rightBorder="{! or(and(v.showCellBorders, index lt (v.orderedRowData.length-1)), and(v.showGridRightBorder, index eq (v.orderedRowData.length-1))) }"
+                topBorder="{! and(v.isHeaderRow, v.showGridTopBorder) }"
+                bottomBorder="{! or(and(!v.isFooterRow, v.showCellBorders), and(v.isFooterRow, v.showGridBottomBorder)) }"
+                >{! $Label.c.No_Columns }</c:GridCell
+            >
+        </aura:if>
+        <aura:iteration items="{! v.orderedRowData }" var="columnObj" indexVar="index">
+            <c:PQLayoutItem
+                columns="{! v.smallColumns }"
+                smallDeviceColumns="{! v.smallColumns }"
+                mediumDeviceColumns="{! v.mediumColumns }"
+                largeDeviceColumns="{! v.largeColumns }"
+            >
+                <c:GridCell
+                    backgroundColor="{# v.rowCellColor }"
+                    class="{! v.isHeaderRow ? v.headerClass : '' }"
+                    leftBorder="false"
+                    rightBorder="{! or(and(v.showCellBorders, index lt (v.orderedRowData.length-1)), and(v.showGridRightBorder, index eq (v.orderedRowData.length-1))) }"
+                    topBorder="{! and(v.isHeaderRow, v.showGridTopBorder) }"
+                    bottomBorder="{! or(and(!v.isFooterRow, v.showCellBorders), and(v.isFooterRow, v.showGridBottomBorder)) }"
+                    >{! columnObj }</c:GridCell
+                >
+            </c:PQLayoutItem>
+        </aura:iteration>
+    </lightning:layout>
+</aura:component>

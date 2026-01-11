@@ -1,0 +1,62 @@
+<aura:component>
+    <!--PUBLIC ATTRIBUTES-->
+    <aura:attribute name="record" type="Map" />
+
+    <!--PRIVATE ATTRIBUTES-->
+    <aura:attribute name="allFieldsValid" type="Boolean" default="true" access="private" />
+    <aura:attribute name="tileHeaderOptions" type="List" access="private" />
+    <aura:attribute name="recordDirty" type="Map" access="private" />
+
+    <!--SERVICE COMPONENTS-->
+    <c:WhiteSpaceService aura:id="wsService" />
+
+    <!--EVENTS-->
+    <aura:registerEvent name="onCellDataChanged" type="c:PQValueChangeEvent" />
+    <aura:registerEvent name="editAction" type="c:PQActionEvent" />
+
+    <!--HANDLERS-->
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
+
+    <div class="ws-tile-editor-main">
+        <aura:if isTrue="{! !empty(v.tileHeaderOptions)}">
+            <lightning:select
+                aura:id="wsLabelSelect"
+                label="{! $Label.c.Header_Label }"
+                onchange="{! c.handleHeaderValueChanged }"
+            >
+                <aura:iteration items="{! v.tileHeaderOptions }" var="option">
+                    <option text="{! option.label }" value="{! option.value }" selected="{! option.selected }" />
+                </aura:iteration>
+            </lightning:select>
+        </aura:if>
+        <aura:if isTrue="{! v.recordDirty.displayFields }">
+            <aura:iteration items="{! v.recordDirty.displayFields }" var="field">
+                <aura:iteration items="{! field.data }" var="data">
+                    <c:PQInputField
+                        type="{# field.type }"
+                        displayName="{# field.displayName }"
+                        fieldValue="{! data.value }"
+                    />
+                </aura:iteration>
+            </aura:iteration>
+        </aura:if>
+        <div aura:id="wsFooter" class="ws-footer-container">
+            <div class="slds-grid slds-grid_align-spread ws-full-width slds-wrap">
+                <lightning:button
+                    label="{! $Label.c.Cancel }"
+                    title="{! $Label.c.Cancel }"
+                    onclick="{! c.onCancel }"
+                    class="ws-button"
+                />
+                <lightning:button
+                    variant="brand"
+                    label="{! $Label.c.Save }"
+                    title="{! $Label.c.Save }"
+                    onclick="{! c.onSave }"
+                    class="ws-button"
+                    disabled="{! !v.allFieldsValid }"
+                />
+            </div>
+        </div>
+    </div>
+</aura:component>

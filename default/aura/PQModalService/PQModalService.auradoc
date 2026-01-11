@@ -1,0 +1,5 @@
+<aura:documentation>
+	<aura:description>
+            <p><code>PQModalService</code> is a service component that abstracts the presentation of modal components</p>
+    </aura:description>
+</aura:documentation>

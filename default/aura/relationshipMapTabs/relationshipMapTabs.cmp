@@ -1,0 +1,62 @@
+<aura:component
+    controller="MasterAccountPlanController"
+    implements="flexipage:availableForRecordHome,force:hasRecordID"
+    access="global"
+>
+    <ltng:require scripts="{! $Resource.StrategyUtils }" afterScriptsLoaded="{! c.init }" />
+
+    <aura:attribute name="maps" type="List" default="[]" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
+    <aura:attribute name="options" type="List" default="[]" />
+    <aura:attribute name="defaultSortOrder" type="String" default="" />
+    <aura:attribute name="selTabId" type="String" default="" />
+
+    <aura:if isTrue="{! v.isLoading }">
+        <lightning:spinner alternativeText="{! $Label.c.Loading }" variant="brand" />
+    </aura:if>
+
+    <div class="slds-section" aura:id="collapsibleSectionContainer">
+        <h5 class="slds-theme_shade">
+            <lightning:buttonStateful
+                labelWhenOff="Change Tab Order"
+                labelWhenOn="Change Tab Order"
+                iconNameWhenOff="utility:chevronright"
+                iconNameWhenOn="utility:chevrondown"
+                onclick="{! c.handleSectionHeaderClick }"
+                class="slds-section__title-action"
+            />
+        </h5>
+        <div class="slds-section__content slds-p-horizontal_medium slds-p-bottom_medium lgc-bg slds-theme_shade">
+            <lightning:combobox
+                name="general"
+                label="Relationship Map Order"
+                value="{! v.defaultSortOrder }"
+                placeholder="Select an Option"
+                options="{! v.options }"
+                onchange="{! c.handleChange }"
+            />
+        </div>
+    </div>
+
+    <c:PQBaseCrushFeature>
+        <lightning:tabset variant="scoped" selectedTabId="{!v.selTabId}">
+            <aura:iteration items="{! v.maps }" var="item" indexVar="index">
+                <lightning:tab label="{! item.Name }" id="{! item.Id }">
+                    <c:RelationshipMapShared
+                        recordId="{! item.Id }"
+                        sObjectName="pqcrush__Relationship_Map__c"
+                        skipLicenseCheck="true"
+                    />
+                    <br />
+                    <c:relationshipMatrix
+                        isClassic="{! v.isClassic }"
+                        recordId="{! item.Id }"
+                        sObjectName="{! v.sObjectName }"
+                    />
+                    <br />
+                    <c:dataTableMapMember recordId="{! item.Id }" objectApiName="pqcrush__Relationship_Map__c" />
+                </lightning:tab>
+            </aura:iteration>
+        </lightning:tabset>
+    </c:PQBaseCrushFeature>
+</aura:component>

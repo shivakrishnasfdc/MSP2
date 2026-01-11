@@ -1,0 +1,79 @@
+<apex:component access="global" controller="CreateDynamicRecordExtension">
+    <apex:includeLightning />
+
+    <apex:attribute name="whiteSpaceId"
+        description="The id for the account plan this whitespace report is associated to"
+        type="Id"
+        required="true"
+        access="global"
+    />
+
+    <div id="responseErrors"></div>
+    <div id="WhiteSpaceReportRecord"></div>
+
+    <script>
+        var recordId = '{! JSENCODE(whiteSpaceId) }';
+        var theme = '{! JSENCODE($User.UITheme) }';
+        var isMobile = theme === 'Theme4t';
+        var isLightning = theme === 'Theme4d' || theme === 'Theme4u';
+        var isClassic = theme === 'Theme3';
+
+        $Lightning.use("pqcrush:strategyApp", function () {
+            $Lightning.createComponent( "pqcrush:WhiteSpaceReportRecord", {
+                recordId: recordId,
+                isClassic: true,
+            }, "WhiteSpaceReportRecord", function (cmp) {
+                console.log('component created');
+                console.log(cmp);
+                $A.eventService.addHandler({
+                    event: 'force:showToast',
+                    handler: function (event) {
+                        postEventToOneApp('force:showToast',
+                        event.getParams(),
+                        function() {
+                            alert(event.getParam('message'));
+                        });
+                    }
+                });
+
+                $A.eventService.addHandler({
+                    event: 'force:createRecord',
+                    handler: function (event) {
+                        if (event.getSource().getName() != 'pqcrushWhiteSpaceReportRecord')
+                        {
+                            return;
+                        }
+                        let params = event.getParams();
+                        let entityName = params.entityApiName;
+                        let fieldValues = params.defaultFieldValues;
+                        if (isLightning || isMobile) {
+                            sforce.one.createRecord(entityName, null, fieldValues);
+                        } else if (isClassic) {
+                            let currentURL = '{! JSENCODE($CurrentPage.URL) }';
+                            fieldValues.saveURL = currentURL;
+                            fieldValues.retURL = currentURL;
+                            Visualforce.remoting.Manager.invokeAction(
+                                '{! $RemoteAction.CreateDynamicRecordExtension.getCreateURL }',
+                                entityName,
+                                fieldValues,
+                                function (result, remoteEvent) {
+                                    if (remoteEvent.status) {
+                                        let url = unescapeHTML(result);
+                                        window.location = url;
+                                    } else if (remoteEvent.type === 'exception') {
+                                        document.getElementById("responseErrors").innerHTML = event.message + "<br/>\n<pre>" + event.where + "</pre>";
+                                    } else {
+                                        document.getElementById("responseErrors").innerHTML = event.message;
+                                    }
+                                },
+                                {
+                                    escape: true
+                                }
+                            );
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</apex:component>

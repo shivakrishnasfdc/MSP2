@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>For_Automation_Use_Only__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Check this box if this badge is used for automation.  It will no appear in the menu for users to select.</description>
+    <inlineHelpText>Check this box if this badge is used for automation.  It will no appear in the menu for users to select.</inlineHelpText>
+    <label>For Automation Use Only</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

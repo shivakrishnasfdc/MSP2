@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Relationship_Map_Default_Fields__c</fullName>
+    <defaultValue>&quot;Contact.Name.Required,Contact.Title,Contact.Email,Relationship_Map_Member__c.Influence__c.Required,Relationship_Map_Member__c.Support__c.Required&quot;</defaultValue>
+    <description>Determines the default fields for the Relationship Map display</description>
+    <externalId>false</externalId>
+    <label>Relationship Map Default Fields</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

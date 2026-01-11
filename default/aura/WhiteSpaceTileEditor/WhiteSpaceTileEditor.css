@@ -1,0 +1,31 @@
+.THIS .ws-full-width {
+    width: 100%;
+}
+
+.THIS .ws-tile-editor-main {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1rem 20px;
+}
+
+/* footer button styles */
+.THIS .ws-footer-container {
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    height: auto;
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0.5rem 10px;
+}
+
+.THIS .ws-button {
+    width: 100%;
+}
+
+.THIS .ws-button + .ws-button {
+    margin-top: 0.25rem;
+    margin-left: 0;
+}

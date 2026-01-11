@@ -1,0 +1,6 @@
+<design:component label="PROLIFIQ CRUSH Objectives (Console)">
+    <sfdc:objects>
+        <sfdc:object>Account_Plan__c</sfdc:object>
+        <sfdc:object>pq_Master_Account_Plan__c</sfdc:object>
+    </sfdc:objects>
+</design:component>

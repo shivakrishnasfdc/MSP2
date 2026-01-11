@@ -1,0 +1,26 @@
+/* text area styles */
+.THIS textarea.ws-textarea {
+    overflow: hidden;
+    resize: none;
+}
+
+.THIS textarea.ws-textarea:read-only {
+    border: none;
+}
+
+.THIS textarea.ws-textarea:read-only:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Hide number arrows for Firefox browser */
+.THIS input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+/* Hide number arrows for webkit browsers like Chrome and Safari */
+.THIS input[type='number']::-webkit-inner-spin-button,
+.THIS input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

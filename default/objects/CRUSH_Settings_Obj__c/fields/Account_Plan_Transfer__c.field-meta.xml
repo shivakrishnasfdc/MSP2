@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_Plan_Transfer__c</fullName>
+    <label>Account Plan Transfer</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>TEAM_MEMBER</fullName>
+                <default>false</default>
+                <label>Assign to oldest team member</label>
+            </value>
+            <value>
+                <fullName>USER</fullName>
+                <default>false</default>
+                <label>Assign to specific user</label>
+            </value>
+            <value>
+                <fullName>NONE</fullName>
+                <default>true</default>
+                <label>Do nothing</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,41 @@
+.THIS .checkbox-column {
+    max-width: 150px;
+    text-align: center;
+}
+
+.THIS table {
+    margin: 1.5rem auto;
+}
+
+.THIS table .slds-form-element__label {
+    display: none;
+}
+
+.THIS table th {
+    text-align: center;
+}
+
+.THIS table .border-right {
+    border-right: 1px solid #ccc;
+}
+
+/* Lookup styling */
+.THIS .uiInputTextForAutocomplete {
+    width: 100%;
+    padding: 0 1rem 0 0.75rem;
+    line-height: 1.875rem;
+    min-height: calc(2.125rem + 2px);
+}
+
+.THIS .slds-lookup__result-text {
+    color: rgb(22, 50, 92);
+    font-weight: normal;
+}
+
+.THIS .lookup__item {
+    text-decoration: none !important;
+}
+
+.THIS .pillText {
+    font-weight: normal;
+}

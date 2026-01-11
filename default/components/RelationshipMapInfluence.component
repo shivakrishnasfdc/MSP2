@@ -1,0 +1,65 @@
+<apex:component access="global">
+    <apex:includeLightning />
+
+    <apex:attribute name="recordId" description="The id for either this relationship map or the record that is related to it"
+        type="Id" required="true" access="global" />
+    <apex:attribute name="sObjectName" description="The the name of the sObject that recordId is for" type="String" required="true" access="global"
+    />
+
+    <div id="relationshipMapInfluence"></div>
+
+    <script>
+        var recordId = '{! JSENCODE(recordId) }';
+        var sObjectName = '{! JSENCODE(sObjectName) }';
+
+        $Lightning.use("pqcrush:strategyApp", function() {
+            $Lightning.createComponent(
+                "pqcrush:relationshipMapInfluenceChart",
+                {
+                    recordId: recordId,
+                    sObjectName: sObjectName,
+                    isClassic: true
+                },
+                "relationshipMapInfluence",
+                function(cmp) {
+                    console.log('component created');
+                    console.log(cmp);
+
+                    $A.eventService.addHandler({
+                        event: 'force:refreshView',
+                        handler: function (event) {
+                            rerenderDetailsBlock();
+                        }
+                    });
+
+                    $A.eventService.addHandler({
+                        event: 'force:navigateToSObject',
+                        handler: function(event) {
+                            var recordId = event.getParam('recordId');
+                            if (isMobile) {
+                                sforce.one.navigateToSObject(recordId);
+                            } else {
+                                window.open('/' + recordId);
+                            }
+                        }
+                    });
+
+                    $A.eventService.addHandler({
+                        event: 'force:editRecord',
+                        handler: function (event) {
+                            var currentURL = '{! JSENCODE($CurrentPage.URL) }';
+                            var recordId = event.getParam('recordId');
+                            if (isMobile) {
+                                sforce.one.editRecord(recordId);
+                            } else {
+                                var recordUrl = '/' + recordId;
+                                var editURLForNewWindow = recordUrl+ '/e?saveURL=' + recordUrl + '&retURL=' + recordUrl;
+                                window.open(editURLForNewWindow);
+                            }
+                        }
+                    });
+                }
+            );
+        });
+     </script>
+</apex:component>

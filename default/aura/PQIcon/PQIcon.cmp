@@ -1,0 +1,49 @@
+<aura:component>
+    <aura:attribute name="supportsExternalSVG" type="Boolean" default="false" />
+    <aura:attribute name="iconName" type="String" />
+    <aura:attribute name="class" type="String" />
+    <aura:attribute
+        name="containerClass"
+        default=""
+        type="String"
+        description="Container class name for span container of icon"
+    />
+    <aura:attribute name="size" type="String" default="medium" />
+    <aura:attribute name="alternativeText" type="String" default="" />
+    <aura:attribute name="iconURL" type="string" default="" access="private" />
+    <aura:attribute name="iconCategory" type="string" default="" access="private" />
+    <aura:attribute name="icon" type="string" default="" access="private" />
+    <aura:attribute name="isLoaded" type="Boolean" default="false" access="private" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!--SERVICE COMPONENTS-->
+    <c:UtilityForBrowserSupport aura:id="utilityForBrowserSupport" />
+
+    <aura:if isTrue="{! v.isLoaded }">
+        <aura:if isTrue="{! v.supportsExternalSVG }">
+            <lightning:icon
+                iconName="{! v.iconName }"
+                class="{! v.class }"
+                size="{! v.size }"
+                alternativeText="{! v.alternativeText }"
+            />
+            <aura:set attribute="else">
+                <span
+                    class="{! join(' ',
+                                        'slds-icon_container',
+                                        'slds-icon-'+v.iconCategory+'-'+v.icon) }"
+                >
+                    <img
+                        class="{! join(' ',
+                                        'slds-icon',
+                                        'slds-icon_' + v.size,
+                                        v.class) }"
+                        src="{! v.iconURL }"
+                        title="Shared directly"
+                        alt="Shared directly"
+                    />
+                </span>
+            </aura:set>
+        </aura:if>
+    </aura:if>
+</aura:component>

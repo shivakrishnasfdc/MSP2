@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Use_Percentage_Account_Plan_Score__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Toggle this to false to use old Account Plan Scoring component</description>
+    <inlineHelpText>Turn off if you want to use old Account Plan Scoring component</inlineHelpText>
+    <label>Use Percentage Account Plan Scoring</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

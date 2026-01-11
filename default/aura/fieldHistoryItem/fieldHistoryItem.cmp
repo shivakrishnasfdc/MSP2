@@ -1,0 +1,92 @@
+<aura:component>
+    <aura:attribute name="hasValues" type="Boolean" />
+    <aura:attribute name="history" type="History" />
+    <aura:handler name="init" action="{!c.init}" value="{!this}" />
+
+    <li>
+        <span class="slds-assistive-text">{! $Label.c.Event }</span>
+        <div class="slds-media">
+            <div class="slds-media__body">
+                <div class="slds-media slds-media_timeline slds-timeline__media_event">
+                    <div class="slds-media__figure slds-timeline__icon">
+                        <aura:if isTrue="{! empty(v.history.iconUrl) }">
+                            <c:PQIcon iconName="standard:event" />
+                        </aura:if>
+                        <aura:if isTrue="{! !empty(v.history.iconUrl) }">
+                            <div class="slds-icon_container" style="{! 'background-color: ' + v.history.color }">
+                                <img src="{! v.history.iconUrl }" alt="icon" class="slds-icon" />
+                            </div>
+                        </aura:if>
+                    </div>
+                    <div class="slds-media__body">
+                        <h3 class="slds-truncate" title="{! v.history.parentObjectLabel }">
+                            {! v.history.parentObjectLabel }
+                        </h3>
+                        <ul class="slds-list_horizontal slds-wrap">
+                            <aura:if isTrue="{! v.history.fieldLabel == null }">
+                                <li class="slds-size_1-of-1">
+                                    <span class="slds-text-title">{! $Label.c.Action }:&nbsp;</span>
+                                    <span class="slds-text-body_small history-action">
+                                        <ui:outputText value="{! v.history.fieldName }" />
+                                    </span>
+                                </li>
+
+                                <aura:set attribute="else">
+                                    <li class="slds-size_1-of-1">
+                                        <span class="slds-text-title">{! $Label.c.Action }:&nbsp;</span>
+                                        <span class="slds-text-body_small history-action">{! $Label.c.Updated }</span>
+                                    </li>
+                                    <li class="slds-size_1-of-1">
+                                        <span class="slds-text-title">field:&nbsp;</span>
+                                        <span class="slds-text-body_small">
+                                            <ui:outputText value="{! v.history.fieldLabel }" />
+                                        </span>
+                                    </li>
+
+                                    <aura:if isTrue="{! v.hasValues }">
+                                        <li class="slds-size_1-of-1">
+                                            <span class="slds-text-title">{! $Label.c.New_Value }:&nbsp;</span>
+                                            <span class="slds-text-body_small">
+                                                <ui:outputText value="{! v.history.newValue }" />
+                                            </span>
+                                        </li>
+                                        <li class="slds-size_1-of-1">
+                                            <span class="slds-text-title">{! $Label.c.Old_Value }:&nbsp;</span>
+                                            <span class="slds-text-body_small">
+                                                <ui:outputText value="{! v.history.oldValue }" />
+                                            </span>
+                                        </li>
+                                    </aura:if>
+                                </aura:set>
+                            </aura:if>
+
+                            <li class="slds-size_1-of-1">
+                                <span class="slds-text-title">{! $Label.c.Name }:&nbsp;</span>
+                                <span class="slds-text-body_small">
+                                    <a onclick="{! c.navigateRecord }" rel="{! v.history.parentId }"
+                                        >{! v.history.parentName }</a
+                                    >
+                                </span>
+                            </li>
+                            <li class="slds-size_1-of-1">
+                                <span class="slds-text-title">{! $Label.c.User }:&nbsp;</span>
+                                <span class="slds-text-body_small">
+                                    <a onclick="{! c.navigateRecord }" rel="{! v.history.createdById }"
+                                        >{! v.history.createdByName }</a
+                                    >
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-media__figure slds-media__figure_reverse">
+                <div class="slds-timeline__actions">
+                    <p class="slds-timeline__date">
+                        <ui:outputDateTime value="{! v.history.createdDateTime }" />
+                    </p>
+                </div>
+            </div>
+        </div>
+    </li>
+</aura:component>

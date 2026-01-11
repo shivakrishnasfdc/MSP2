@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cell_Max_LMD__c</fullName>
+    <description>The most recently modified date for all the Cells related to this Cross Sell Report</description>
+    <inlineHelpText>Used in the account plan score - If you are not using a freeform whitespace, this value is not likely to change much</inlineHelpText>
+    <label>Cell Max Modified Date</label>
+    <summarizedField>White_Space_Cell__c.LastModifiedDate</summarizedField>
+    <summaryForeignKey>White_Space_Cell__c.White_Space__c</summaryForeignKey>
+    <summaryOperation>max</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

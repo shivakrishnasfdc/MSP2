@@ -1,0 +1,5 @@
+<design:component label="PROLIFIQ CRUSH Tasks">
+    <sfdc:objects>
+        <sfdc:object>Account_Plan__c</sfdc:object>
+    </sfdc:objects>
+</design:component>

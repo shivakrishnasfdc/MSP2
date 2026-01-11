@@ -1,0 +1,71 @@
+<apex:component access="global">
+    <apex:includeLightning />
+
+    <apex:attribute name="accountPlanId" description="The id for the account plan currently in view" type="Id" required="true"
+        access="global" />
+    <apex:attribute name="title" type="String" description="The title to display in the header" default="Account Opportunities"
+        access="global" />
+    <apex:attribute name="columns" description="Comma separated list of Field API names for each table column. Supports parent relationship fields (e.g. Account.Name)."
+        type="String" access="global" default="Name, Account.Name, Amount, StageName" />
+    <apex:attribute name="showOpportunitiesForDescendentAccounts" type="Boolean" description="Controls whether Opportunities related to any descendant accounts are displayed initially."
+        default="false" access="global" />
+    <apex:attribute name="expressions" type="String" description="One or more field expressions to filter the Opportunities by. Use SOQL Condition Expression syntax. (e.g. StageName != 'Closed Won' AND Amount > 0)"
+        access="global" />
+    <apex:attribute name="sortableFields" description="Comma separated list of Field API names for each column that allows sorting. Supports parent relationship fields (e.g. Account.Name)."
+        type="String" access="global" default="Name, Account.Name, Amount, StageName" />
+    <apex:attribute name="sortedBy" description="Field API name for default sort column. Supports parent relationship fields (e.g. Account.Name)."
+        type="String" access="global" />
+    <apex:attribute name="sortedDirection" description="Sort direction. Valid values are either asc or desc for ascending/descending."
+        type="String" access="global" default="asc" />
+    <apex:attribute name="useRelativeMaxHeight" description="Force table height to 60% of the vertical screen space. To set a custom percentage, use this in conjunction with Custom Relative Max Height"
+        type="Boolean" default="false" />
+    <apex:attribute name="customRelativeMaxHeight" description="Set custom max height (0-100) relative to the vertical screen space. Limit Height must first be enabled."
+        type="String" default="" />
+
+    <div id="AccountOppDatatable"></div>
+
+    <script>
+        var theme = '{! JSENCODE($User.UITheme) }';
+        var isMobile = theme === 'Theme4t';
+        var isLightning = theme === 'Theme4d' || theme === 'Theme4u';
+        var isClassic = theme === 'Theme3';
+        var accplanId = '{! JSENCODE(accountPlanId) }';
+        var title = '{! JSENCODE(title) }';
+        var columns = '{! JSENCODE(columns) }';
+        var showOpportunitiesForDescendentAccounts = Boolean({! JSENCODE(IF(showOpportunitiesForDescendentAccounts, "true", "false")) });
+        var exps = '{! JSENCODE(expressions) }';
+        var sortableFields = '{! JSENCODE(sortableFields) }';
+        var sortBy = '{! JSENCODE(sortedBy) }';
+        var sortDirection = '{! JSENCODE(sortedDirection) }';
+        var useRelativeMaxHeight = Boolean({! JSENCODE(IF(useRelativeMaxHeight, "true", "false")) });
+        var customRelativeMaxHeight = '{! JSENCODE(customRelativeMaxHeight) }';
+
+        $Lightning.use("pqcrush:strategyApp", function () {
+            $Lightning.createComponent("pqcrush:accountOppDatatable", {
+                recordId: accplanId,
+                title: title,
+                columns: exps,
+                showOpportunitiesForDescendentAccounts: showOpportunitiesForDescendentAccounts,
+                expressions: exps,
+                sortableFields: sortableFields,
+                sortedBy: sortBy,
+                sortedDirection: sortDirection,
+                useRelativeMaxHeight: useRelativeMaxHeight,
+                customRelativeMaxHeight: customRelativeMaxHeight
+            }, "AccountOppDatatable", function (cmp) {
+                console.log('component created');
+                console.log(cmp);
+                $A.eventService.addHandler({
+                    event: 'force:showToast',
+                    handler: function (event) {
+                        postEventToOneApp('force:showToast',
+                            event.getParams(),
+                            function () {
+                                alert(event.getParam('message'));
+                            });
+                    }
+                });
+            });
+        });
+    </script>
+</apex:component>

@@ -1,0 +1,29 @@
+<aura:component>
+    <ltng:require scripts="{! $Resource.textContrastUtil }" afterScriptsLoaded="{! c.afterLoad }" />
+
+    <!-- Public Attributes -->
+    <aura:attribute name="class" type="String" default="" />
+    <aura:attribute name="displayFieldWrapper" type="WhiteSpaceDisplayFieldWrapper" required="true" />
+    <aura:attribute name="backgroundIsLight" type="Boolean" default="true" access="private" />
+
+    <aura:if isTrue="{! !empty(v.displayFieldWrapper.data) }">
+        <aura:iteration items="{! v.displayFieldWrapper.data }" var="obj">
+            <li
+                style="{! !empty(v.displayFieldWrapper.color) ? 'background-color: ' + v.displayFieldWrapper.color + ';' : '' }"
+                class="{! join(' ', v.class, (v.backgroundIsLight ? 'slds-text-color_default' : 'slds-text-color_inverse')) }"
+            >
+                <div class="ws-field-container">
+                    <!-- PLACEHOLDER FOR MEDIA ELEMENT -->
+                    <!-- <div class="ws-field-left">
+                    </div> -->
+                    <div class="ws-field-label">
+                        <p>{! obj.displayName }</p>
+                    </div>
+                    <div class="ws-field-value">
+                        <c:PQOutputField displayType="{# v.displayFieldWrapper.type }" fieldValue="{! obj.value }" />
+                    </div>
+                </div>
+            </li>
+        </aura:iteration>
+    </aura:if>
+</aura:component>

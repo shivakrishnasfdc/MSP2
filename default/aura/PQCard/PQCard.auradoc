@@ -1,0 +1,10 @@
+<aura:documentation>
+	<aura:description>
+            <p>A <code>PQCard</code> is a wrapper around <code>lightning:card</code> that adds a border and some slight styling so that all card components have a consistent design.</p>
+            <p>It has the same attributes and functionality as the <code>lightning:card</code> component</p>
+    </aura:description>
+    <aura:example name="PQCardExample" ref="c:PQCardExample" label="Two examples of using the PQCard component">
+        <p>Here is a basic and more advanced example of how to use the PQPQCard component.</p>
+        <p>Due to extensive use of slds styling, these examples may not look exactly the same as they would in actual use.</p>
+    </aura:example>
+</aura:documentation>

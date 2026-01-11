@@ -1,0 +1,9 @@
+.THIS .fixed-header-width {
+    flex: 0 0 140px;
+    max-width: 140px;
+    position: sticky;
+    position: -webkit-sticky;
+    left: 0px;
+    z-index: 2;
+    box-shadow: 0 2px 2px 0 rgb(217, 219, 221);
+}

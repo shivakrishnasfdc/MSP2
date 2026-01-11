@@ -1,0 +1,47 @@
+<aura:component>
+    <aura:attribute name="title" type="String" />
+    <aura:attribute name="records" type="SWOT_Analysis__c[]" />
+    <aura:attribute name="recordTypeId" type="Id" />
+    <aura:attribute name="canCreate" type="Boolean" />
+    <aura:attribute name="canUpdate" type="Boolean" />
+    <aura:attribute name="canDelete" type="Boolean" />
+
+    <aura:attribute name="itemsList" type="List" />
+
+    <aura:handler name="init" value="{! this }" action="{! c.init }" />
+
+    <aura:registerEvent name="addItem" type="c:swotEvent" />
+
+    <lightning:layoutItem
+        flexibility="grow"
+        class="slds-theme_default slds-box"
+        size="12"
+        smallDeviceSize="12"
+        mediumDeviceSize="6"
+        largeDeviceSize="6"
+    >
+        <div class="slds-grid slds-grid_align-spread slds-m-bottom_x-small slds-has-flexi-truncate">
+            <div class="slds-text-title_caps slds-truncate" title="Strengths">
+                <ui:outputText value="{!v.title}" />
+            </div>
+            <div class="slds-shrink-none">
+                <aura:if isTrue="{! v.canCreate }">
+                    <c:PQButtonMenu
+                        menuAlignment="right"
+                        alternativeText="{! $Label.c.Actions }"
+                        iconSize="small"
+                        onselect="{! c.onMenuSelect }"
+                        itemList="{! v.itemsList }"
+                    />
+                </aura:if>
+            </div>
+        </div>
+        <ul class="slds-list_dotted slds-text-color_weak">
+            <aura:iteration items="{!v.records}" var="item">
+                <li class="slds-hint-parent">
+                    <c:swotMatrixItem item="{!item}" canUpdate="{! v.canUpdate }" canDelete="{! v.canDelete }" />
+                </li>
+            </aura:iteration>
+        </ul>
+    </lightning:layoutItem>
+</aura:component>

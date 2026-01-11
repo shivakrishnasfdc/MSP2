@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Formula__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Formulas are comprised of different amount types and math symbols.  The amount type variable is defined by using the name of the amount type surrounded by curly braces.  Example formula: {Amount Type 1} + {Amount Type 2}</inlineHelpText>
+    <label>Formula</label>
+    <length>255</length>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

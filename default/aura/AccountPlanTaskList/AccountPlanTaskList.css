@@ -1,0 +1,51 @@
+@media print {
+    .THIS.pro-account-plan-list-print {
+        page-break-inside: avoid;
+        border: 1px solid rgb(216, 221, 230);
+        border-radius: 0.25rem;
+    }
+
+    .THIS .slds-page-header {
+        background-color: white;
+    }
+}
+
+.THIS.is-mobile {
+    background: inherit;
+    border: none;
+    margin-top: 12px;
+    margin-left: -16px;
+}
+
+.THIS.no-header .slds-card__header {
+    padding-top: 0;
+}
+
+.THIS .main-header-top-padding {
+    padding-top: 130px;
+}
+
+.THIS .center-align {
+    text-align: center;
+}
+
+.THIS .left-align {
+    display: inline-block;
+    text-align: left;
+}
+
+.THIS .inline-edit-trigger {
+    display: none;
+}
+
+.THIS .no-tasks {
+    padding: 2em;
+}
+
+.THIS .record-type-content {
+    min-height: 200px;
+}
+
+.THIS .spinner {
+    padding: 10px;
+}

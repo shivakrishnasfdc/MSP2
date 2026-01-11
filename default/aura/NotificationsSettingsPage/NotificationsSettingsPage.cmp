@@ -1,0 +1,49 @@
+<aura:component>
+    <aura:attribute name="notificationSettings" type="Map" />
+    <aura:attribute name="notificationsEnabled" type="Boolean" />
+    <aura:attribute name="pageTitle" type="String" default="Notifications" />
+    <aura:attribute name="pageDescription" type="String" default="" />
+
+    <aura:registerEvent name="SaveClickEvent" type="c:PQButtonClickEvent" />
+
+    <div class="slds-media">
+        <div class="slds-media__body">
+            <h3 class="slds-setup-assistant__step-summary-title slds-text-heading_small">{# v.pageTitle }</h3>
+            <p>{# v.pageDescription }</p>
+        </div>
+        <div class="slds-media__figure slds-media__figure_reverse">
+            <lightning:input
+                variant="label-hidden"
+                type="toggle"
+                label="{! $Label.c.Notifications }"
+                messageToggleActive="{! $Label.c.Enabled }"
+                messageToggleInactive="{! $Label.c.Disabled }"
+                checked="{! v.notificationsEnabled }"
+                onchange="{! c.handleChange}"
+            />
+        </div>
+    </div>
+
+    <div class="slds-p-vertical_medium">
+        <aura:if isTrue="{! !v.notificationsEnabled }">
+            <div class="slds-p-bottom_x-small">
+                <c:PQIcon class="slds-m-right_x-small" iconName="utility:info_alt" size="x-small" />
+                <span>{! $Label.c.Options_Are_Disabled }</span>
+            </div>
+        </aura:if>
+
+        <ul class="slds-list_vertical-space">
+            <aura:iteration items="{! v.notificationSettings }" var="notification">
+                <li class="slds-item">
+                    <lightning:input
+                        type="checkbox"
+                        label="{# notification.label }"
+                        disabled="{! !v.notificationsEnabled }"
+                        checked="{! notification.enabled }"
+                        onchange="{! c.handleChange}"
+                    />
+                </li>
+            </aura:iteration>
+        </ul>
+    </div>
+</aura:component>

@@ -1,0 +1,341 @@
+<apex:page showHeader="false" sidebar="false" standardController="Account_Plan__c">
+
+    <head>
+        <apex:includeScript value="{!URLFOR($Resource.jqueryzip, '/jquery-3.6.0.min.js')}" />
+        <apex:includeScript value="{!URLFOR($Resource.jqueryuizip, '/jquery-ui-1.12.1.custom/jquery-ui.min.js')}" />
+
+        <script>
+            var j$ = jQuery.noConflict();
+
+            j$(document).ready(function () {
+                /*
+                    Notice the difference in the way element's Id have been referenced in jquery.
+                    for pure html tag use -> $('#idName')
+                    for VF tags use -> $('[id$=idName]')
+                    And for Classes
+                    pure html tag - > $('.className')
+                    VF tags -> $('[class$=className]')
+
+                */
+
+                j$(function () {
+                    j$('[class$=sortable]').sortable({ opacity: .8 });
+                });
+
+                j$('[id$=hideplanoverview]').click(function () {
+                    j$('[id$=planoverview]').hide();
+                });
+
+                j$('[id$=hideaccountplandetail]').click(function () {
+                    j$('[id$=accountplandetail]').hide();
+                });
+
+                j$('[id$=hideaccountplanrelatedlistObj]').click(function () {
+                    j$('[id$=accountplanrelatedlistObj]').hide();
+                });
+
+                j$('[id$=hideaccountplanrelatedlistTM]').click(function () {
+                    j$('[id$=accountplanrelatedlistTM]').hide();
+                });
+
+                j$('[id$=hideaccountplanrelatedlistKD]').click(function () {
+                    j$('[id$=accountplanrelatedlistKD]').hide();
+                });
+
+                j$('[id$=hideaccountplanrelatedlistOpp]').click(function () {
+                    j$('[id$=accountplanrelatedlistOpp]').hide();
+                });
+
+                j$('[id$=hideaccountplanrelatedlistKS]').click(function () {
+                    j$('[id$=accountplanrelatedlistKS]').hide();
+                });
+
+                j$('[id$=hidematrix]').click(function () {
+                    j$('[id$=matrix]').hide();
+                });
+
+                j$('[id$=hidewhitespace]').click(function () {
+                    j$('[id$=whitespace]').hide();
+                });
+
+                j$('[id$=hidehierarchy]').click(function () {
+                    j$('[id$=hierarchy]').hide();
+                });
+
+                j$('[id$=hideswot]').click(function () {
+                    j$('[id$=swot]').hide();
+                });
+
+                j$('[id$=hidetask]').click(function () {
+                    j$('[id$=task]').hide();
+                });
+            });
+        </script>
+
+        <style>
+            body {
+                font-family: Arial Unicode MS;
+                margin: 5mm !important;
+            }
+
+            body .bPageBlock {
+                border-width: 0 !important;
+            }
+
+            body .pbHeader>table {
+                border: none !important;
+            }
+
+            body .bPageBlock,
+            body .bPageBlock .pbBody .pbSubheader {
+                background-color: white !important;
+            }
+
+            body .bPageTitle .ptBody .pageType,
+            body .bPageTitle .ptBody .pageDescription {
+                margin-left: 0 !important;
+            }
+
+            body a,
+            body a:hover {
+                text-decoration: none;
+                color: black;
+                cursor: default;
+            }
+
+            body div:hover {
+                cursor: pointer;
+            }
+
+            .btn {
+                text-align: right;
+            }
+
+            .pbBottomButtons,
+            .actionColumn,
+            .fewerMore,
+            .dataCol>span a:first-child {
+                display: none;
+            }
+
+            lightning-input,
+            input,
+            button {
+                visibility: hidden;
+            }
+
+            .userDefinedImage {
+                display: none !important;
+            }
+
+            .dataRow td,
+            .dataRow th,
+            .headerRow td,
+            .headerRow th {
+                text-align: left !important;
+            }
+
+            .dataRow td,
+            .dataRow th {
+                border-bottom: 1px solid #ccc !important;
+            }
+
+            .dataRow:last-child td,
+            .dataRow:last-child th {
+                border-bottom-width: 0 !important;
+            }
+
+            .dataRow.highlight td,
+            .dataRow.highlight th {
+                background-color: white !important;
+            }
+
+            .pbBody {
+                margin: 0 !important;
+            }
+
+            .pbBody td,
+            .pbBody th {
+                padding: 8px !important;
+            }
+
+            .apexp {
+                width: calc(100vw - 10mm - 26px);
+            }
+
+            .slds-box.slds-theme_shade {
+                background: white;
+            }
+
+            .oRight {
+                max-width: 80vw;
+            }
+
+            .section {
+                background: white;
+                pointer-events: none;
+            }
+
+            .pq-print-enabled-button lightning-input,
+            .pq-print-enabled-button input,
+            .pq-print-enabled-button button,
+            .pq-print-enabled-button .slds-checkbox_faux {
+                visibility: visible;
+                pointer-events: auto !important;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="sortable">
+            <apex:form >
+                <apex:actionFunction name="rerenderAccountPlanDetails" rerender="accountPlanBlock" />
+            </apex:form>
+
+            <div id="planoverview">
+                <div id="hideplanoverview" class="btn">[x]</div>
+                <div class="print">
+                    <fieldset disabled="true" class="section">
+                        <apex:pageBlock title="{! $Label.Plan_Overview_Title }">
+                            <div class="planOverview">
+                                <apex:include pageName="PlanOverview" />
+                            </div>
+                        </apex:pageBlock>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div id="accountplandetail">
+                <div id="hideaccountplandetail" class="btn">[x]</div>
+                <fieldset disabled="true" class="section">
+                    <apex:pageBlock id="accountPlanBlock">
+                        <apex:detail subject="{!Account_Plan__c.Id}" relatedList="false" />
+                    </apex:pageBlock>
+                </fieldset>
+            </div>
+
+            <div id="accountplanrelatedlistObj">
+                <div id="hideaccountplanrelatedlistObj" class="btn">[x]</div>
+                <fieldset disabled="true" class="section">
+                    <apex:pageBlock >
+                        <div class="relatedListObj">
+                            <apex:relatedList list="pqcrush__Objectives__r" pageSize="50" />
+                        </div>
+                    </apex:pageBlock>
+                </fieldset>
+            </div>
+
+            <div id="accountplanrelatedlistTM">
+                <div id="hideaccountplanrelatedlistTM" class="btn">[x]</div>
+                <fieldset disabled="true" class="section">
+                    <apex:pageBlock >
+                        <div class="relatedListTM">
+                            <apex:relatedList list="pqcrush__Team_Members__r" pageSize="50" />
+                        </div>
+                    </apex:pageBlock>
+                </fieldset>
+            </div>
+
+            <div id="accountplanrelatedlistKD">
+                <div id="hideaccountplanrelatedlistKD" class="btn">[x]</div>
+                <fieldset disabled="true" class="section">
+                    <apex:pageBlock >
+                        <div class="relatedListKD">
+                            <apex:relatedList list="pqcrush__Key_Dates__r" pageSize="50" />
+                        </div>
+                    </apex:pageBlock>
+                </fieldset>
+            </div>
+
+            <div id="accountplanrelatedlistOpp">
+                <div id="hideaccountplanrelatedlistOpp" class="btn">[x]</div>
+                <fieldset disabled="true" class="section">
+                    <apex:pageBlock >
+                        <div class="relatedListOpp">
+                            <apex:relatedList list="pqcrush__Account_Plan_Opportunities__r" pageSize="50" />
+                        </div>
+                    </apex:pageBlock>
+                </fieldset>
+            </div>
+
+            <div id="accountplanrelatedlistKS">
+                <div id="hideaccountplanrelatedlistKS" class="btn">[x]</div>
+                <fieldset disabled="true" class="section">
+                    <apex:pageBlock >
+                        <div class="relatedListKS">
+                            <c:MapMemberList planOrMapId="{!Account_Plan__c.Id}" sObjectType="pqcrush__Account_Plan__c" title="Key Stakeholders" columns=""/>
+                        </div>
+                    </apex:pageBlock>
+                </fieldset>
+            </div>
+
+            <div id="matrix">
+                <div id="hidematrix" class="btn">[x]</div>
+                <fieldset disabled="true" class="section">
+                    <apex:pageBlock >
+                        <div class="relationshipMatrix">
+                            <apex:include pageName="RelationshipMatrix" />
+                        </div>
+                    </apex:pageBlock>
+                </fieldset>
+            </div>
+
+            <div id="hierarchy">
+                <div id="hidehierarchy" class="btn">[x]</div>
+                <fieldset class="section">
+                    <apex:pageBlock >
+                        <div class="keystakeholderHierarchy">
+                            <apex:include pageName="KeyStakeholderHierarchy" />
+                        </div>
+                    </apex:pageBlock>
+                </fieldset>
+            </div>
+
+            <div id="whitespace">
+                <div id="hidewhitespace" class="btn">[x]</div>
+                <fieldset class="section">
+                    <apex:pageBlock >
+                        <div class="whiteSpace">
+                            <c:WhiteSpace accountPlanId="{!Account_Plan__c.Id}" isPrinterFriendly="true" />
+                        </div>
+                    </apex:pageBlock>
+                </fieldset>
+            </div>
+
+            <div id="swot">
+                <div id="hideswot" class="btn">[x]</div>
+                <fieldset disabled="true" class="section">
+                    <apex:pageBlock >
+                        <div class="swotMatrix">
+                            <apex:include pageName="SWOTMatrix" />
+                        </div>
+                    </apex:pageBlock>
+                </fieldset>
+            </div>
+
+            <div id="task">
+                <div id="hidetask" class="btn">[x]</div>
+                <fieldset disabled="true" class="section">
+                    <apex:pageBlock >
+                        <div class="AccountPlanTaskList">
+                            <apex:include pageName="AccountPlanTaskList" />
+                        </div>
+                    </apex:pageBlock>
+                </fieldset>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        var theme = '{! JSENCODE($User.UITheme) }';
+
+        // LEX - still displays header when using the normal display, but if we go directly to
+        // the Visualforce page itself then it works as expected.
+        if (theme === 'Theme4d') {
+            window.open('{!$Page.AccountPlanPageLayoutPrint}?id={!Account_Plan__c.Id}', '_blank');
+            window.history.back();
+        } else {
+            document.body.style.display = 'block';
+        }
+    </script>
+</apex:page>

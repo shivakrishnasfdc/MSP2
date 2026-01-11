@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Use_System_Create_Task_Modal__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Use the default Saleforce Task modal when adding tasks from the Objective Component</description>
+    <inlineHelpText>Check this box to use the default Saleforce Task modal when adding tasks from the Objective Component</inlineHelpText>
+    <label>Use System Create Task Modal</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

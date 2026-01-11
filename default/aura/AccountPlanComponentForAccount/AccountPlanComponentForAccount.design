@@ -1,0 +1,6 @@
+<design:component label="PROLIFIQ CRUSH Components">
+    <design:attribute name="componentType" label="Component type" required="true" description="The type of components from the account plan to display" datasource="Account Plan Field History, Account Plan Overview, Account Plan Tasks, Key Stakeholder Hierarchy, Key Stakeholder Influence, SWOT Analysis, White Space Report" default="Account Plan Field History"/>
+    <sfdc:objects>
+        <sfdc:object>Account</sfdc:object>
+    </sfdc:objects>
+</design:component>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AreUnrelatedCellsFiltered__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>If filter cells is checked, then this checkbox determines if amount types using an object that has no relation to an account are also filtered out, or are still shown on the cross sell map.</description>
+    <label>Filter Cells Without Relationships</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

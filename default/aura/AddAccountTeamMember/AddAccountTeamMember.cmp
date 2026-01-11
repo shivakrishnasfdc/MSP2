@@ -1,0 +1,44 @@
+<aura:component
+    extends="PQBaseCrushFeature"
+    controller="AddAccountTeamMember"
+    implements="force:lightningQuickActionWithoutHeader,force:hasRecordId"
+    access="global"
+>
+    <ltng:require scripts="{!$Resource.StrategyUtils}" />
+
+    <aura:attribute name="plan" type="Account_Plan__c" />
+    <aura:attribute
+        name="member"
+        type="Team_Member__c"
+        default="{ 'sobjectType': 'Team_Member__c' }"
+    />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- Output Field Workaround -->
+    <force:outputField aura:id="workaround1" value="{!v.member.pqcrush__Role__c}" class="slds-hide"></force:outputField>
+    <force:outputField aura:id="workaround2" value="{!v.member.pqcrush__User__c}" class="slds-hide"></force:outputField>
+
+    <div class="slds-form_stacked">
+        <div class="slds-form-element">
+            <label class="slds-form-element__label">Available Users</label>
+            <div>
+                <force:inputField aura:id="users" value="{! v.member.pqcrush__User__c }" />
+            </div>
+        </div>
+
+        <br />
+
+        <div class="slds-form-element">
+            <label class="slds-form-element__label">{! $Label.c.Role } </label>
+            <force:inputField aura:id="role" value="{!v.member.pqcrush__Role__c}" />
+        </div>
+
+        <br />
+
+        <div class="slds-form-element slds-text-align_right">
+            <ui:button class="slds-button slds-button_neutral" press="{!c.cancel}">{! $Label.c.Cancel }</ui:button>
+            <ui:button class="slds-button slds-button_brand" press="{!c.handleSave}">{! $Label.c.Save }</ui:button>
+        </div>
+    </div>
+</aura:component>

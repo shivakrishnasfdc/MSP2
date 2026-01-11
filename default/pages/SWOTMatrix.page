@@ -1,0 +1,36 @@
+<apex:page standardController="Account_Plan__c">
+    <apex:includeLightning />
+
+    <div id="swotMatrix"></div>
+
+    <script>
+        var recordId = '{!pqcrush__Account_Plan__c.Id}';
+        var theme = '{! JSENCODE($User.UITheme) }';
+        var isMobile = theme === 'Theme4t';
+
+        // Salesforce1
+        if (isMobile) {
+            document.body.style.margin = 0;
+            
+            // Workaround for issue in mobile app that prevents overflow scrolling
+            var scrollOverride = document.createElement('style');
+            scrollOverride.innerHTML = 'html,html body{overflow:auto;-webkit-overflow-scrolling:touch;}body{position:absolute;left:0;right:0;top:0;bottom:0;}';
+            document.getElementsByTagName('head')[0].appendChild(scrollOverride);
+        }
+
+        $Lightning.use("pqcrush:strategyApp", function() {
+            $Lightning.createComponent(
+                "pqcrush:swotMatrix",
+                {
+                    recordId: recordId,
+                    isMobile: isMobile
+                },
+                "swotMatrix",
+                function(cmp) {
+                    console.log('component created');
+                    console.log(cmp);
+                }
+            );
+        });
+    </script>
+</apex:page>

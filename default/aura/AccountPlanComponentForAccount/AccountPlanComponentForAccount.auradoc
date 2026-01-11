@@ -1,0 +1,6 @@
+<aura:documentation>
+	<aura:description>
+		<p>This is a wrapper for the various account plan components to view them directly in an account</p>
+		<p>You can choose which component to display by setting the <code>componentType</code> attribute</p>
+	</aura:description>
+</aura:documentation>

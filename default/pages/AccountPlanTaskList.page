@@ -1,0 +1,105 @@
+<apex:page standardController="Account_Plan__c" tabstyle="pqcrush__Account_Plan_Tasks__tab" standardStylesheets="false">
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #AccountPlanTaskList {
+            width: 100%;
+        }
+    </style>
+
+    <apex:includeLightning />
+
+    <div id="AccountPlanTaskList"></div>
+
+    <script>
+        var recordId = '{! pqcrush__Account_Plan__c.Id }';
+        var theme = '{! JSENCODE($User.UITheme) }';
+        var isMobile = theme === 'Theme4t';
+        var isLightning = theme === 'Theme4d' || theme === 'Theme4u';
+        var isClassic = theme === 'Theme3';
+
+        // Salesforce1
+        if (isMobile) {
+            document.body.style.margin = 0;
+
+            // Workaround for issue in mobile app that prevents overflow scrolling
+            var scrollOverride = document.createElement('style');
+            scrollOverride.innerHTML = 'html,html body{overflow:auto;-webkit-overflow-scrolling:touch;}body{position:absolute;left:0;right:0;top:0;bottom:0;}';
+            document.getElementsByTagName('head')[0].appendChild(scrollOverride);
+        }
+
+        function postEventToOneApp(name, params, fallbackAction) {
+            if (SfdcApp && SfdcApp.projectOneNavigator && SfdcApp.projectOneNavigator.fireContainerEvent) {
+                // Not officially supported by Salesforce
+                SfdcApp.projectOneNavigator.fireContainerEvent(name, params);
+            } else if (fallbackAction) {
+                // Fallback if no Salesforce support of fireContainerEvent
+                fallbackAction();
+            }
+        }
+
+        $Lightning.use("pqcrush:strategyApp", function () {
+            $Lightning.createComponent(
+                "pqcrush:AccountPlanTaskList",
+                {
+                    recordId: recordId,
+                    isMobile: isMobile,
+                    isClassic: isClassic
+                },
+                "AccountPlanTaskList",
+                function (cmp) {
+                    console.log('component created');
+                    console.log(cmp);
+
+                    $A.eventService.addHandler({
+                        event: 'force:showToast',
+                        handler: function (event) {
+                            postEventToOneApp('force:showToast', event.$params$);
+                        }
+                    });
+
+                    $A.eventService.addHandler({
+                        event: 'force:createRecord',
+                        handler: function (event) {
+                            if (event.getSource().getName() != 'pqcrushAccountPlanTaskList') {
+                                return;
+                            }
+                            if (isClassic) {
+                                var createURL = '{! URLFOR($Action.Task.NewTask, null, [what_id=pqcrush__Account_Plan__c.Id,saveURL=$CurrentPage.URL]) }';
+                                window.location.href = createURL;
+                            } else if (isMobile || isLightning) {
+                                var params = {};
+                                if (recordId) {
+                                    params = { 'WhatId': recordId };
+                                }
+                                sforce.one.createRecord('Task', null, params);
+                            }
+                        }
+                    });
+
+                    $A.eventService.addHandler({
+                        event: 'force:editRecord',
+                        handler: function (event) {
+                            var currentURL = '{! JSENCODE($CurrentPage.URL) }';
+                            var taskId = event.getParam('recordId');
+                            if (isClassic) {
+                                //Building up URL because unable to dynamically create URL with passed taskID from the event
+                                //Could not do this dynamically as there does not seem to be a way to pass the taskID to URLFOR()
+                                //or to generate the URL in the controller since the page loads before we have the taskID.
+                                var editURL = '/' + taskId + '/e?saveURL=' + currentURL + '&retURL=' + currentURL;
+                                window.location.href = editURL;
+                            } else if (isMobile || isLightning) {
+                                sforce.one.editRecord(taskId);
+                            }
+                        }
+                    });
+                }
+            );
+        });
+    </script>
+</apex:page>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Use_OmniViewer_For_KeyStakeholders__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Check this to use the OmniViewer for Key Stakeholder details in the Relationship Map</description>
+    <inlineHelpText>Check this to use the OmniViewer for Key Stakeholder details in the Relationship Map</inlineHelpText>
+    <label>Use OmniViewer for Key Stakeholders</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

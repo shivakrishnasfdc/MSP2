@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Show_Populated_Columns__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Whether or not to show columns that have at least one cell with data</description>
+    <label>Show columns with data</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

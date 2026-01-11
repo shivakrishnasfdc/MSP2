@@ -1,0 +1,76 @@
+<aura:component>
+    <ltng:require scripts="{! $Resource.StrategyUtils }" />
+
+    <!-- Service Components -->
+    <c:PQEventService aura:id="eventService" />
+
+    <!-- Attributes -->
+    <aura:attribute name="isClassic" type="Boolean" default="false" access="global" />
+    <aura:attribute name="recordId" type="Id" access="global" />
+    <aura:attribute name="sObjectName" type="String" access="global" />
+
+    <aura:attribute name="defaultMatrix" type="String" access="global" />
+    <aura:attribute name="didRequestModal" type="Boolean" default="false" access="private" />
+    <aura:attribute name="skipLicenseCheck" type="Boolean" default="false" access="public" />
+    <aura:attribute name="skipSuggestedContacts" type="Boolean" default="true" access="public" />
+
+    <!-- EVENT HANDLERS -->
+    <aura:handler event="c:PQApplicationEvent" action="{! c.handleApplicationEvent }" />
+
+    <aura:if isTrue="{! v.sObjectName eq 'pqcrush__PQ_Opportunity_Plan__c' }">
+        <c:PQBaseOppPlanFeature>
+            <c:relationshipMapForOppPlan
+                aura:id="orggraph"
+                recordId="{! v.recordId }"
+                onrequestobjectviewer="{! c.handleObjectViewerRequested }"
+                ongrapherror="{! c.handleGraphError }"
+                onpqapplicationevent="{! c.fireApplicationEvent }"
+                oncreatenewtask="{! c.handleCreateNewTask }"
+            ></c:relationshipMapForOppPlan>
+        </c:PQBaseOppPlanFeature>
+    </aura:if>
+    <aura:if isTrue="{! v.sObjectName eq 'pqcrush__Account_Plan__c' }">
+        <c:PQBaseCrushFeature bypassFeatureCheck="{# v.skipLicenseCheck }">
+            <c:relationshipMapForAnyObject
+                aura:id="orggraph"
+                recordId="{! v.recordId }"
+                objectApiName="{! v.sObjectName }"
+                onrequestobjectviewer="{! c.handleObjectViewerRequested }"
+                ongrapherror="{! c.handleGraphError }"
+                onpqapplicationevent="{! c.fireApplicationEvent }"
+                oncreatenewtask="{! c.handleCreateNewTask }"
+                skipSuggestedContacts="{! v.skipSuggestedContacts}"
+            ></c:relationshipMapForAnyObject>
+        </c:PQBaseCrushFeature>
+    </aura:if>
+    {! v.sObjectName}
+    <aura:if isTrue="{! v.sObjectName eq 'pqcrush__Relationship_Map__c' }">
+        <c:PQBaseRMFeature bypassFeatureCheck="{# v.skipLicenseCheck }">
+            <c:relationshipMap
+                aura:id="orggraph"
+                recordId="{! v.recordId }"
+                onrequestobjectviewer="{! c.handleObjectViewerRequested }"
+                ongrapherror="{! c.handleGraphError }"
+                onpqapplicationevent="{! c.fireApplicationEvent }"
+                oncreatenewtask="{! c.handleCreateNewTask }"
+            ></c:relationshipMap>
+        </c:PQBaseRMFeature>
+    </aura:if>
+    <aura:if
+        isTrue="{! and(v.sObjectName != 'pqcrush__Relationship_Map__c', and(v.sObjectName != 'pqcrush__Account_Plan__c', v.sObjectName != 'pqcrush__PQ_Opportunity_Plan__c')) }"
+    >
+        <c:PQBaseRMFeature bypassFeatureCheck="{# v.skipLicenseCheck }">
+            <c:relationshipMapForAnyObject
+                aura:id="orggraph"
+                recordId="{! v.recordId }"
+                objectApiName="{! v.sObjectName }"
+                onrequestobjectviewer="{! c.handleObjectViewerRequested }"
+                ongrapherror="{! c.handleGraphError }"
+                onpqapplicationevent="{! c.fireApplicationEvent }"
+                oncreatenewtask="{! c.handleCreateNewTask }"
+                skipSuggestedContacts="{! v.skipSuggestedContacts}"
+            ></c:relationshipMapForAnyObject>
+        </c:PQBaseRMFeature>
+    </aura:if>
+    <c:PQModalService aura:id="modalService" isClassic="{! v.isClassic }" />
+</aura:component>

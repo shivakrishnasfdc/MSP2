@@ -1,0 +1,3 @@
+<aura:documentation>
+    <aura:description>This component shows key stakeholders in a matrix by influence and support. You can change these values by dragging and dropping key stakeholders in other sections of the matrix.</aura:description>
+</aura:documentation>

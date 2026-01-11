@@ -1,0 +1,7 @@
+<apex:page standardController="Account_Plan_Template__c" extensions="AccountPlanTemplateController" standardStylesheets="false" lightningStylesheets="true" sidebar="false">
+    <apex:form styleClass="myFormStyle">
+        <apex:pageBlock >
+            <c:AccountPlanTemplate recId="{!JSENCODE(recordId)}"/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

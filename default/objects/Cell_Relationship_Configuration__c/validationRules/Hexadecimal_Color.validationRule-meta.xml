@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Hexadecimal_Color</fullName>
+    <active>true</active>
+    <description>Verifies that the color code entered is a valid Hexadecimal color</description>
+    <errorConditionFormula>NOT(REGEX( Color__c , &quot;^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$&quot;))</errorConditionFormula>
+    <errorDisplayField>Color__c</errorDisplayField>
+    <errorMessage>You must enter a valid 3 or 6 digit hexadecimal color code (ex. #f82 or #ff11bb)</errorMessage>
+</ValidationRule>

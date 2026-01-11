@@ -1,0 +1,21 @@
+<aura:component>
+    <ltng:require scripts="{!$Resource.StrategyUtils}" />
+
+    <aura:attribute name="isClassic" type="Boolean" default="false" access="global" />
+    <aura:attribute name="recordId" type="Id" access="global" />
+    <aura:attribute name="sObjectName" type="String" access="global" />
+
+    <!-- Service Components -->
+    <c:PQEventService aura:id="eventService" />
+    <c:PQModalService aura:id="modalService" isClassic="{! v.isClassic }" />
+
+    <aura:handler event="c:PQApplicationEvent" action="{! c.handleApplicationEvent }" />
+
+    <c:relationshipInfluenceForRelationshipMap
+        aura:id="influenceChart"
+        mapId="{! v.recordId }"
+        onpqapplicationevent="{! c.fireApplicationEvent }"
+        onshoweditmodal="{! c.handleShowEditModal }"
+        onshowerror="{! c.handleError }"
+    />
+</aura:component>

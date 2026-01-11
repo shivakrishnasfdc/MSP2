@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cannot_group_with_parent</fullName>
+    <active>true</active>
+    <description>Cannot set both grouping and parent relationship on a mapping</description>
+    <errorConditionFormula>AND(GroupResults__c, NOT(OR(ISNULL(ParentField__c ), ISBLANK(ParentField__c))))</errorConditionFormula>
+    <errorMessage>Cannot use Grouping and Parent/Child relationship at the same time</errorMessage>
+</ValidationRule>

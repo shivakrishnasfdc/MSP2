@@ -1,0 +1,41 @@
+<aura:component>
+    <!-- ATTRIBUTES -->
+    <aura:attribute name="class" type="String" default="" />
+    <aura:attribute name="title" type="String" default="" />
+    <aura:attribute name="content" type="Object" />
+    <aura:attribute name="primaryActionLabel" type="String" default="Save" />
+    <aura:attribute name="primaryActionClass" type="String" />
+    <aura:attribute name="primaryActionVariant" type="String" default="neutral" />
+    <aura:attribute name="primaryActionDisabled" type="Boolean" default="false" />
+
+    <!-- EVENTS -->
+    <aura:registerEvent name="closeModal" type="c:PQComponentNotificationEvent" />
+    <aura:registerEvent name="onPrimaryActionClicked" type="c:PQComponentNotificationEvent" />
+
+    <!-- MARKUP -->
+    <div class="{! v.class }">
+        <header class="slds-modal__header">
+            <h2 class="slds-text-heading_medium slds-hyphenate">{# v.title }</h2>
+        </header>
+        <ui:scrollerWrapper class="">
+            <div class="slds-modal__content slds-p-around_medium">
+                {! v.content }
+            </div>
+        </ui:scrollerWrapper>
+        <footer class="slds-modal__footer">
+            <lightning:button
+                variant="neutral"
+                label="{! $Label.c.Cancel }"
+                title="{! $Label.c.Cancel }"
+                onclick="{! c.onCancel }"
+            />
+            <lightning:button
+                variant="{# v.primaryActionVariant }"
+                label="{# v.primaryActionLabel }"
+                title="{# v.primaryActionLabel }"
+                disabled="{! v.primaryActionDisabled }"
+                onclick="{! c.onConfirm }"
+            />
+        </footer>
+    </div>
+</aura:component>

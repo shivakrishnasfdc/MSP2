@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Count_BP_High__c</fullName>
+    <defaultValue>5</defaultValue>
+    <description>The high breakpoint for the number of objects when calculating the score</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>If the count is above this value it will have the high breakpoint score value for the score</inlineHelpText>
+    <label>Count Breakpoint High</label>
+    <precision>7</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

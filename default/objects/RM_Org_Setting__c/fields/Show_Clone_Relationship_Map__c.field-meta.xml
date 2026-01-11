@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Show_Clone_Relationship_Map__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>If checked then the clone button in the dropdown menu of relationship maps will show based on user permissions.  If unchecked this will hide the button regardless of any permissions for users to see the clone button.</description>
+    <inlineHelpText>If this is unchecked then no users in the org will see the clone button in the relationship map dropdown menu regardless of what permissions they have set for showing the button.  This is org wide.</inlineHelpText>
+    <label>Show Clone Relationship Map</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

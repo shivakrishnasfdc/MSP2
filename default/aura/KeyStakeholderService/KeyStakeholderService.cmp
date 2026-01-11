@@ -1,0 +1,7 @@
+<aura:component controller="KeyStakeholderController">
+    <aura:method name="getSupportFields" action="{! c.handleGetSupportFields }"></aura:method>
+    <aura:method name="getOrgSettings" action="{! c.handleGetOrgSettings }"></aura:method>
+    <aura:method name="upsertOrgSettings" action="{! c.handleUpsertOrgSettings }">
+        <aura:attribute name="orgSettings" type="Object" />
+    </aura:method>
+</aura:component>

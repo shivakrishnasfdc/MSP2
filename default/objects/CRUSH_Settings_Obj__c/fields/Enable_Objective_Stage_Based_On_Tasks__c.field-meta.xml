@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enable_Objective_Stage_Based_On_Tasks__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Check this box to enable objective stage based on tasks</description>
+    <inlineHelpText>Check this box to enable objective stage based on tasks</inlineHelpText>
+    <label>Enable objective stage based on tasks</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

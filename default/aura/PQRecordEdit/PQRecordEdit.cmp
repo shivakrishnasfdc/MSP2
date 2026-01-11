@@ -1,0 +1,51 @@
+<aura:component>
+    <!-- PUBLIC ATTRIBUTES -->
+    <aura:attribute name="recordId" type="String" access="public" />
+    <aura:attribute name="title" type="String" access="public" />
+    <aura:attribute name="editable" type="Boolean" access="public" default="false" />
+    <aura:attribute name="closeEventKey" type="String" access="public" />
+    <aura:attribute name="saveEventKey" type="String" access="public" />
+    <aura:attribute name="openNewTab" type="Boolean" access="public" default="false" />
+
+    <!-- EVENTS -->
+    <aura:registerEvent name="PQApplicationEvent" type="c:PQApplicationEvent" />
+
+    <!-- EVENT HANDLERS -->
+    <aura:handler name="onSaveSuccess" event="force:recordSaveSuccess" action="{! c.handleSaveSuccess }" />
+
+    <!-- MARK UP -->
+    <div>
+        <div class="header-padding"></div>
+        <div class="edit-header">
+            <div class="edit-title slds-text-heading_medium">{! v.title }</div>
+            <div class="edit-details-button">
+                <lightning:buttonIcon
+                    iconName="utility:info"
+                    alternativeText="{! $Label.c.Details }"
+                    size="large"
+                    variant="bare"
+                    onclick="{! c.handleDetails }"
+                />
+            </div>
+        </div>
+        <div class="edit-body slds-p-around_medium">
+            <aura:if isTrue="{! v.editable }">
+                <force:recordEdit aura:id="edit" recordId="{! v.recordId }"></force:recordEdit>
+                <aura:set attribute="else">
+                    <force:recordView aura:id="view" recordId="{! v.recordId }"></force:recordView>
+                </aura:set>
+            </aura:if>
+        </div>
+        <div class="edit-footer">
+            <span class="slds-p-around_x-small slds-align_absolute-center">
+                <aura:if isTrue="{! v.editable }">
+                    <lightning:button label="{! $Label.c.Cancel }" onclick="{! c.handleCancel }" variant="neutral" />
+                    <lightning:button label="{! $Label.c.Save }" onclick="{! c.handleSave }" variant="brand" />
+                    <aura:set attribute="else">
+                        <lightning:button label="{! $Label.c.Close }" onclick="{! c.handleCancel }" variant="neutral" />
+                    </aura:set>
+                </aura:if>
+            </span>
+        </div>
+    </div>
+</aura:component>

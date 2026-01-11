@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Objective_Task_Low_Color__c</fullName>
+    <description>The RGB color when the number of objective tasks completed is low (in format #aabbcc)</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The RGB color when the number of objectives tasks completed is low (in format #aabbcc)</inlineHelpText>
+    <label>Objective Task Low Color</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,5 @@
+<apex:page standardController="White_Space_Template__c" standardStylesheets="false" lightningStylesheets="true" sidebar="false">
+    <apex:pageBlock >
+        <c:WhiteSpaceTemplateBuilder />
+    </apex:pageBlock>
+</apex:page>

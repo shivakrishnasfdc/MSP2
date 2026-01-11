@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Geometry_String__c</fullName>
+    <description>This is an SVG &apos;path&apos; element, containing commands to draw the badge shape.</description>
+    <inlineHelpText>This is an SVG &apos;path&apos; element, containing commands to draw the badge shape.</inlineHelpText>
+    <label>Geometry String</label>
+    <length>131072</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

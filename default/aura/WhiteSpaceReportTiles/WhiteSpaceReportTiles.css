@@ -1,0 +1,20 @@
+.THIS .row-header {
+    font-weight: bold;
+    color: rgb(112, 110, 107);
+    text-transform: uppercase;
+}
+
+.THIS .col-header {
+    padding-top: 20px;
+    font-weight: bold;
+    color: rgb(112, 110, 107);
+    text-transform: uppercase;
+}
+
+.THIS .ws-grid {
+    background-color: #f3f2f2;
+}
+
+.THIS .ace-printer {
+    overflow: visible !important;
+}

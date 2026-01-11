@@ -1,0 +1,113 @@
+<apex:page standardController="Account_Plan__c">
+
+    <apex:includeLightning />
+
+    <div id="keystakeholderHierarchy"></div>
+
+    <script>
+        var recordId = '{! pqcrush__Account_Plan__c.Id }';
+        var recordType = 'pqcrush__Account_Plan__c'
+        var theme = '{! JSENCODE($User.UITheme) }';
+        var isMobile = theme === 'Theme4t';
+        var isLightning = theme === 'Theme4d' || theme === 'Theme4u';
+        var isClassic = theme === 'Theme3';
+
+        // Salesforce1
+        (function () {
+            if (isMobile) {
+                document.body.style.margin = 0;
+
+                // Workaround for issue in mobile app that prevents overflow scrolling
+                var scrollOverride = document.createElement('style');
+                scrollOverride.innerHTML = 'html,html body{overflow:auto;-webkit-overflow-scrolling:touch;}body{position:absolute;left:0;right:0;top:0;bottom:0;}';
+                document.getElementsByTagName('head')[0].appendChild(scrollOverride);
+
+                // Workaround to get horizontal scrolling working on android devices
+                var uAgent = navigator.userAgent;
+                if (uAgent.indexOf('Android') != -1) {
+                    document.getElementById('keystakeholderHierarchy').setAttribute('style', 'overflow: auto;');
+                }
+            }
+        })();
+
+        $Lightning.use("pqcrush:strategyApp", function () {
+            $Lightning.createComponent(
+                "pqcrush:StakeholderHierarchyChart",
+                {
+                    recordId: recordId,
+                    sObjectName: recordType,
+                    isClassic: isClassic
+                },
+                "keystakeholderHierarchy",
+                function (cmp) {
+                    console.log('component created');
+                    console.log(cmp);
+
+                    $A.eventService.addHandler({
+                        event: 'force:refreshView',
+                        handler: function (event) {
+                            if (rerenderAccountPlanDetails) {
+                                rerenderAccountPlanDetails();
+                            }
+                        }
+                    });
+
+                    $A.eventService.addHandler({
+                        event: 'force:navigateToSObject',
+                        handler: function(event) {
+                            var recordId = event.getParam('recordId');
+                            if (isMobile) {
+                                sforce.one.navigateToSObject(recordId);
+                            } else {
+                                window.location.href = '/' + recordId;
+                            }
+                        }
+                    });
+
+                    $A.eventService.addHandler({
+                        event: 'force:editRecord',
+                        handler: function (event) {
+                            var currentURL = '{! JSENCODE($CurrentPage.URL) }';
+                            var recordId = event.getParam('recordId');
+                            if (isMobile) {
+                                sforce.one.editRecord(recordId);
+                            } else {
+                                var editURL = '/' + recordId + '/e?saveURL=' + currentURL + '&retURL=' + currentURL;
+                                window.location.href = editURL;
+                            }
+                        }
+                    });
+
+                    $A.eventService.addHandler({
+                        event: 'force:createRecord',
+                        handler: function (event) {
+                            var entityApiName = event.getParam('entityApiName');
+                            if (isClassic && entityApiName==='Task') {
+                                var defaultFieldValues = event.getParam('defaultFieldValues')
+                                var paramsString = '';
+                                if (defaultFieldValues && defaultFieldValues.WhoId) {
+                                    paramsString = '&who_id=' + defaultFieldValues.WhoId;
+                                }
+                                if (defaultFieldValues && defaultFieldValues.WhatId) {
+                                    paramsString = paramsString + '&what_id=' + defaultFieldValues.WhatId;
+                                }
+
+                                //alert(defaultFieldValues.OwnerId)
+                                // Add User to URL HERE (though not sure what param is user id)
+                                // user firstname & last name work using &tsk1=firstname lastname
+
+                                //if (defaultFieldValues && defaultFieldValues.OwnerId) {
+                                //    paramsString = paramsString + '&owner_id=' + defaultFieldValues.OwnerId;
+                                //}
+                                //paramsString = paramsString + '&tsk1=0051100000AXiqLAAT';
+
+                                var createURL = '{! URLFOR($Action.Task.NewTask, null, [saveURL=$CurrentPage.URL]) }';
+                                window.location.href = createURL + paramsString;
+                            }
+                        }
+                    });
+                }
+            );
+        });
+    </script>
+</apex:page>

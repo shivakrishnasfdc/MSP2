@@ -1,0 +1,59 @@
+<aura:component>
+    <!-- PUBLIC ATTRIBUTES -->
+    <aura:attribute
+        name="actions"
+        type="Aura.Component[]"
+        access="public"
+        description="Actions are components such as button or buttonIcon. Actions are displayed in the header."
+    />
+    <aura:attribute
+        name="class"
+        type="String"
+        default=""
+        access="public"
+        description="A CSS class for the outer element, in addition to the component's base classes."
+    />
+    <aura:attribute
+        name="footer"
+        type="Object"
+        default=""
+        access="public"
+        description="The footer can include text or another component"
+    />
+    <aura:attribute
+        name="iconName"
+        type="String"
+        default=""
+        access="public"
+        description="The Lightning Design System name of the icon. Names are written in the format 'utility:down' where 'utility' is the category, and 'down' is the specific icon to be displayed. The icon is displayed in the header to the left of the title."
+    />
+    <aura:attribute
+        name="title"
+        type="Object"
+        default=""
+        access="public"
+        description="The title can include text or another component, and is displayed in the header."
+    />
+    <aura:attribute
+        name="variant"
+        type="String"
+        default="base"
+        access="public"
+        description="The variant changes the appearance of the card. Accepted variants include base or narrow. This value defaults to base."
+    />
+
+    <div class="pro-card">
+        <lightning:card class="{! v.class }" variant="{! v.variant }" iconName="{! v.iconName }">
+            <aura:set attribute="title">
+                <div class="slds-p-horizontal_small slds-p-top_small">{! v.title }</div>
+            </aura:set>
+            <aura:set attribute="actions">
+                <div class="slds-p-horizontal_small slds-p-top_small">{! v.actions }</div>
+            </aura:set>
+            <aura:set attribute="footer">
+                {! v.footer }
+            </aura:set>
+            {! v.body }
+        </lightning:card>
+    </div>
+</aura:component>

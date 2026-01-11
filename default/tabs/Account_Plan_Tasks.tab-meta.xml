@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Account Plan Tasks tab for classic</description>
+    <icon>CRUSH_Icons/Account_Plan_Tasks_Icon.png</icon>
+    <label>Account Plan Tasks</label>
+    <motif>Custom253: TV Widescreen</motif>
+    <page>AccountPlanTaskList</page>
+</CustomTab>

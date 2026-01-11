@@ -1,0 +1,63 @@
+<aura:component>
+    <aura:attribute
+        name="isLookup"
+        type="Boolean"
+        default="false"
+        required="true"
+        description="Whether this component is an object lookup."
+    />
+    <aura:attribute name="lookupType" type="String" default="" description="Type of object for lookup" />
+    <aura:attribute name="lookupDisplayField" type="String" default="" description="Display field for lookup" />
+    <aura:attribute name="lookupIgnoreIds" type="String" default="" description="Ids of objects to ignore for lookup" />
+    <aura:attribute name="lookupValue" type="Object" default="" description="Selected object from lookup results" />
+    <aura:attribute name="inputValue" type="String" default="" description="Value of text input" />
+    <aura:attribute name="value" type="Object" default="{}" description="Object returned when add button is pressed" />
+    <aura:attribute name="messageWhenPatternMismatch" type="String" default="" />
+    <aura:attribute name="pattern" type="String" default="" />
+    <aura:attribute name="placeholder" type="String" default="" />
+
+    <aura:attribute name="isValid" type="Boolean" default="false" access="private" />
+
+    <aura:registerEvent name="onAdd" type="c:PQComponentEvent" />
+
+    <aura:handler name="change" value="{! v.lookupValue }" action="{! c.checkValidity }" />
+
+    <aura:method name="clearInput" action="{! c.clearInput }"></aura:method>
+
+    <lightning:layoutItem size="9" class="">
+        <aura:if isTrue="{! v.isLookup }">
+            <c:InputLookup
+                aura:id="lookup"
+                objectType="{# v.lookupType }"
+                displayFieldApiName="{# v.lookupDisplayField }"
+                placeholder="{# v.placeholder }"
+                ignoreIds="{! v.lookupIgnoreIds }"
+                selection="{! v.lookupValue }"
+            />
+            <aura:set attribute="else">
+                <lightning:input
+                    aura:id="textInput"
+                    placeholder="{# v.placeholder }"
+                    minlength="1"
+                    maxlength="80"
+                    variant="label-hidden"
+                    label="{! $Label.c.Add }"
+                    messageWhenTooLong="{! $Label.c.warning_less_than_80_characters }"
+                    value="{! v.inputValue }"
+                    onchange="{! c.checkValidity }"
+                    pattern="{! v.pattern }"
+                    messageWhenPatternMismatch="{! v.messageWhenPatternMismatch }"
+                />
+            </aura:set>
+        </aura:if>
+    </lightning:layoutItem>
+
+    <lightning:layoutItem size="3" class="slds-p-left_small">
+        <lightning:button
+            variant="brand"
+            label="{! $Label.c.Add }"
+            onclick="{! c.handleAdd }"
+            disabled="{! !v.isValid }"
+        />
+    </lightning:layoutItem>
+</aura:component>

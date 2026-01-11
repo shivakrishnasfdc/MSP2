@@ -1,0 +1,76 @@
+<template>
+<c-pq-matrix-member-modal onsuccess={handleMatrixMemberSuccess}></c-pq-matrix-member-modal>
+<c-pq-datatable
+    icon-name="standard:opportunity"
+    key-field="id"
+    title={title}
+    custom-relative-max-height={customRelativeMaxHeight}
+    use-relative-max-height={useRelativeMaxHeight}
+    sortable-fields={sortableFields}
+    sorted-by={sortedBy}
+    sorted-direction={sortedDirection}
+    filter={filterObj}
+    show-spinner={showSpinner}
+    show-record-count
+    show-refresh-button
+    show-row-number-column
+    show-column-totals
+    onrefresh={handleRefresh}
+    loaded={loaded}
+    onrowaction={handleRowAction}
+>
+<lightning-datatable
+                key-field="id"
+                data={mapMemData}
+                columns={mapMemColumns}>
+        </lightning-datatable>
+<div class="slds-grid" slot="composedActions" style="position: relative;">
+        <lightning-button-icon
+        variant='border-filled'
+        onclick={handleOpenModal}
+        icon-name='utility:filterList'
+    >
+    </lightning-button-icon>
+    
+    <section if:true={isModalOpen} class = "pq-dropdown slds-popover slds-dynamic-menu "  role="dialog" style="position: absolute; top: 0; right: 100%; margin-right: 10px;">
+    <div class="slds-popover__body slds-p-horizontal_none slds-m-around_small" slot name="popover-body">   
+            <div>
+                <lightning-radio-group
+                    label="Select Map Members"
+                    options={statusOptions}
+                    value={selectedStatus}
+                    onchange={handleStatusChange}>
+                </lightning-radio-group>
+            </div>
+            <div>
+                <h2><strong>Select Date Range</strong></h2>
+                <lightning-input
+                    type="date"
+                    label="Start Date"
+                    value={startDate}
+                    onchange={handleStartDateChange}>
+                </lightning-input>
+
+                <lightning-input
+                    type="date"
+                    label="End Date"
+                    value={endDate}
+                    onchange={handleEndDateChange}>
+                </lightning-input>
+                <template if:true={isDateError}>
+                    <p style="color:red;">End Date must be later than Start Date.</p>
+                </template>
+                <div class="custom-combobox-container">
+                <label class="custom-label">Select a user</label>
+                <lightning-combobox
+                    value={selectedUser}
+                    options={UserOptions}
+                    onchange={handleUserChange}>
+                </lightning-combobox>
+                </div>
+            </div>
+        </div>
+</section>
+</div>
+</c-pq-datatable>
+</template>

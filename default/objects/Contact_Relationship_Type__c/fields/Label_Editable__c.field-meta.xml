@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Label_Editable__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Check this if you want the users to be able to change the default label when they draw or edit a relationship of this Relationship Line Type</description>
+    <inlineHelpText>Check this if you want the users to be able to change the default label when they draw or edit a relationship of this Relationship Line Type</inlineHelpText>
+    <label>Label Editable</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

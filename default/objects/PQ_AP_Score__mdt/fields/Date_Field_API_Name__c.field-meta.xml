@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Date_Field_API_Name__c</fullName>
+    <description>The field on the account plan that holds the date value that is used for time decay of the score this metadata record represents</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>If this field is not set or if &apos;Use Time Decay&apos; is not checked then time decay will not be used for the scoring of this object.  Time decay will also not work if the field entered is invalid or not a date or date time field on the Account Plan object.</inlineHelpText>
+    <label>Date Field API Name</label>
+    <length>255</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

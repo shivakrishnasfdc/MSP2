@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Use_Time_Decay__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>If set then score will decrease by a multiplier based on how long since any records were modified</description>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>This is only available for packaged score objects</inlineHelpText>
+    <label>Use Time Decay</label>
+    <type>Checkbox</type>
+</CustomField>

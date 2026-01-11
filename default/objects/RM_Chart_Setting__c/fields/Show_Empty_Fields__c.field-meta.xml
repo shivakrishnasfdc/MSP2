@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Show_Empty_Fields__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Check this if you want fields that have no value to show up.  For example, if users don&apos;t have an email it will show [email].  Uncheck this if you want fields that have no value to not show up.</description>
+    <label>Show Empty Fields</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

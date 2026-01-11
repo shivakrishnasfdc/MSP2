@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Default__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>There should only be one matrix marked as the global default.  If multiple matrices are set as default, the system will select whichever was most recently modified.</description>
+    <inlineHelpText>There should only be one matrix marked as the global default.  If multiple matrices are set as default, the system will select whichever was most recently modified.</inlineHelpText>
+    <label>Global Default</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

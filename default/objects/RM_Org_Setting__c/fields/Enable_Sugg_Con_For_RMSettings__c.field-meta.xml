@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enable_Sugg_Con_For_RMSettings__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Check this box to allow users to see suggested contacts for the relationship map settings.</description>
+    <inlineHelpText>Check this box to allow users to see suggested contacts for the relationship map settings.</inlineHelpText>
+    <label>Enable Suggested Contacts For RMSetting</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Color__c</fullName>
+    <defaultValue>&quot;#556677&quot;</defaultValue>
+    <description>Hexadecimal color code value</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Color code in the form of #RRGGBB or #RGB (example: #FF0000 for red)</inlineHelpText>
+    <label>Color</label>
+    <length>7</length>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,22 @@
+<aura:component>
+    <!--PUBLIC ATTRIBUTES-->
+    <aura:attribute name="record" type="WhiteSpaceDisplayFieldWrapper" />
+
+    <aura:iteration items="{! v.record.data }" var="obj">
+        <aura:if isTrue="{# and(!empty(obj.value), obj.value ne 0) }">
+            <li>
+                <aura:if isTrue="{# v.record.type eq 'textarea' }">
+                    <div class="slds-m-bottom_x-small slds-text-body_small">
+                        <lightning:formattedText value="{# obj.value ? obj.value : '' }" />
+                    </div>
+                    <aura:set attribute="else">
+                        <label class="ws-item-label slds-text-body_small"
+                            >{! v.record.abbreviation ? v.record.abbreviation : v.record.displayName }:&nbsp;</label
+                        >
+                        <c:PQOutputField displayType="{# v.record.type }" fieldValue="{! obj.value }" />
+                    </aura:set>
+                </aura:if>
+            </li>
+        </aura:if>
+    </aura:iteration>
+</aura:component>

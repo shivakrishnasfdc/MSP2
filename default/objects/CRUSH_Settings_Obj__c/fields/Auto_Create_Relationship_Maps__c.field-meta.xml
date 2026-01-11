@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auto_Create_Relationship_Maps__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>When checked will allow the system to auto create a map if one isn&apos;t found (and user has permissions) when accessing the Relationship Map component</description>
+    <label>Auto Create Relationship Maps</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

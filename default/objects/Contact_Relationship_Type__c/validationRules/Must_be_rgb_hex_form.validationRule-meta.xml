@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Must_be_rgb_hex_form</fullName>
+    <active>true</active>
+    <description>Must be in the RGB hex form</description>
+    <errorConditionFormula>NOT(REGEX(Color__c,&apos;^#(?:[0-9a-fA-F]{3}){1,2}$&apos;))</errorConditionFormula>
+    <errorDisplayField>Color__c</errorDisplayField>
+    <errorMessage>The color must be in the form #RRGGBB.  For example #0080FF</errorMessage>
+</ValidationRule>

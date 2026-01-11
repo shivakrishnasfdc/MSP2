@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Relationship_Line_Opacity_Rule</fullName>
+    <active>true</active>
+    <description>Relationship Line Opacity needs to be between 0 and 100</description>
+    <errorConditionFormula>!isBlank(Relationship_Line_Opacity__c) &amp;&amp; (Relationship_Line_Opacity__c &lt; 0 || Relationship_Line_Opacity__c &gt; 100)</errorConditionFormula>
+    <errorDisplayField>Relationship_Line_Opacity__c</errorDisplayField>
+    <errorMessage>Relationship Line Opacity needs to be between 0 and 100</errorMessage>
+</ValidationRule>

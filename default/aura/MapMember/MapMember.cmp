@@ -1,0 +1,9 @@
+<aura:component
+    controller="RelationshipMapMemberController"
+    implements="force:LightningQuickAction,lightning:actionOverride,force:hasRecordId,lightning:isUrlAddressable"
+    access="global"
+>
+    <ltng:require scripts="{! $Resource.StrategyUtils }" afterScriptsLoaded="{! c.doInit }" />
+
+    <c:pqMatrixMemberForm aura:id="membermodal"></c:pqMatrixMemberForm>
+</aura:component>

@@ -1,0 +1,41 @@
+<apex:page standardController="Relationship_Map__c">
+    <style type="text/css">
+        .userDefinedImage {
+            display: none !important;
+        }
+
+        body .bPageTitle .ptBody .pageType,
+        body .bPageTitle .ptBody .pageDescription {
+            margin-left: 0 !important;
+        }
+
+        body .bPageBlock .pbBody .pbSubheader {
+            background-color: #C0C0C0 !important;
+        }
+
+        .oRight {
+            max-width: 80vw;
+        }
+    </style>
+
+    <apex:form >
+        <apex:actionFunction name="rerenderDetailsBlock" rerender="DetailsBlock" />
+    </apex:form>
+
+    <apex:pageBlock >
+        <div class="MapBlock">
+            <c:RelationshipMap recordId="{! pqcrush__Relationship_Map__c.Id }" sObjectType="pqcrush__Relationship_Map__c" />
+        </div>
+    </apex:pageBlock>
+
+    <apex:pageBlock >
+        <div class="MapInfluenceBlock">
+            <c:RelationshipMapInfluence recordId="{! pqcrush__Relationship_Map__c.Id }" sObjectName="pqcrush__Relationship_Map__c" />
+        </div>
+    </apex:pageBlock>
+
+    <apex:pageBlock id="DetailsBlock">
+        <apex:detail subject="{!Relationship_Map__c.Id}" relatedListHover="false" />
+    </apex:pageBlock>
+
+</apex:page>

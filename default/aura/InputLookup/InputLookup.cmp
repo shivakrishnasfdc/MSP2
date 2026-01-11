@@ -1,0 +1,151 @@
+<aura:component controller="InputLookupController">
+    <ltng:require scripts="{! $Resource.StrategyUtils }" afterScriptsLoaded="{! c.init }" />
+
+    <aura:attribute name="objectType" type="String" required="true" description="Searchable object type" />
+    <aura:attribute
+        name="displayFieldApiName"
+        type="String"
+        default="Name"
+        required="true"
+        description="Primary field used to display in lookup result"
+    />
+    <aura:attribute name="label" type="String" required="true" default="" description="Component's label" />
+    <aura:attribute name="ignoreIds" type="List" required="false" />
+    <aura:attribute name="selectedRecordId" type="String" />
+    <aura:attribute
+        name="selection"
+        type="Object"
+        required="true"
+        description="List of selected items (a list of only one element for a single entry lookup). Data structure is the same as Apex List&lt;LookupSearchResult&gt;."
+    />
+    <aura:attribute
+        name="placeholder"
+        type="String"
+        default=""
+        description="Component's placeholder. Optional, defaults to none."
+    />
+
+    <aura:attribute name="searchTerm" type="String" default="" access="private" />
+    <aura:attribute name="searchResults" type="List" default="[]" access="private" />
+    <aura:attribute name="hasFocus" type="Boolean" default="false" access="private" />
+    <aura:attribute name="blurTimeout" type="Map" access="private" />
+    <aura:attribute name="searchThrottlingTimeout" type="Map" access="private" />
+    <aura:attribute name="focusedIndex" type="Integer" default="-1" access="PRIVATE" />
+
+    <aura:registerEvent name="onSearch" type="c:PQComponentEvent" />
+    <aura:registerEvent name="onSelect" type="c:PQComponentEvent" />
+
+    <aura:handler name="onSearch" event="c:PQComponentEvent" action="{! c.search }" />
+
+    <aura:method
+        name="search"
+        action="{! c.search }"
+        description="Performs search by calling the provide server-side action and displays results."
+    >
+        <aura:attribute
+            name="serverAction"
+            type="Aura.Action"
+            required="true"
+            description="Server-side action for the search. Action must return an Apex List&lt;LookupSearchResult&gt;."
+        />
+    </aura:method>
+
+    <div class="slds-form-element">
+        <aura:if isTrue="{! !empty(v.label) }">
+            <label class="slds-form-element__label" for="{# globalId + '_combobox' }">{! v.label }</label>
+        </aura:if>
+        <div class="slds-form-element__control">
+            <div
+                class="{! 'slds-combobox_container slds-has-inline-listbox '+ (v.hasFocus ? 'slds-has-input-focus' : '') }"
+            >
+                <div
+                    class="{! 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click '+ (and(v.hasFocus, !empty(v.searchResults)) ? 'slds-is-open' : 'slds-combobox-lookup') }"
+                    aria-expanded="{! !empty(v.searchResults) }"
+                    aria-haspopup="listbox"
+                    role="combobox"
+                >
+                    <!-- Single-entry combobox start -->
+                    <div
+                        class="{! 'slds-combobox__form-element slds-input-has-icon '+ (empty(v.selection) ? 'slds-input-has-icon_right' : 'slds-input-has-icon_left-right') }"
+                        role="none"
+                    >
+                        <c:PQIcon
+                            iconName="{! empty(v.selection.icon) ? 'standard:default' : v.selection.icon }"
+                            size="small"
+                            alternativeText="{! $Label.c.Selected_Item_Icon }"
+                            class="{! 'slds-combobox__input-entity-icon '+ (empty(v.selection) ? 'slds-hide' : '') }"
+                        />
+                        <input
+                            type="text"
+                            class="slds-input slds-combobox__input slds-combobox__input-value"
+                            aria-autocomplete="list"
+                            aria-controls="{# globalId + '_listbox' }"
+                            autocomplete="disabled"
+                            role="textbox"
+                            id="{# globalId + '_combobox' }"
+                            aura:id="searchInput"
+                            placeholder="{! v.placeholder }"
+                            value="{! empty(v.selection) ? '' : v.selection.title }"
+                            onfocus="{!c.onFocus}"
+                            onblur="{! c.onBlur }"
+                            oninput="{! c.onInput }"
+                            readonly="{! !empty(v.selection) }"
+                            onkeydown="{! c.onKeyDown }"
+                        />
+                        <c:PQIcon
+                            iconName="utility:search"
+                            size="x-small"
+                            alternativeText="{! $Label.c.Search }"
+                            class="{! 'slds-input__icon slds-input__icon_right '+ (empty(v.selection) ? '' : 'slds-hide') }"
+                        />
+                        <c:PQButtonIcon
+                            iconName="utility:close"
+                            variant="bare"
+                            alternativeText="{! $Label.c.Remove }"
+                            onclick="{! c.onClearSelection }"
+                            class="{! 'slds-input__icon slds-input__icon_right '+ (empty(v.selection) ? 'slds-hide' : '') }"
+                        />
+                    </div>
+                    <!-- Single-entry combobox end -->
+
+                    <!-- List box start -->
+                    <div id="{# globalId + '_listbox' }" role="listbox" onclick="{! c.onComboboxClick }">
+                        <ul
+                            class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid"
+                            role="presentation"
+                        >
+                            <aura:iteration items="{! v.searchResults }" var="result">
+                                <li role="presentation" class="slds-listbox__item">
+                                    <span
+                                        aura:id="result"
+                                        id="{! result.id }"
+                                        class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
+                                        role="option"
+                                        onclick="{! c.onResultClick }"
+                                    >
+                                        <span class="slds-media__figure">
+                                            <c:PQIcon
+                                                iconName="{! empty(result.icon) ? 'standard:default' : result.icon }"
+                                                size="small"
+                                                alternativeText="{! $Label.c.Result_Item_Icon }"
+                                            />
+                                        </span>
+                                        <span class="slds-media__body">
+                                            <span class="slds-listbox__option-text slds-listbox__option-text_entity"
+                                                >{! result.title }</span
+                                            >
+                                            <span class="slds-listbox__option-meta slds-listbox__option-meta_entity"
+                                                >{! result.subtitle}</span
+                                            >
+                                        </span>
+                                    </span>
+                                </li>
+                            </aura:iteration>
+                        </ul>
+                    </div>
+                    <!-- List box end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

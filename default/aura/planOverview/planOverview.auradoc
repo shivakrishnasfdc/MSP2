@@ -1,0 +1,3 @@
+<aura:documentation>
+    <aura:description>This component shows the Plan Overview and it's Title for the Account Plan it is associated with.</aura:description>
+</aura:documentation>

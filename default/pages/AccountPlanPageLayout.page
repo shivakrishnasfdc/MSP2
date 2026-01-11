@@ -1,0 +1,73 @@
+<apex:page standardController="Account_Plan__c">
+
+    <style type="text/css">
+        .userDefinedImage {
+            display: none !important;
+        }
+
+        body .bPageTitle .ptBody .pageType, body .bPageTitle .ptBody .pageDescription {
+            margin-left: 0 !important;
+        }
+
+        body .bPageBlock .pbBody .pbSubheader {
+            background-color: #C0C0C0 !important;
+        }
+
+        .oRight {
+            max-width: 80vw;
+        }
+    </style>
+
+    <apex:form >
+        <apex:actionFunction name="rerenderAccountPlanDetails" rerender="accountPlanBlock" />
+    </apex:form>
+
+    <apex:pageBlock title="{! $Label.Plan_Overview_Title }">
+        <div class="planOverview">
+            <apex:include pageName="PlanOverview"/>
+        </div>
+    </apex:pageBlock>
+
+    <apex:pageBlock id="accountPlanBlock">
+        <apex:detail subject="{!Account_Plan__c.Id}" relatedListHover="false"/>
+    </apex:pageBlock>
+
+    <apex:pageBlock >
+        <div class="relationshipMatrix">
+            <apex:include pageName="RelationshipMatrix"/>
+        </div>
+    </apex:pageBlock>
+
+    <apex:pageBlock >
+        <div class="keystakeholderHierarchy">
+            <apex:include pageName="KeyStakeholderHierarchy"/>
+        </div>
+    </apex:pageBlock>
+
+    <apex:pageBlock >
+        <div class="whiteSpace">
+            <c:WhiteSpace accountPlanId="{!Account_Plan__c.Id}" isPrinterFriendly="false"/>
+        </div>
+    </apex:pageBlock>
+
+    <apex:pageBlock >
+        <div class="swotMatrix">
+            <apex:include pageName="SWOTMatrix"/>
+        </div>
+    </apex:pageBlock>
+
+    <apex:pageBlock >
+        <div class="AccountPlanTaskList">
+            <apex:include pageName="AccountPlanTaskList"/>
+        </div>
+    </apex:pageBlock>
+
+    <apex:pageBlock >
+        <apex:pageBlockSection id="section1" columns="1" collapsible="true" title="{! $Label.Field_History }">
+            <div class="fieldHistory">
+                <apex:include pageName="FieldHistory"/>
+            </div>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+
+</apex:page>

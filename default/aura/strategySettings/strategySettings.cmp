@@ -1,0 +1,127 @@
+<aura:component extends="c:PQBaseSettingsLayout" controller="StrategySettingsController" access="global">
+    <ltng:require scripts="{! $Resource.StrategyUtils }" afterScriptsLoaded="{! c.init }" />
+
+    <!-- Super component attributes -->
+    <aura:attribute name="activeSection" type="String" default="notifications" />
+    <aura:attribute name="navSet" type="List" />
+
+    <aura:set attribute="navigationData" value="{! v.navSet }" />
+
+    <!-- Component attributes -->
+    <aura:attribute name="showAccountPlanSection" type="Boolean" default="false" />
+    <aura:attribute name="showKeyStakeholdersSection" type="Boolean" default="false" />
+    <aura:attribute name="showScheduleJobsSection" type="Boolean" default="false" />
+    <aura:attribute name="isKeyDateReminderJobStarted" type="Boolean" default="false" />
+    <aura:attribute name="canScheduleKeyDateReminder" type="Boolean" default="false" />
+    <aura:attribute name="canScheduleAccountPlanScoreHistoryJob" type="Boolean" default="false" />
+    <aura:attribute name="isAccountPlanScoreHistoryJobStarted" type="Boolean" default="false" />
+
+    <!-- Event handlers -->
+    <aura:handler name="CancelClickEvent" event="c:PQButtonClickEvent" action="{! c.cancelHandler }" />
+    <aura:handler name="SaveClickEvent" event="c:PQButtonClickEvent" action="{! c.saveHandler }" />
+
+    <aura:if isTrue="{! v.activeSection == 'notifications' }">
+        <c:NotificationsSettingsPage
+            notificationSettings="{! v.settings.notifications }"
+            notificationsEnabled="{! v.settings.enableNotifications }"
+            pageTitle="{! $Label.c.Email_Notifications }"
+            pageDescription="{! $Label.c.Choose_Notification_Changes }"
+        />
+    </aura:if>
+
+    <aura:if isTrue="{! v.activeSection == 'general' }">
+        <c:settingsGeneralPage />
+    </aura:if>
+
+    <aura:if isTrue="{! v.activeSection == 'cross-sell' }">
+        <c:crossSellSettingsPage />
+    </aura:if>
+
+    <aura:if isTrue="{! v.activeSection == 'keyStakeholders' }">
+        <c:KeyStakeholderSettingsPage
+            aura:id="KeyStakeholderSettingsPage"
+            hierarchyLevel="{! v.settings.contactsAncestryLevels }"
+        />
+    </aura:if>
+    <!--Added By Navya START-->
+    <aura:if isTrue="{! v.activeSection == 'AccountRelationShip' }">
+        <c:AccountMapSettingsPage
+            aura:id="KeyStakeholderSettingsPage"
+            hierarchyLevel="{! v.settings.contactsAncestryLevels }"
+            maptype="accountrelation"
+        />
+    </aura:if>
+<!--Added By Navya END-->
+    <aura:if isTrue="{! v.activeSection == 'scheduledJobs' }">
+        <div aura:id="scheduledJobsSection">
+            <div class="slds-text-heading_small slds-m-top_small slds-m-bottom_medium">
+                {! $Label.c.Scheduled_Jobs }
+            </div>
+            <div>
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_striped">
+                    <thead>
+                        <tr class="slds-theme_shade">
+                            <th class="slds-text-title_caps border-right">{! $Label.c.Job }</th>
+                            <th class="slds-text-title_caps border-right">{! $Label.c.Status }</th>
+                            <th class="slds-text-title_caps"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:if isTrue="{! v.canScheduleKeyDateReminder }">
+                            <tr>
+                                <td class="border-right">{! $Label.c.Key_Date_Reminder }</td>
+                                <td class="checkbox-column border-right">
+                                    {! v.isKeyDateReminderJobStarted ? $Label.c.Started : $Label.c.Stopped }
+                                </td>
+                                <td class="checkbox-column">
+                                    <lightning:button
+                                        variant="brand"
+                                        label="{! $Label.c.Start }"
+                                        disabled="{! v.isKeyDateReminderJobStarted }"
+                                        onclick="{! c.scheduleKeyDateReminderJobs }"
+                                    />
+                                </td>
+                            </tr>
+                        </aura:if>
+                        <aura:if isTrue="{! v.canScheduleAccountPlanScoreHistoryJob }">
+                            <tr>
+                                <td class="border-right">{! $Label.c.Account_Plan_Score_History }</td>
+                                <td class="checkbox-column border-right">
+                                    {! v.isAccountPlanScoreHistoryJobStarted ? $Label.c.Started : $Label.c.Stopped }
+                                </td>
+                                <td class="checkbox-column">
+                                    <lightning:button
+                                        variant="brand"
+                                        label="{! $Label.c.Start }"
+                                        disabled="{! v.isAccountPlanScoreHistoryJobStarted }"
+                                        onclick="{! c.scheduleScoreJobs }"
+                                    />
+                                </td>
+                            </tr>
+                        </aura:if>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </aura:if>
+
+    <aura:if isTrue="{! v.activeSection == 'tasks' }">
+        <c:taskSettingsPage />
+    </aura:if>
+
+    <aura:if isTrue="{! v.activeSection == 'permissions' }">
+        <lightning:input
+            type="checkbox"
+            label="Use Account Teams for Account Plan Permissions"
+            checked="{! v.settings.useAccountTeamPermissions }"
+            onchange="{! c.saveHandler }"
+        />
+        <lightning:button
+            variant="brand"
+            label="Sync All Account Plans"
+            disabled="{! !v.originalSettings.useAccountTeamPermissions }"
+            onclick="{! c.handleUpdateAllSharing }"
+            class="slds-m-top_small"
+        />
+    </aura:if>
+</aura:component>

@@ -1,0 +1,715 @@
+<apex:page showHeader="false" standardStylesheets="false" controller="PqPresentAccountPlanController"  action="{!getListAndImage}">
+    <apex:includeLightning />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <div id="container"  >
+       <div class="storeheadBtn" id="storeheadBtn">
+            <div id="header">
+                <div class="imgDiv" id="planedImg"></div>
+                <span class="TitleOfCarousel">{!planName}</span>
+                <div class="imgDiv" id="templateImg"></div>
+            </div >
+            <div class="buttonDiv" id= "buttonId">
+                <div class="mybtnDiv">
+                    <button class="myBtnUpArrow" id="myBtnUpArrow" type="button" onclick="Resize()" >‹</button>
+                </div>
+                <div id="btnContainer">
+                   <!-- <button class="myBtnCap" type="button" id="btnCapture" onclick = "enableCaptureMode()" >{!$Label.Capture_Image}</button> -->
+                    <button class="myBtn" type="button" onclick="handleChangeTemplate()">{!$Label.Change_Template}</button>
+                <!--    <button class="myBtn" type="button" onclick="genratePDF()" >{!$Label.GenratePDF}</button>   -->
+                </div>
+            </div>
+        </div>
+        <div class="containCompNote"  id="containCompNote" onmouseover="ShowArrow()" onmouseout="HideArrow()" ondblclick="handleDoubleClick()">
+            <div id="containerLoader">
+                <div id="loader"></div>
+            </div>
+
+                <div class="storeDownArrow" id="storeDownArrow">
+                    <button class="myBtnDownArrow" id="myBtnDownArrow" type="button" onclick="Resize()" >‹</button>
+                </div>
+                <div class="storecompText">
+                    <div id="storeComponent">
+                        <!-- Dynamically added LWC component -->
+                    </div>
+                    <div id="textArea" ondblclick="handleDoubleClickOnTextArea()">
+                        <!-- <textarea id="w3review" name="w3review" placeholder="Enter Notes... " ></textarea> -->
+
+                    </div>
+                </div>
+
+            <a id="prev" onclick="plusSlides(-1)" onmouseover="ShowArrow()" onmouseout="HideArrow()">❮</a>
+            <a id="next" onclick="plusSlides(1)" onmouseover="ShowArrow()" onmouseout="HideArrow()">❯</a>
+        </div>
+        <button class="myBtnNotes" id="myBtnNotes" onclick="ShowNotes()">{!$Label.Notes}</button>
+        <div id="footer"></div>
+    </div>
+    <!-- The Modal -->
+
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+    <!--    <div class="modal-content" >
+            <span class="close">&times;</span>
+            <div id="modal-content">
+            <button onclick="captureBtn()" class="myBtn"  >Capture image</button>
+            <img id="imgId" class="imageCapture" />
+            </div>
+        </div> -->
+
+    </div>
+    <script type="text/javascript">__sfdcSessionId = '{!JSENCODE($Api.Session_Id)}';</script>
+    <script src="../../soap/ajax/30.0/connection.js" type="text/javascript"></script>
+     <apex:includeScript value="{!$Resource.html2Image}"/>  
+   <style>
+        body{
+        overflow-y : hidden;
+        }
+        #overlay {
+            position: fixed;
+            display: none;
+            border: 2px dashed #000;
+            z-index: 9999;
+            pointer-events: none; /* Ensure the overlay doesn't interfere with selection */
+        }
+        #freezeLayer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+        display: none;
+        z-index: 9998; /* Below the overlay's z-index to still show the selection */
+        }
+        .myBtn {
+        border: none;
+        background-color: #fff;
+        outline: none;
+        color: #181818;
+        padding: 8px 15px;
+        border-radius: 4px;
+        margin: 20px 10px 10px 0;
+        cursor: pointer;
+        transition: .25s ease;
+        height: 36px;
+        font-weight: 600;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+        }
+        .myBtnCap{
+        border: none;
+        display: none;
+        background-color: #fff;
+        outline: none;
+        color: #181818;
+        padding: 8px 15px;
+        border-radius: 4px;
+        margin: 20px 10px 10px 0;
+        cursor: pointer;
+        transition: .25s ease;
+        height: 36px;
+        font-weight: 600;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+        }
+        .myBtnUpArrow{
+            border: none;
+            font-size: 30px;
+            transform: rotate(90deg);
+            background-color: #fff;
+            outline: none;
+            color: #0a0101;
+            padding: 1px 12px 5px 12px;
+            border-radius: 4px;
+            margin: 20px 10px 10px 0;
+            cursor: pointer;
+            transition: .25s ease;
+        }
+        .storeheadBtn{
+            transition: .8s ease;
+
+        }
+        .storeDownArrow{
+            padding-left: 35px;
+            padding-top: 1px;
+        }
+        .myBtnDownArrow{
+            display: none;
+            border: none;
+            font-size: 30px;
+            transform: rotate(-90deg);
+            background-color: #fff;
+            outline: none;
+            color: #0a0101;
+            padding: 1px 12px 5px 12px;
+            border-radius: 4px;
+            margin: 20px 10px 10px 0;
+            cursor: pointer;
+            transition: .25s ease;
+        }
+        .mybtnDiv{
+            padding-left: 35px;
+        }
+        .myBtnNotes {
+            border: none;
+            background: #2D50E2;
+            /* outline: none; */
+            color: #fff;
+            padding: 5px;
+            border-radius: 4px 4px 0 0;
+            /* margin: 20px 10px 10px 0; */
+            cursor: pointer;
+            /* transition: .25s ease; */
+            /* height: 36px; */
+            position: absolute;
+            right: -9px;
+            /* bottom: 128px; */
+            transform: rotate(270deg);
+            width: 4rem;
+            font-size: 15px;
+            font-weight: 400;
+            top: 15rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+            z-index: 999;
+        }
+
+        .buttonDiv{
+        justify-content: space-between;
+        display: flex;
+        background: #2D50E2;
+        height: 77px;
+        }
+        #notesid{
+        float: right;
+        margin-top: 20px;
+        }
+        #textArea{
+        padding-top: 10px;
+        padding-right: 56px;
+        flex-direction: column;
+        display: none;
+        transition: .3s ease;
+        }
+        textarea {
+        resize: none;
+        }
+        #loader {
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 70px;
+        height: 70px;
+        -webkit-animation: spin 2s linear infinite; /* Safari */
+        animation: spin 2s linear infinite;
+        }
+
+        /* Header Image */
+
+        .imgDiv {
+            width: 100px;
+            height: 80px;
+        }
+        .headerImg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Safari */
+        @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+        }
+
+        #storeComponent{
+            padding-top: 8px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            padding-left: 53px;
+            padding-right: 10px;
+            width: calc(100% - 106px);
+            height: calc(100vh - 250px);
+            overflow-y: scroll;
+            /* transition: .3s ease; */
+        }
+
+
+        #storeComponent::-webkit-scrollbar {
+        display: none;
+        }
+
+        .containCompNote{
+        position: relative;
+        background-color: #F5F5F5;
+        height: calc(100vh - 240px);
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        justify-content: space-between;
+        }
+        .storecompText{
+            display: flex;
+            color: #181818;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+        }
+        .containCompNote::-webkit-scrollbar {
+        display: none;
+        }
+
+        #containerLoader{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #000;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        opacity: .15;
+        }
+        #w3review{
+        width: 258px;
+        height: 471px;
+        }
+        #header{
+        background: #fff;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        }
+        #footer{
+        height: 4rem;
+        }
+        #prev{
+        position: absolute;
+        top: 54%;
+        padding: 16px 12px;
+        font-size: 22px;
+        transform: translateY(-50%);
+        left: 25px;
+        background: #F5F5F5;
+        opacity: .2;
+        color: #000000;
+        cursor:pointer;
+        }
+        #next{
+        position: absolute;
+        top: 54%;
+        padding: 16px 12px;
+        font-size: 22px;
+        transform: translateY(-50%);
+        right: 25px;
+        background: #F5F5F5 ;
+        opacity: .2;
+        color: #000000;
+        cursor:pointer;
+        }
+        .w3-round{
+        height: calc(100% - 20px);
+        margin: 0 10px;
+
+        }
+        .w3-round-Plan{
+        height: calc(100% - 20px);
+        padding-right: 10px;
+        }
+        .w3-round-PlanDiv{
+        height: calc(100% - 20px);
+        padding-right: 10px;
+        background:red;
+        }
+        .TitleOfCarousel{
+            color: #181818;
+            font-size: 2rem;
+            font-weight: 600;
+            font-family: var(--lwc-fontFamily, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol');
+            /* font-family: Arial; */
+        }
+        .fullStoreComponent{
+        height: 100% !important;
+        width: 100% !important;
+        padding-top: 0px !important;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        }
+
+        /* width */
+		::-webkit-scrollbar {
+  		width: 0px;
+		}
+
+/* Track */
+	    ::-webkit-scrollbar-track {
+  		background: #f5f5f5;
+		}
+
+		/* Handle */
+		::-webkit-scrollbar-thumb {
+ 		 background: #f5f5f5;
+		}
+        /* modal css */
+        .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 99 !important; /* Sit on top */
+        padding-top : 100px ; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+/* Modal Content */
+        .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        }
+
+        /* The Close Button */
+        .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+        }
+        .ws-table-container{
+            max-height: 100% !important;
+            max-width: 100% !important;
+        }
+        .imageCapture{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <apex:includeScript value="{!$Resource.HTML3Canvas}"/>
+    <script  >
+    let modelData = document.getElementById('modal-content');
+    let base64Image ;
+    let currentComponent;
+    let currentComponentId;
+    var recordid = '{!JSENCODE($CurrentPage.parameters.recordId)}';
+    var templateid = '{!JSENCODE($CurrentPage.parameters.planId)}';
+    var startX, startY, overlay = document.createElement('canvas');
+        overlay.id = 'overlay';
+        document.body.appendChild(overlay);
+    var freezeLayer = document.createElement('div');
+        freezeLayer.id = 'freezeLayer';
+        document.body.appendChild(freezeLayer);
+    var span = document.getElementsByClassName("close")[0];
+    var modal = document.getElementById("myModal");
+    var imageData = document.getElementById("imgId");
+    let captureDiv = document.getElementById('storeComponent');
+    var count =0;
+
+        function enableCaptureMode() {
+            htmlToImage.toPng(document.getElementById('storeComponent'),{ quality: 1,
+            allowTaint: true,
+            foreignObjectRendering: true
+            })
+            .then(function (dataUrl) {
+            imageData.src = dataUrl;
+            base64Image = dataUrl;
+            currentComponentId = count;
+            let view ={'base64Image':base64Image,'currentComponent':currentComponent};
+            localStorage.clear();
+            localStorage.setItem('pqPrsentPreview', JSON.stringify(view));
+            localStorage.setItem('currentComponentId', currentComponentId);
+            var url = '/apex/pqcrush__showImageCapture?recordId='+recordid+'&currentComponent='+currentComponent+'&planId='+templateid;
+                        window.location.href = url;
+        });
+
+             freezeLayer.style.display = 'block';
+        }
+
+        if(typeof span != 'undefined'){
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+        }
+
+        window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    function handleChangeTemplate() {
+
+        $Lightning.createComponent(
+            "pqcrush:printButton",
+            {isChangeTemplate: true, recId: '{!JSENCODE($CurrentPage.parameters.recordId)}' },
+            "storeComponent",
+            function(component) {
+                // spinner.style.display = 'none';
+
+            }
+        );
+    }
+
+
+    function HideArrow(){
+
+        document.getElementById('next').style.visibility="hidden";
+        document.getElementById('prev').style.visibility="hidden";
+    }
+
+    //var count =0;
+    var currentCompId = '';
+    let components = '{!componentList}';
+    let removeLeftBracket = components.replace("[", "");
+    let removeRightBracket = removeLeftBracket.replace("]", "");
+    let comp = removeRightBracket.split(',');
+    let componentShow = [];
+    let fullScreen=true;
+    let headerImageURL='{!JSENCODE(imageURL)}';
+    let headerTitle='{!JSENCODE(titleOfCarousel)}';
+    let data1='{!JSENCODE(imageURLPlan)}';
+    let showAttribute='true';
+    let componentAvailable=componentShow;
+    let showNotesarea=false;
+    let pdfCount='{!pdfCount}';
+    let screenShotImages='{!screenShotImage}';
+    let removeLeftBracket1=screenShotImages.replace("[", "");
+    let removeRightBracket1=removeLeftBracket1.replace("]", "");
+    let tempData=removeRightBracket1.split(',');
+    let finalScreenShotImagesArray=[];
+    let doubleClickOnTextArea = true;
+
+    //Push Each screenshot image into Array
+    for(let m=0;m<tempData.length;m++){
+        finalScreenShotImagesArray.push(tempData[m].trim());
+    }
+    if('{!JSENCODE(imageURL)}' != ''){
+        let planImg = document.getElementById('planedImg');
+        let img = document.createElement('img');
+        img.setAttribute('src', '{!JSENCODE(imageURL)}');
+        img.classList.add("headerImg");
+        planImg.appendChild(img);
+    }
+
+    // Plan Image
+    if('{!JSENCODE(imageURLPlan)}' != ''){
+        let planImg = document.getElementById('templateImg');
+        let img = document.createElement('img');
+        img.setAttribute('src', '{!JSENCODE(imageURLPlan)}');
+        img.classList.add("headerImg");
+        planImg.appendChild(img);
+    }
+
+    for (let i = 0; i < comp.length; i++) {
+        componentShow.push(comp[i].trim());
+    }
+    createNotes();
+    function createNotes(){
+        $Lightning.use("pqcrush:PqPresentAccountPlan", function() {
+                            $Lightning.createComponent(
+                            'pqcrush:noteSection',
+                            {recordId : recordid ,templateids : templateid },
+                            "textArea",
+                            function(cmp) {
+                                 }
+                                 );
+                                     });
+    }
+
+    if(localStorage.getItem('currentComponentId') !== null && localStorage.getItem('currentComponentId') !== '') {
+        currentCompId = localStorage.getItem('currentComponentId');
+    }
+    if (currentCompId !== '') {
+        count = currentCompId;
+        showLWC(count);
+        localStorage.setItem('currentComponentId', '');
+    }
+    else {
+        showLWC(count);
+    }
+    //data-id={index} pqcrush:genericDataTableComponent
+
+    document.getElementById('prev').style.visibility="hidden";
+    document.getElementById('next').style.visibility="hidden";
+    document.addEventListener('fullscreenchange', handleEscKeyPress);
+    function showLWC(n){
+        currentComponent = componentShow[n];
+        document.getElementById('containerLoader').style.display = 'flex';
+        /*if(componentShow[n].split(' $')[0] === 'pqcrush:WhiteSpaceReport' || componentShow[n].split(' $')[0] === 'pqcrush:StakeholderHierarchyChart'){
+            document.getElementById('btnCapture').style.display = 'inline-block';
+        }else{
+            document.getElementById('btnCapture').style.display = 'none';
+        }*/
+        $Lightning.use("pqcrush:PqPresentAccountPlan", function() {
+            $Lightning.createComponent(
+                componentShow[n].split(' $')[0],
+                {recordId : recordid ,sObjectName: componentShow[n].split(' $')[1] },
+                "storeComponent",
+                function(cmp) {
+                    setTimeout(()=>{
+                        document.getElementById('containerLoader').style.display = 'none';
+                    },5000);
+                    }
+                        );
+                    });
+                    }
+
+                        function plusSlides(n){
+                        count = parseInt(count);
+                        count+=n;
+                        let value1=document.getElementById("storeComponent");
+                        value1.innerHTML = '';
+                        showLWC(count);
+                    }
+                        function ShowNotes(){
+                            let textArea = document.getElementById('textArea');
+                            let storeCompWidth = document.getElementById('storeComponent');
+                            console.log('test 1');
+                            if(textArea.style.display === 'flex') {
+                                console.log('test 2');
+                            showNotesarea=false;
+                            textArea.style.display = 'none';
+                            storeCompWidth.style.width = 'calc(100% - 106px)';
+                            }else{
+                                console.log('test 3');
+                                showNotesarea=true;
+                                textArea.style.display = 'flex';
+                                storeCompWidth.style.width = '71%';
+                                console.log('test4');
+                            }
+                        }
+
+                        //image send to content version
+
+
+
+                        function handleDoubleClick(){
+                            if(fullScreen==true) {
+                                document.getElementById('containCompNote').requestFullscreen();
+                                document.getElementById('myBtnNotes').style.display = 'none';
+                                document.getElementById('textArea').style.display = 'none';
+                                fullScreen=false;
+                                document.getElementById('storeComponent').classList.add('fullStoreComponent');
+                                document.getElementById('prev').style.display='none';
+                                document.getElementById('next').style.display='none';
+                                document.getElementById('storeDownArrow').style.display='none';
+                                doubleClickOnTextArea = true;
+                            }
+                            else {
+                                document.getElementById('storeDownArrow').style.display='block';
+                                document.getElementById('myBtnNotes').style.display = 'block';//flex replaced with block if any error found;
+                                if(showNotesarea==true){
+                                    document.getElementById('textArea').style.display = 'flex';//flex replaced with block if any error found;
+                                }
+                                fullScreen=true;
+                                document.getElementById('storeComponent').classList.remove('fullStoreComponent');
+                                document.getElementById('prev').style.display='block';
+                                document.getElementById('next').style.display='block';
+                                if (doubleClickOnTextArea) {
+                                    document.exitFullscreen();
+                                }
+                            }
+                    }
+
+                    function handleDoubleClickOnTextArea() {
+                        doubleClickOnTextArea = false;
+                        fullScreen=false;
+                        document.getElementById('myBtnNotes').style.display = 'block';
+                        if(showNotesarea==true){
+                            document.getElementById('textArea').style.display = 'flex';//replace flex with block if facing sny error.
+                        }
+                        document.getElementById('storeComponent').classList.remove('fullStoreComponent');
+                        document.getElementById('prev').style.display='block';
+                        document.getElementById('next').style.display='block';
+                    }
+
+                function Resize(){
+                    let header = document.getElementById('header');
+                    let btn = document.getElementById('buttonId');
+                    let grayDiv = document.getElementById('containCompNote');
+                    let storeComp = document.getElementById('storeComponent');
+                    let upArrow = document.getElementById('myBtnUpArrow');
+                    let downArrow = document.getElementById('myBtnDownArrow');
+                    let storeheadbtn = document.getElementById('storeheadBtn');
+                    let notesDiv = document.getElementById('container');
+                    if((header.style.display === '' || header.style.display === 'flex') && (storeheadbtn.style.marginTop === '' || storeheadbtn.style.marginTop === '0px' )){
+                        storeheadbtn.style.marginTop = '-180px';
+                        storeheadbtn.style.opacity = '0';
+                        downArrow.style.display = 'block';
+                        grayDiv.style.height = 'calc(100vh - 40px)';
+                        storeComp.style.height = 'calc(100vh - 117px)';
+                        notesDiv.style.height = 'calc(100vh - 125px)';
+                    }else if(storeheadbtn.style.marginTop === '-180px'){
+                        storeheadbtn.style.marginTop  = '0px';
+                        storeheadbtn.style.opacity = '1';
+                        downArrow.style.display = 'none';
+                        grayDiv.style.height = 'calc(100vh - 240px)';
+                        storeComp.style.height = 'calc(100vh - 250px)';
+                        notesDiv.style.height = 'calc(100vh - 245px)';
+                    }
+				}
+
+
+                function handleEscKeyPress(Event){
+                    if(!document.fullscreenElement){
+                        document.getElementById('myBtnNotes').style.display = 'block';
+                        fullScreen=true;
+                        document.getElementById('storeComponent').classList.remove('fullStoreComponent');
+                        document.getElementById('prev').style.display='block';
+                        document.getElementById('next').style.display='block';
+                    }
+                    }
+
+                        let data2='';
+                        let headerImage='';
+                        let uploadfileName='';
+                        let rectempId='';
+                    function genratePDF(){
+                        let previewList = {
+                                'headerTitle':headerTitle,
+                                'AccountplanName':'{!JSENCODE(planName)}',
+                                'headerImageURL':headerImageURL,
+                                'accountPlanImage':data1,
+                                'componentAvailable':JSON.stringify(componentAvailable),
+                                'uploadfileName':uploadfileName,
+                                'planRecordID': recordid,
+                                'pdfCount':pdfCount,
+                                'screenShotImage':JSON.stringify(finalScreenShotImagesArray)
+                            };
+                        localStorage.clear();
+                        localStorage.setItem('pqPrsentPreviewItem', JSON.stringify(previewList));
+                        var url = '/apex/pqcrush__PreviewAccountPlanTemplate?showAttribute=' + encodeURIComponent(showAttribute) +
+                                                                    '&param5=' + encodeURIComponent(templateid) +
+                                                                    '&recordId=' + encodeURIComponent(recordid);
+                        window.location.href = url;
+
+                        }
+
+                        function ShowArrow(){
+                            if(count == 0){
+                                document.getElementById('prev').style.visibility="hidden";
+                            }else if(count > 0){
+                                document.getElementById('prev').style.visibility="visible";
+                            }
+                            if(count == componentShow.length -1){
+                                document.getElementById('next').style.visibility="hidden";
+                            }else if(count < componentShow.length -1){
+                                document.getElementById('next').style.visibility="visible";
+                            }
+                        }
+                        </script>
+</apex:page>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>White_Space_Cell__c</fullName>
+    <label>White Space Cell</label>
+    <referenceTo>White_Space_Cell__c</referenceTo>
+    <relationshipLabel>Cross-Sell Data Type Associations</relationshipLabel>
+    <relationshipName>Cross_Sell_Data_Type_Associations</relationshipName>
+    <relationshipOrder>1</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

@@ -1,0 +1,11 @@
+<aura:component>
+    <aura:attribute name="cell" type="WhiteSpaceCellWrapper" required="true" />
+
+    <div class="ws-cell">
+        <ul class="ws-list">
+            <aura:iteration items="{! v.cell.tiles[0].displayFields }" var="obj">
+                <c:whitespaceField displayFieldWrapper="{# obj }" class="ws-list-item" />
+            </aura:iteration>
+        </ul>
+    </div>
+</aura:component>

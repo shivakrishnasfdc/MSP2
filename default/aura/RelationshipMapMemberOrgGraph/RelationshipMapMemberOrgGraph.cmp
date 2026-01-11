@@ -1,0 +1,79 @@
+<aura:component
+    controller="AccountPlanController"
+    implements="force:appHostable,lightning:actionOverride,flexipage:availableForAllPageTypes,force:hasRecordID,force:hasSObjectName"
+    access="global"
+>
+    <ltng:require scripts="{! $Resource.StrategyUtils }" afterScriptsLoaded="{! c.init }" />
+    <!-- Attributes -->
+    <aura:attribute name="isClassic" type="Boolean" default="false" />
+    <aura:attribute name="defaultMatrix" type="String" default="" access="global" />
+    <aura:attribute name="maps" type="List" default="[]" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
+    <aura:attribute name="selTabId" type="String" default="" />
+    <aura:attribute name="newRelationshipMap" type="Boolean" default="false" />
+    <aura:attribute name="options" type="List" default="[]" />
+    <aura:attribute name="defaultSortOrder" type="String" default="" />
+
+    <aura:if isTrue="{! v.isLoading }">
+        <lightning:spinner alternativeText="{! $Label.c.Loading }" variant="brand" />
+    </aura:if>
+
+    <div class="slds-section" aura:id="collapsibleSectionContainer">
+        <h5 class="slds-theme_shade">
+            <lightning:buttonStateful
+                labelWhenOff="Change Tab Order"
+                labelWhenOn="Change Tab Order"
+                iconNameWhenOff="utility:chevronright"
+                iconNameWhenOn="utility:chevrondown"
+                onclick="{! c.handleSectionHeaderClick }"
+                class="slds-section__title-action"
+            />
+        </h5>
+        <div class="slds-section__content slds-p-horizontal_medium slds-p-bottom_medium lgc-bg slds-theme_shade">
+            <lightning:combobox
+                name="general"
+                label="Relationship Map Order"
+                value="{! v.defaultSortOrder }"
+                placeholder="Select an Option"
+                options="{! v.options }"
+                onchange="{! c.handleChange }"
+            />
+        </div>
+    </div>
+
+    <!-- <c:RelationshipMapShared isClassic="{! v.isClassic }" recordId="{! v.recordId }" sObjectName="{! v.sObjectName }" /> -->
+    <c:PQBaseCrushFeature>
+        <lightning:tabset variant="scoped" selectedTabId="{!v.selTabId}">
+            <aura:iteration items="{! v.maps }" var="item" indexVar="index">
+                <lightning:tab label="{! item.Name }" id="{! item.Id }">
+                    <!-- <c:pqSuggestedContacts recordId="{! item.Id }" objectApiName="pqcrush__Relationship_Map__c" /> -->
+                    <br />
+                    <c:RelationshipMapShared
+                        isClassic="{! v.isClassic }"
+                        recordId="{! item.Id }"
+                        sObjectName="{! v.sObjectName }"
+                        skipLicenseCheck="true"
+                        skipSuggestedContacts="false"
+                    />
+                    <br />
+                    <c:relationshipMatrix
+                        isClassic="{! v.isClassic }"
+                        recordId="{! item.Id }"
+                        sObjectName="{! v.sObjectName }"
+                    />
+                    <br />
+                    <c:dataTableMapMember recordId="{! item.Id }" objectApiName="pqcrush__Relationship_Map__c" />
+                </lightning:tab>
+            </aura:iteration>
+            <aura:if isTrue="{! v.newRelationshipMap }">
+                <lightning:tab label="➕" onactive="{! c.handleClick }"></lightning:tab>
+                <c:pqAddRelationshipMapModal
+                    aura:id="pqAddRelationshipMapModal"
+                    onvaluechange="{! c.getValueFromLwc }"
+                    recordId="{! v.recordId }"
+                    objectApiName="{! v.sObjectName }"
+                />
+            </aura:if>
+        </lightning:tabset>
+    </c:PQBaseCrushFeature>
+</aura:component>

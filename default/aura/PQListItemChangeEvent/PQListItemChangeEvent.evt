@@ -1,0 +1,7 @@
+<aura:event type="COMPONENT" description="A value changed for the identified object">
+    <aura:attribute name="oldValue" type="Object"/>
+    <aura:attribute name="newValue" type="Object"/>
+    <aura:attribute name="index" type="Integer"/>
+    <aura:attribute name="newIndex" type="Integer"/>
+    <aura:attribute name="markForDelete" type="Boolean"/>
+</aura:event>

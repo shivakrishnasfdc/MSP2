@@ -1,0 +1,12 @@
+.slds-modal__container{
+    width:40% !important;
+    max-width: 90% !important;
+}
+
+.slds-modal__content{
+max-height: 363px !important;
+}
+
+.slds-modal__content::-webkit-scrollbar {
+    display: none;
+}

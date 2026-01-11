@@ -1,0 +1,6 @@
+<aura:component controller="UserRecordAccessServiceController">
+    <ltng:require scripts="{!$Resource.StrategyUtils}" />
+    <aura:method name="getUserRecordAccess" action="{! c.handleGetUserRecordAccess }">
+        <aura:attribute name="recordId" type="Id" />
+    </aura:method>
+</aura:component>

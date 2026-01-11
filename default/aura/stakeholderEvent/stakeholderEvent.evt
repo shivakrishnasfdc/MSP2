@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="An event related to a Key Stakeholder item">
+    <aura:attribute name="type" type="String"/>
+    <aura:attribute name="item" type="Key_Stakeholder__c"/>
+</aura:event>

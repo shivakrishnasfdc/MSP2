@@ -1,0 +1,22 @@
+<aura:component>
+    <aura:attribute name="stateBody" type="String" />
+    <aura:attribute name="stateDetail" type="String" />
+    <aura:attribute name="stateTitle" type="String" />
+    <aura:attribute name="imageResourceName" type="String" />
+    <aura:attribute name="actionItems" type="Aura.Component[]" />
+
+    <aura:attribute name="imageResourceReference" type="String" access="private" />
+    <aura:handler name="init" value="{! this }" action="{! c.init }" />
+
+    <div class="slds-text-align_center slds-p-around_medium">
+        <img class="pq-image" src="{! v.imageResourceReference }" />
+        <div class="slds-text-longform">
+            <h3 class="slds-text-heading_large">{! v.stateTitle }</h3>
+            <p class="slds-text-body_regular">{! v.stateBody }</p>
+            <aura:if isTrue="{! v.stateDetail }">
+                <p class="slds-text-body_regular">Details: {! v.stateDetail }</p>
+            </aura:if>
+        </div>
+        {! v.actionItems }
+    </div>
+</aura:component>

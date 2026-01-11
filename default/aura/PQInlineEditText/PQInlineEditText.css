@@ -1,0 +1,11 @@
+.THIS.pro-main-row .pro-btn-appearance {
+    vertical-align: middle;
+}
+
+.THIS.pro-main-row:hover .pro-btn-appearance {
+    display: block;
+}
+
+.THIS.pro-main-row .pro-btn-appearance {
+    display: none;
+}

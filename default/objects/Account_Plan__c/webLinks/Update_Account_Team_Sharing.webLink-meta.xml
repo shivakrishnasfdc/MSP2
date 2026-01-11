@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Update_Account_Team_Sharing</fullName>
+    <availability>online</availability>
+    <description>Update Account Team Sharing for classic</description>
+    <displayType>button</displayType>
+    <linkType>page</linkType>
+    <masterLabel>Update Account Team Sharing</masterLabel>
+    <openType>replace</openType>
+    <page>UpdateAccountTeamSharingAction</page>
+    <protected>false</protected>
+</WebLink>

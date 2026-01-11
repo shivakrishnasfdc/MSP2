@@ -1,0 +1,57 @@
+<apex:page showHeader="true" sidebar="false">
+    <style>
+        html,
+        body {
+            height: 100%;
+            padding: 0 !important;
+        }
+
+        #strategySettings {
+            height: 100%;
+        }
+  </style>
+
+    <apex:includeLightning />
+
+    <div id="strategySettings"></div>
+
+    <script>
+        var theme = '{! JSENCODE($User.UITheme) }';
+        var isMobile = theme === 'Theme4t';
+        var isLightning = theme === 'Theme4d' || theme === 'Theme4u';
+        var isClassic = theme === 'Theme3';
+
+        function postEventToOneApp(name, params, fallbackAction) {
+            if (SfdcApp && SfdcApp.projectOneNavigator && SfdcApp.projectOneNavigator.fireContainerEvent) {
+                // Not officially supported by Salesforce
+                SfdcApp.projectOneNavigator.fireContainerEvent(name, params);
+            } else if (fallbackAction) {
+                // Fallback if no Salesforce support of fireContainerEvent
+                fallbackAction();
+            }
+        }
+
+        $Lightning.use('pqcrush:strategyApp', function() {
+            $Lightning.createComponent(
+                'pqcrush:strategySettings',
+                {
+                    showAccountPlanSection: true,
+                    showKeyStakeholdersSection: true,
+                    showScheduleJobsSection: true,
+                    isClassic: isClassic
+                },
+                'strategySettings',
+                function(cmp) {
+                    console.log('StrategySettings created');
+
+                    $A.eventService.addHandler({
+                        event: 'force:showToast',
+                        handler: function(event) {
+                            postEventToOneApp('force:showToast', event.$params$);
+                        }
+                    });
+                }
+            );
+        });
+     </script>
+</apex:page>

@@ -1,0 +1,49 @@
+.inline-spinner {
+    position: relative;
+    display: inline;
+}
+
+.pro-grid {
+    background: white;
+    border: 1px solid rgb(217, 219, 221);
+    border-radius: 0.25rem 0.25rem 0 0;
+}
+
+.pro-span-content {
+    justify-content: space-between;
+    display: flex;
+}
+
+.page-section {
+    border: solid 1px #ccc;
+    padding: 1rem;
+}
+
+.page-main {
+    background: #f0efef;
+    position: relative;
+}
+
+.container{
+    display: flex;
+    width: 100%;
+    height: max-content;
+}
+
+.section{
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.tabsection{
+    flex: 1;
+    width: 12.5%;
+    background-color: rgb(251, 254, 254);
+}
+
+.datasection{
+    flex: 7;
+    width: 87.5%;
+    background-color: rgb(251, 254, 254);
+    border: solid 1px #ccc;
+}

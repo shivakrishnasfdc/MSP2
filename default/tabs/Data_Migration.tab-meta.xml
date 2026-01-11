@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Data migration for potentially larger operations in the case that batch jobs during upgrade/install fail for any reason</description>
+    <label>Data Migration (PROLIFIQ)</label>
+    <lwcComponent>settingsDataCleanup</lwcComponent>
+    <motif>Custom67: Gears</motif>
+</CustomTab>

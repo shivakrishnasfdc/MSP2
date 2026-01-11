@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enable_Omni_Viewer_Context_Menu__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Check this to enable the OmniViewer context menu in the Relationship Map</description>
+    <inlineHelpText>Check this to enable the OmniViewer context menu in the Relationship Map</inlineHelpText>
+    <label>Enable OmniViewer context Menu</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

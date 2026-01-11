@@ -1,0 +1,20 @@
+<aura:component
+    extends="c:PQBaseMobileCmp"
+    controller="AccountPlanController"
+    implements="flexipage:availableForAllPageTypes,force:hasRecordId"
+    access="global"
+>
+    <!-- Base Mobile Component Attributes-->
+    <aura:attribute name="mobileIconName" type="String" default="standard:note" />
+    <aura:attribute name="mobileTitle" type="String" default="Plan Overview" />
+    <aura:attribute name="title" type="String" default="Overview" access="global" />
+    <aura:attribute name="overviewKey" type="String" default="" access="global" />
+    <aura:attribute name="isGlobal" type="Boolean" default="false" access="global" />
+
+    <c:pqPlanOverview
+        recordId="{! v.recordId }"
+        title="{! v.title }"
+        overviewKey="{! v.overviewKey }"
+        isGlobal="{! v.isGlobal }"
+    ></c:pqPlanOverview>
+</aura:component>

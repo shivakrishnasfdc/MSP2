@@ -1,0 +1,6 @@
+<aura:component access="global">
+    <ltng:require scripts="{! $Resource.StrategyUtils }" />
+    <c:PQBaseRMFeature>
+        <c:relationshipMapSettingsLwc aura:id="relMapSettings" onsettingschange="{! c.handleSettingsChanged }" />
+    </c:PQBaseRMFeature>
+</aura:component>

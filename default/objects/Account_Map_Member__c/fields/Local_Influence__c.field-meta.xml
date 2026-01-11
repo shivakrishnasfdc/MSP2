@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Local_Influence__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <label>Local Influence</label>
+    <referenceTo>pq_Influence__c</referenceTo>
+    <relationshipLabel>Account Map Members</relationshipLabel>
+    <relationshipName>Account_Map_Members</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

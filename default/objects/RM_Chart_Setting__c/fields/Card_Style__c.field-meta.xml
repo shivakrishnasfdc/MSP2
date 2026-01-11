@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Card_Style__c</fullName>
+    <inlineHelpText>Select the detail level of the card.</inlineHelpText>
+    <label>Card Style</label>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Detail</fullName>
+                <default>false</default>
+                <label>Detail</label>
+            </value>
+            <value>
+                <fullName>Compact</fullName>
+                <default>false</default>
+                <label>Compact</label>
+            </value>
+            <value>
+                <fullName>FixedSize</fullName>
+                <default>true</default>
+                <label>FixedSize</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Can_Create_Objects_In_Cross_Sell__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Toggle this to true to give users the option to create new objects in the Cross-Sell map</description>
+    <inlineHelpText>Toggle this to true to give users the option to create new objects in the Cross-Sell map</inlineHelpText>
+    <label>Can Create Objects In Cross-Sell</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

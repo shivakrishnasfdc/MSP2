@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Opportunity_Max_LMD__c</fullName>
+    <description>The most recently modified date for all the Account Plan Opportunities related to this plan</description>
+    <inlineHelpText>Used in the account plan score</inlineHelpText>
+    <label>Opportunity Max Modified Date</label>
+    <summarizedField>Account_Plan_Opportunity__c.LastModifiedDate</summarizedField>
+    <summaryForeignKey>Account_Plan_Opportunity__c.Account_Plan__c</summaryForeignKey>
+    <summaryOperation>max</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>
